@@ -735,7 +735,7 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
 
   <div class="declass" data-key="realm">
     <div class="declass-bar" onclick="toggleDeclass(this)">
-      <span class="ico">◈ FILE R-A</span><span class="txt">The mechanics</span><span class="chev">▸</span>
+      <span class="ico">◈ FILE R-A</span><span class="txt">The setup screen</span><span class="chev">▸</span>
     </div>
     <div class="declass-body">
       <p><b>How many boxes</b> — a slider snapped to 4/8/16/32/64, the same clean multiples as the
@@ -744,31 +744,84 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
       specifically, with an on-screen reason: a quantum search has to commit to a step count before
       it looks, so there's nothing left to keep re-testing. Not an arbitrary restriction — Grover's
       algorithm genuinely requires the iteration count fixed in advance.</p>
-      <p><b>Which constructs to practise</b> — up to four tick-boxes, gated sensibly by mode. Each
-      ticked construct adds a real, functional block to drag in; unticking one genuinely removes that
-      piece of the program and the engine substitutes a sensible default (a fixed starting index
-      instead of a draggable one, a single measurement instead of a repeat loop) — not cosmetic
+      <p><b>Which constructs to practise</b> — up to four tick-boxes, gated sensibly by mode. Ticking
+      more than one no longer means dragging them all in at once — it means the build below
+      introduces them one at a time, testing each addition before the next. Unticking one entirely
+      removes that piece of the program and the engine substitutes a sensible default — not cosmetic
       filtering.</p>
-      <p><b>Assembling it</b> — blocks snap into labelled slots; any numeric blank inside a placed
-      block is filled by dragging a value chip into it. Real HTML5 drag-and-drop on a mouse; on
-      touch, tapping a block "arms" it and tapping the slot places it — full parity, not a degraded
-      fallback.</p>
-      <p><b>Worth knowing:</b> tick both loop constructs in Classic mode and both blocks appear, but
-      only one fits the single loop slot — trying each and comparing is a live, self-directed rerun
-      of Task 1's own until-vs-counted contrast. If "counted loop" is chosen, the run genuinely
-      completes its full stated count even after finding the target, rather than stopping early — a
-      behavioural difference the learner watches happen, not one they're told to take on faith.</p>
-      <p><b>Running it</b> computes real odds from the same <code>conf(N,k)</code> and
-      <code>bestK(N)</code> functions as the main story (§04) — no separate, simplified sandbox maths.</p>
+    </div>
+  </div>
+
+  <div class="declass" data-key="realm-build">
+    <div class="declass-bar" onclick="toggleDeclass(this)">
+      <span class="ico">◈ FILE R-B</span><span class="txt">The build — staged, not one-shot</span><span class="chev">▸</span>
+    </div>
+    <div class="declass-body">
+      <p>This is the part that changed most, and for a specific reason: the original Realm handed the
+      learner every slot and block for their chosen constructs at once, with only a terse label on
+      each ("SETUP", "THE CHECK") and no explanation of what any of it meant or why it was in that
+      order — functionally a drag-and-drop exercise with the <i>teaching</i> stripped out. It now
+      works in stages instead.</p>
+      <p><b>It opens on the simplest possible version.</b> Classic mode starts on the bare baseline —
+      check box 0, then 1, then 2, stopping the instant the target is found — with nothing yet to
+      drag. Quantum mode starts on one lonely search step: spin every box, nudge once, measure. A
+      stage card above the build explains in plain language what the <i>current</i> construct is and
+      why it's being added, before the learner touches anything.</p>
+      <p><b>"Test it" runs only the version that exists right now</b>, and returns an insight line
+      computed live from that specific result — e.g. <i>"3 steps (the best count for 16 boxes): 96.1%
+      odds. Compare that to one lonely step."</i> These are generated from the same
+      <code>conf(N,k)</code>/<code>bestK(N)</code> functions as the main story (§04), never scripted
+      text.</p>
+      <p><b>Only after a stage is tested does "Continue" unlock the next one.</b> A row of badges
+      fills in as each stage completes, and a running log beneath the build keeps one line per stage
+      — a build history, not just a changing current state.</p>
+      <p><b>Drag-and-drop is kept, and pointed at what matters.</b> Trivial, non-optional plumbing
+      (spinning the boxes, looking at the result) is placed automatically — dragging is reserved for
+      the stages that represent a real choice: the variable, the loop type, the conditional, the
+      oracle, and the step count. Real HTML5 drag-and-drop on a mouse; on touch, tapping a block
+      "arms" it and tapping the slot places it — full parity, not a degraded fallback.</p>
+      <p><b>Worth knowing:</b> tick both loop constructs in Classic mode and the loop stage's blurb
+      says to try the until loop first and test it, then swap in the counted loop and test again — a
+      live, self-directed rerun of Task 1's own until-vs-counted contrast. A counted loop genuinely
+      completes its full stated count even after finding the target — a behavioural difference the
+      learner watches happen.</p>
+      <p><b>In quantum mode</b>, "repeated steps" and "your own step count" are separate stages on
+      purpose — repeated steps first fixes the loop at the mathematically best count (still nothing
+      to drag, since the point is that repetition itself is the mechanism); only if "your own step
+      count" was also ticked does that number become a real, draggable choice, so the learner can try
+      fewer than best, more than best, or exactly best, and watch the odds rise and then fall on
+      overshoot.</p>
+    </div>
+  </div>
+
+  <div class="declass" data-key="realm-convert">
+    <div class="declass-bar" onclick="toggleDeclass(this)">
+      <span class="ico">◈ FILE R-C</span><span class="txt">Convert — the closing move</span><span class="chev">▸</span>
+    </div>
+    <div class="declass-body">
+      <p>Once the full build is tested, a Convert button appears in the code window. It rebuilds the
+      same problem in the <i>other</i> paradigm — classical to quantum, or back again, any number of
+      times — and prints a line-by-line map of what happened to every concept the learner built. Some
+      things carry across directly (a conditional and an oracle are the same rule, just phrased
+      differently — <code>if box == target</code> becomes <code>if box == key</code>). Others have no
+      equivalent, and the panel gives the actual reason rather than a generic "not supported": a
+      chosen starting position has nothing to become in quantum mode, because a quantum search
+      inspects every position at once and has nowhere to "start"; a chosen step count has nothing to
+      become in classical mode, because a classical loop just runs its fixed count. This is
+      deliberately not a code transform dressed up as insight — the honest answer to "can you convert
+      this" is "mostly, and here's exactly where it breaks down and why," the same standard of
+      honesty the rest of the build holds itself to (§00). It's also, deliberately, the last thing the
+      sandbox does.</p>
     </div>
   </div>
 
   <div class="warn-box">
     <div class="lab">◆ Delivery note</div>
     <p>No clock, no wrong path out — well suited to "free practice" time at the end of a session, or
-    as its own five-minute standalone activity for someone who's already done the full heist. Not a
-    test; the only failure mode is an incomplete program, which just leaves Run disabled with the
-    still-empty slots visible — the same honest-locked-gate pattern as the rest of the build (§00, §09).</p>
+    as its own five-to-ten minute standalone activity for someone who's already done the full heist;
+    building up a version and converting it back and forth is a natural closing beat. Not a test; the
+    only failure mode at any stage is an incomplete program, which just leaves "Test it" disabled with
+    the still-empty slot visible — the same honest-locked-gate pattern as the rest of the build (§00, §09).</p>
   </div>
 </section>
 

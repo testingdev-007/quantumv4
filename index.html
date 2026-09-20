@@ -84,24 +84,33 @@ body{padding-top:56px}
 .clock.warn .dot{background:var(--warn);box-shadow:0 0 10px var(--warn)}
 .clock.crit,.clock.crit .dot{color:var(--bad)}
 .clock.crit .dot{background:var(--bad);box-shadow:0 0 10px var(--bad)}
-/* ── selling the cost: a pulse on the clock + a floating "-Ns" tag ──── */
-.clock.hit{animation:clockHit .5s ease}
+/* ── selling the cost: a pulse on the clock + a floating "-Ns" tag ────
+   Made bigger and slower than the first pass at this — a player said the
+   original didn't register at all, so this version runs longer, reads
+   larger, and the top bar itself briefly washes red so it's impossible
+   to be looking at the screen and miss a time hit. */
+.clock.hit{animation:clockHit .8s ease}
 @keyframes clockHit{
   0%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(255,78,100,0))}
-  30%{transform:scale(1.24);filter:drop-shadow(0 0 12px rgba(255,78,100,.85))}
+  30%{transform:scale(1.36);filter:drop-shadow(0 0 16px rgba(255,78,100,.95))}
   100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(255,78,100,0))}
 }
 .timehit{
   position:absolute;top:100%;right:0;margin-top:6px;
-  font-family:var(--fm);font-weight:800;font-size:.78rem;color:var(--bad);
-  text-shadow:0 0 10px rgba(255,78,100,.7);pointer-events:none;white-space:nowrap;
-  animation:timehitFloat .9s ease-out forwards;
+  font-family:var(--fm);font-weight:800;font-size:1.05rem;color:var(--bad);
+  text-shadow:0 0 12px rgba(255,78,100,.85);pointer-events:none;white-space:nowrap;
+  animation:timehitFloat 1.6s ease-out forwards;
 }
 @keyframes timehitFloat{
   0%{opacity:0;transform:translateY(-5px) scale(.75)}
-  18%{opacity:1;transform:translateY(0) scale(1.1)}
-  32%{transform:translateY(0) scale(1)}
-  100%{opacity:0;transform:translateY(18px) scale(.92)}
+  14%{opacity:1;transform:translateY(0) scale(1.15)}
+  26%{transform:translateY(0) scale(1)}
+  100%{opacity:0;transform:translateY(24px) scale(.92)}
+}
+.topbar.flash{animation:topbarFlash .7s ease}
+@keyframes topbarFlash{
+  0%{background:rgba(255,78,100,.4)}
+  100%{background:rgba(4,6,14,.86)}
 }
 
 /* ── scenes ─────────────────────────────────────────────────── */
@@ -237,6 +246,12 @@ h3{font-size:1.05rem;font-weight:700;margin-bottom:7px}
 .fb-body{color:var(--txt-2);font-size:1rem;line-height:1.65}
 .fb-body p{margin-bottom:12px}
 .fb-body b{color:var(--gold)}
+.fb-skiphint{
+  display:none;font-family:var(--fm);font-size:.68rem;letter-spacing:.1em;
+  color:var(--txt-3);text-align:right;margin:-6px 0 12px;cursor:pointer;
+}
+.fb-veil.typing .fb-skiphint{display:block}
+.fb-veil.typing .fb-body{cursor:pointer}
 
 /* ── flashback: made to pop ────────────────────────────────── */
 .fb-strobe{position:fixed;inset:0;z-index:220;background:radial-gradient(ellipse at 50% 40%,#fff8ea,#f5c451 70%,#a3781f 100%);opacity:0;pointer-events:none}
@@ -298,7 +313,8 @@ h3{font-size:1.05rem;font-weight:700;margin-bottom:7px}
 .blank:hover{border-color:var(--violet);background:rgba(139,123,255,.14)}
 .blank.sel{border-color:var(--violet);background:rgba(139,123,255,.24);box-shadow:0 0 0 3px rgba(139,123,255,.22),0 0 18px rgba(139,123,255,.4)}
 .blank.ok{border-style:solid;border-color:var(--good);background:rgba(61,255,168,.13);color:var(--good)}
-.blank.ok.weak{border-color:var(--warn);background:rgba(255,162,61,.13);color:var(--warn)}
+.blank.ok.weak{border-style:dashed;border-color:var(--good);background:rgba(61,255,168,.13);color:var(--good)}
+.blank.ok.weak::after{content:" \1F4A1";font-size:.82em}
 .blank.retry{border-style:solid;border-color:var(--bad);background:rgba(255,78,100,.13);color:var(--bad)}
 .blank.no{animation:shake .45s}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
@@ -587,6 +603,84 @@ input[type="range"]::-moz-range-thumb{
 }
 .slot .blankchip.filled{border-style:solid;background:rgba(255,162,61,.22)}
 
+/* ── quantum realm: the staged build-up, badges, insights, convert ── */
+.stagebadges{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 16px}
+.stagebadge{
+  display:inline-flex;align-items:center;gap:6px;font-family:var(--fm);font-weight:700;font-size:.72rem;
+  padding:7px 12px;border-radius:100px;border:1px solid var(--edge-2);color:var(--txt-3);
+  background:rgba(255,255,255,.04);transition:all .3s;
+}
+.stagebadge .ic{font-size:.95rem;filter:grayscale(1);opacity:.5;transition:all .3s}
+.stagebadge.done{border-color:rgba(245,196,81,.5);color:var(--gold);background:rgba(245,196,81,.1)}
+.stagebadge.done .ic{filter:none;opacity:1}
+.stagebadge.now{border-color:var(--cyan);color:var(--cyan);background:rgba(69,227,255,.1);box-shadow:0 0 0 3px rgba(69,227,255,.15)}
+.stagebadge.now .ic{filter:none;opacity:1;animation:beat 1.1s ease-in-out infinite}
+
+.stagecard{
+  background:rgba(154,109,255,.08);border:1px solid rgba(154,109,255,.3);border-radius:14px;
+  padding:15px 17px;margin:14px 0;
+}
+.stagecard .sc-eyebrow{
+  font-family:var(--fm);font-weight:800;font-size:.62rem;letter-spacing:.16em;color:var(--violet);
+  margin-bottom:6px;display:flex;align-items:center;gap:7px;
+}
+.stagecard h3{margin:0 0 7px;font-size:1.05rem}
+.stagecard p{margin:0;font-size:.9rem;line-height:1.55;color:var(--txt-2)}
+
+.insight{
+  display:flex;gap:10px;align-items:flex-start;margin-top:12px;padding:12px 14px;
+  background:rgba(61,255,168,.08);border:1px solid rgba(61,255,168,.32);border-radius:12px;
+  font-size:.88rem;line-height:1.55;color:var(--txt);animation:insightIn .4s ease both;
+}
+.insight .ic{font-size:1.15rem;flex-shrink:0;line-height:1.3}
+@keyframes insightIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.stagelog{display:flex;flex-direction:column;gap:6px;margin:14px 0}
+.stagelog-row{
+  display:flex;gap:9px;align-items:baseline;font-size:.8rem;color:var(--txt-3);
+  padding:6px 2px;border-bottom:1px dashed var(--edge);
+}
+.stagelog-row .ic{font-size:.9rem}
+.stagelog-row b{color:var(--txt-2);font-weight:700}
+
+.codehead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.codehead .code-label{margin-bottom:0}
+.convertbtn{
+  font-family:var(--fm);font-weight:800;font-size:.66rem;letter-spacing:.08em;
+  background:linear-gradient(135deg,#8B5CF6,#45E3FF);color:#04050d;
+  border:none;border-radius:100px;padding:8px 14px;cursor:pointer;white-space:nowrap;
+  box-shadow:0 6px 16px rgba(139,123,255,.35);transition:transform .15s,filter .15s;
+}
+.convertbtn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.convertbtn:disabled{opacity:.4;cursor:default;filter:none;transform:none}
+
+.convertpanel{
+  background:linear-gradient(168deg,rgba(139,123,255,.12),rgba(69,227,255,.06));
+  border:1px solid rgba(139,123,255,.4);border-radius:16px;padding:18px 18px 16px;margin:18px 0;
+  animation:insightIn .45s ease both;
+}
+.convertpanel .cp-head{
+  font-family:var(--fm);font-weight:800;font-size:.68rem;letter-spacing:.14em;color:var(--violet);
+  margin-bottom:10px;display:flex;align-items:center;gap:8px;
+}
+.convert-map{display:flex;flex-direction:column;gap:7px;margin:12px 0}
+.convert-map-row{display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--txt-2)}
+.convert-map-row .from{color:var(--txt-3);text-decoration:line-through;text-decoration-color:rgba(255,107,126,.6)}
+.convert-map-row .arrow{color:var(--violet);font-weight:800}
+.convert-map-row .to{color:var(--good);font-weight:700}
+.convert-map-row.dropped .to{color:var(--bad);font-weight:400;text-decoration:none}
+
+.finalbanner{
+  text-align:center;padding:18px 16px;margin:18px 0 10px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(245,196,81,.16),rgba(69,227,255,.1));
+  border:1px solid rgba(245,196,81,.4);
+  animation:finalPop .5s cubic-bezier(.2,1.4,.3,1) both;
+}
+.finalbanner .fb-icon{font-size:2.2rem;margin-bottom:6px}
+.finalbanner h3{margin:0 0 4px;font-size:1.2rem}
+.finalbanner p{margin:0;color:var(--txt-2);font-size:.88rem}
+@keyframes finalPop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+
 .realm-result{margin:18px 0}
 .realm-result .wall{max-width:none}
 
@@ -617,6 +711,91 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
 }
 .centre{text-align:center}
 .mono{font-family:var(--fm)}
+.oplegend{
+  display:flex;flex-wrap:wrap;gap:6px 14px;margin-bottom:9px;
+  font-size:.76rem;color:var(--txt-2);
+}
+.oplegend b{color:var(--cyan);margin-right:4px}
+.oplegend i{color:var(--txt-1);font-style:normal;text-decoration:underline dotted var(--txt-3)}
+
+/* ── Vale: one-way phone-chat drawer, pulled from the right edge ── */
+.valeTab{
+  position:fixed;top:50%;right:0;transform:translateY(-50%) translateX(0);
+  z-index:340;display:flex;flex-direction:column;align-items:center;gap:4px;
+  background:linear-gradient(180deg,var(--ink-3),var(--ink-2));
+  border:1px solid var(--edge-2);border-right:none;
+  border-radius:14px 0 0 14px;padding:12px 8px;cursor:pointer;
+  font-family:var(--fm);font-weight:800;font-size:.62rem;letter-spacing:.12em;
+  color:var(--cyan);box-shadow:-6px 0 24px rgba(0,0,0,.45);
+  writing-mode:horizontal-tb;
+}
+.valeTab:hover{filter:brightness(1.2)}
+.valeTabIcon{font-size:1.15rem;line-height:1}
+.valeUnread{
+  position:absolute;top:-6px;left:-6px;min-width:18px;height:18px;padding:0 4px;
+  border-radius:50%;background:var(--bad);color:#fff;font-size:.68rem;font-weight:800;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px var(--ink-2);
+}
+.valeTab.pulse{animation:valeTabPulse 1.1s ease-in-out infinite}
+@keyframes valeTabPulse{
+  0%,100%{box-shadow:-6px 0 24px rgba(0,0,0,.45),0 0 0 0 rgba(69,227,255,.5)}
+  50%{box-shadow:-6px 0 24px rgba(0,0,0,.45),0 0 0 8px rgba(69,227,255,0)}
+}
+.valeScrim{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:349;
+  opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s .3s;
+}
+.valeScrim.on{opacity:1;visibility:visible;transition:opacity .3s}
+.valeDrawer{
+  position:fixed;top:0;right:0;height:100%;width:min(360px,88vw);z-index:350;
+  background:linear-gradient(180deg,var(--ink-2),var(--ink));
+  border-left:1px solid var(--edge-2);box-shadow:-16px 0 50px rgba(0,0,0,.55);
+  transform:translateX(100%);transition:transform .38s cubic-bezier(.2,1,.3,1);
+  display:flex;flex-direction:column;
+}
+.valeDrawer.open{transform:translateX(0)}
+.valeDrawerHead{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 16px 12px;border-bottom:1px solid var(--edge);
+  font-family:var(--fm);font-weight:800;letter-spacing:.08em;color:var(--cyan);
+  flex:0 0 auto;
+}
+.valeDrawerClose{
+  background:none;border:none;color:var(--txt-3);font-size:1.1rem;cursor:pointer;
+  padding:4px 8px;line-height:1;
+}
+.valeDrawerClose:hover{color:var(--txt-1)}
+.valeDrawerBody{
+  flex:1 1 auto;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:10px;
+  -webkit-overflow-scrolling:touch;
+}
+.valeBubble{
+  align-self:flex-start;max-width:88%;background:var(--ink-3);border:1px solid var(--edge-2);
+  border-radius:16px 16px 16px 4px;padding:10px 13px;font-size:.86rem;line-height:1.5;
+  color:var(--txt-1);animation:valeBubbleIn .3s ease;
+}
+.valeBubble .valeMeta{
+  display:block;font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;
+  color:var(--txt-3);margin-top:5px;
+}
+.valeBubble.rescue{border-color:rgba(61,255,168,.4);background:rgba(61,255,168,.08)}
+.valeBubble.time{border-color:rgba(255,162,61,.4);background:rgba(255,162,61,.08)}
+.valeBubble.hint{border-color:rgba(154,109,255,.4);background:rgba(154,109,255,.08)}
+@keyframes valeBubbleIn{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
+@media (max-height:560px){
+  .valeDrawerHead{padding:10px 14px 8px}
+  .valeDrawerBody{padding:10px 12px;gap:7px}
+  .valeBubble{padding:8px 11px;font-size:.8rem}
+}
+@media (orientation:landscape) and (max-height:480px){
+  .valeTab{padding:8px 6px;gap:2px;font-size:.56rem}
+  .valeTabIcon{font-size:.95rem}
+  .valeDrawer{width:min(320px,60vw)}
+}
+@media (max-width:420px){
+  .valeDrawer{width:100vw;border-left:none}
+}
+
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
   .atmos .grain{display:none}
@@ -637,6 +816,7 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
     <div class="fb-when" id="fbWhen">EIGHT MONTHS EARLIER</div>
     <h2 id="fbTitle"></h2>
     <div class="fb-body" id="fbBody"></div>
+    <div class="fb-skiphint" id="fbSkipHint">tap to finish ▸</div>
     <button class="btn gold" id="fbBack">Back to the job →</button>
   </div>
 </div>
@@ -648,6 +828,20 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
   <button class="mark" id="homeBtn" type="button" title="Start over from the beginning">THE VAULT</button>
   <div class="acts" id="acts"></div>
   <div class="clock" id="clock"><span class="dot"></span><span id="clockT">6:00</span></div>
+</div>
+
+<button class="valeTab" id="valeTab" type="button" aria-label="Open messages from Vale">
+  <span class="valeUnread" id="valeUnread" style="display:none">0</span>
+  <span class="valeTabIcon">🕶️</span>
+  <span>VALE</span>
+</button>
+<div class="valeScrim" id="valeScrim"></div>
+<div class="valeDrawer" id="valeDrawer" aria-hidden="true">
+  <div class="valeDrawerHead">
+    <span>🕶️ VALE</span>
+    <button class="valeDrawerClose" id="valeDrawerClose" type="button" aria-label="Close">✕</button>
+  </div>
+  <div class="valeDrawerBody" id="valeDrawerBody"></div>
 </div>
 
 <div class="shell">
@@ -730,7 +924,12 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
   <div class="card">
     <div class="slug">ACT ONE · WRITE IT</div>
     <h2>Name the box. Put a number in it.</h2>
-    <p class="lede">Click the gap, then choose. The name is yours to pick &mdash; and the choice matters.</p>
+    <p class="lede">Two gaps below are glowing &mdash; those are empty boxes waiting for you to fill them.
+      Click a gap, then click one of the choices that appears underneath it to fill it in. Do that twice, once
+      for each gap.</p>
+    <div class="do">Step 1: click the first gap (already glowing) and pick a <b>name</b> from the options below it.
+      Step 2: click the second gap and try a <b>number</b> &mdash; any of them. Wrong guesses cost you nothing here;
+      this box is for finding out, not for getting it right first try.</div>
 
     <div class="code" id="varCode">
       <div class="code-label">DECODER.PY</div>
@@ -743,7 +942,7 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
 
     <div class="picker">
       <div class="pick-grp">
-        <div class="pick-lab">A NAME FOR THE BOX</div>
+        <div class="pick-lab">STEP 1 &middot; A NAME FOR THE BOX</div>
         <div class="opts" id="nameOpts">
           <span class="opt name" data-k="name" data-v="shift">shift</span>
           <span class="opt name" data-k="name" data-v="x">x</span>
@@ -752,7 +951,7 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
         </div>
       </div>
       <div class="pick-grp">
-        <div class="pick-lab">A NUMBER TO PUT IN IT</div>
+        <div class="pick-lab">STEP 2 &middot; A NUMBER TO TRY (guessing wrong costs nothing)</div>
         <div class="opts" id="valOpts">
           <span class="opt num" data-k="val" data-v="3">3</span>
           <span class="opt num" data-k="val" data-v="5">5</span>
@@ -769,12 +968,15 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
     <div id="varBeats">
       <div class="beat" id="bName"><b>That is a variable.</b> A named box with a value in it that you can change.
         Everything any program has ever done starts here.</div>
-      <div class="beat" id="bWeak">It runs. But in a month, nobody reading <span class="mono">x</span> knows
-        what x <i>is</i>. Naming is not decoration &mdash; it is the difference between code you can change and
-        code you have to rewrite.</div>
-      <div class="beat" id="bWrong">Wrong number. The letters moved, but not into a word. Try another.</div>
-      <div class="beat" id="bRight"><b>VAULT.</b> That is the combination. And you found it by changing one
-        number in one box.</div>
+      <div class="beat" id="bWeak">All four names above are <b>accepted</b> &mdash; the computer runs any of them
+        identically. The dashed 💡 border just means: this one works, but think about it. In a month, nobody
+        reading <span class="mono">x</span> knows what x <i>is</i>. Naming is not decoration &mdash; it is the
+        difference between code you can change and code you have to rewrite.</div>
+      <div class="beat" id="bWrong">Not that word yet &mdash; but that is not a failure, it is the search. There
+        are only 25 other shifts it could be. Try another number; it costs you nothing to be wrong here.</div>
+      <div class="beat" id="bRight"><b>VAULT.</b> That is the combination. There are 26 possible shifts, and only
+        one of them turns <span class="mono">CHBSA</span> back into a real word &mdash; you just found it by
+        trying numbers until the output made sense. That is the whole method: guess, look at the result, adjust.</div>
     </div>
 
     <button class="btn gold" id="go1b" disabled>Try the combination →</button>
@@ -1090,6 +1292,13 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
     <div class="picker">
       <div class="pick-grp">
         <div class="pick-lab">COMPARISONS</div>
+        <div class="oplegend">
+          <span><b class="mono">&gt;</b> more than</span>
+          <span><b class="mono">&lt;</b> less than</span>
+          <span><b class="mono">==</b> is equal to</span>
+          <span><b class="mono">!=</b> is <i>not</i> equal to</span>
+          <span><b class="mono">=</b> sets a value (not a question)</span>
+        </div>
         <div class="opts" id="opOpts">
           <span class="opt op" data-k="op1" data-v="&gt;">&gt;</span>
           <span class="opt op" data-k="op1" data-v="&lt;">&lt;</span>
@@ -1203,7 +1412,7 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
 
     <div class="note c"><b>About 3,000 people work in quantum in the UK.</b> The sector is aiming for
       100,000-plus jobs over the next two decades. You are not behind. Almost nobody is ahead.
-      <span style="display:block;margin-top:6px;font-size:.82rem;color:var(--txt-3)">Source: UK Quantum Skills Taskforce / NQCC</span></div>
+      <span style="display:block;margin-top:6px;font-size:.82rem;color:var(--txt-3)">Source: National Quantum Computing Centre (NQCC)</span></div>
 
     <h3 style="margin-top:22px">Quick check</h3>
     <div id="quiz"></div>
@@ -1285,9 +1494,17 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
 <section class="scene" id="sRP">
   <div class="card q">
     <div class="slug q" id="rpSlug">QUANTUM REALM · QUANTUM MODE</div>
-    <h2 id="rpTitle">Drag the blocks into place</h2>
-    <p class="lede" id="rpLede">Drag a block onto the slot it belongs in. On a mouse, drag and drop. On
-    touch, tap a block to arm it, then tap the slot.</p>
+    <h2 id="rpTitle">Build it up, one piece at a time</h2>
+    <p class="lede" id="rpLede">You are not assembling everything at once. Start with the simplest
+    version, test it, then add one piece and test again — watch it actually get better as you go.</p>
+
+    <div class="stagebadges" id="rBadges"></div>
+
+    <div class="stagecard" id="rStageCard">
+      <div class="sc-eyebrow"><span id="rStageEyebrow">STAGE 1 OF 1</span></div>
+      <h3 id="rStageTitle">—</h3>
+      <p id="rStageBlurb">—</p>
+    </div>
 
     <div class="palette" id="rBlocks"></div>
     <div class="slotrow" id="rSlots"></div>
@@ -1295,11 +1512,17 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
     <div class="palette" id="rValues" style="display:none"></div>
 
     <div class="code" id="rProgram">
-      <div class="code-label">REALM.PY</div>
+      <div class="codehead">
+        <div class="code-label">REALM.PY</div>
+        <button class="convertbtn" id="rConvertBtn" style="display:none" type="button">⇄ Convert to Quantum</button>
+      </div>
       <div id="rProgramBody"></div>
     </div>
 
-    <button class="btn q" id="rRun" disabled>▶ Run it</button>
+    <div class="row">
+      <button class="btn q" id="rRun" disabled>▶ Test it</button>
+      <button class="btn gold" id="rContinue" style="display:none" type="button">Continue →</button>
+    </div>
 
     <div class="realm-result" id="rResult" style="display:none">
       <div class="wall" id="rWall" style="grid-template-columns:repeat(4,1fr);max-width:340px"></div>
@@ -1308,12 +1531,23 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
         <div class="odds-rail"><div class="odds-fill" id="rOddsFill" style="width:0%"></div></div>
       </div>
       <div class="term" id="rOut"></div>
+      <div class="insight" id="rInsight" style="display:none"><span class="ic">💡</span><span id="rInsightTxt"></span></div>
       <div class="vs" id="rVs" style="display:none">
         <div class="vs-side classic"><div class="k" id="rVsCK">BY HAND</div><div class="n" id="rVsCN">—</div><div class="s" id="rVsCS"></div></div>
         <div class="vs-mid">VS</div>
         <div class="vs-side quantum"><div class="k" id="rVsQK">QUANTUM</div><div class="n" id="rVsQN">—</div><div class="s" id="rVsQS"></div></div>
       </div>
     </div>
+
+    <div class="stagelog" id="rStageLog"></div>
+
+    <div class="finalbanner" id="rFinalBanner" style="display:none">
+      <div class="fb-icon">🏁</div>
+      <h3>Full program complete.</h3>
+      <p>Everything above, built by you, one construct at a time. Try converting it below.</p>
+    </div>
+
+    <div class="convertpanel" id="rConvertPanel" style="display:none"></div>
 
     <div class="row">
       <button class="btn ghost" id="rAgain">↺ Reconfigure</button>
@@ -1359,11 +1593,82 @@ function go(id){
 function toast(m){
   const t = $('#toast'); t.textContent = m; t.classList.add('on');
   clearTimeout(toast._h); toast._h = setTimeout(() => t.classList.remove('on'), 2800);
+  if (valeSuppressNext){ valeSuppressNext = false; } else { valeSay(m); }
 }
 function dismissToast(){
   clearTimeout(toast._h);
   $('#toast').classList.remove('on');
 }
+
+/* ── Vale: one-way chat drawer ─────────────────────
+   Mirrors every toast (unless suppressed, to avoid doubling up with an
+   explicit valeSay() call that already covers the same moment), plus
+   periodic time-awareness pings and any hint/encouragement text pushed
+   in directly. This is the "constant reminder" surface the console
+   toast alone wasn't enough to be. */
+let valeSuppressNext = false;
+let valeUnreadCount = 0;
+let valeOpen = false;
+function openValeDrawer(){
+  valeOpen = true;
+  $('#valeDrawer').classList.add('open');
+  $('#valeDrawer').setAttribute('aria-hidden', 'false');
+  $('#valeScrim').classList.add('on');
+  $('#valeTab').classList.remove('pulse');
+  valeUnreadCount = 0;
+  $('#valeUnread').style.display = 'none';
+  const body = $('#valeDrawerBody');
+  body.scrollTop = body.scrollHeight;
+}
+function closeValeDrawer(){
+  valeOpen = false;
+  $('#valeDrawer').classList.remove('open');
+  $('#valeDrawer').setAttribute('aria-hidden', 'true');
+  $('#valeScrim').classList.remove('on');
+}
+function valeSay(text, cls){
+  const body = $('#valeDrawerBody');
+  if (!body) return;
+  const b = document.createElement('div');
+  b.className = 'valeBubble' + (cls ? ' ' + cls : '');
+  const meta = document.createElement('span');
+  meta.className = 'valeMeta';
+  const left = Math.max(0, Math.round(LIMIT - spent));
+  meta.textContent = 'VALE · clock ' + fmt(left) + ' left';
+  b.textContent = text;
+  b.appendChild(meta);
+  body.appendChild(b);
+  body.scrollTop = body.scrollHeight;
+  if (!valeOpen){
+    valeUnreadCount++;
+    const u = $('#valeUnread');
+    u.textContent = valeUnreadCount;
+    u.style.display = 'flex';
+    $('#valeTab').classList.add('pulse');
+  }
+}
+/* Fires roughly every 40 seconds of accumulated in-fiction spend, so the
+   time pressure and its consequences stay visible without needing to
+   stare at the top-bar clock. Independent of the rescue messages above. */
+let valeLastTimeCheck = 0;
+const VALE_TIME_LINES = [
+  'Clock’s at {t} left. Every wrong guess costs seconds — make them count, not fast.',
+  '{t} left on the clock. Slow and right beats fast and wrong in here.',
+  'Still {t} to work with. That’s enough — as long as you stop guessing blind.',
+  'Time check: {t} left. I can’t buy you much more of it.',
+  '{t} remaining. Every second you spend here is a second the room upstairs is quieter without you.'
+];
+function valeTimeCheck(){
+  if (spent - valeLastTimeCheck < 40) return;
+  valeLastTimeCheck = spent;
+  const left = Math.max(0, Math.round(LIMIT - spent));
+  const line = VALE_TIME_LINES[Math.floor(Math.random() * VALE_TIME_LINES.length)]
+    .replace('{t}', fmt(left));
+  valeSay(line, 'time');
+}
+$('#valeTab').addEventListener('click', openValeDrawer);
+$('#valeDrawerClose').addEventListener('click', closeValeDrawer);
+$('#valeScrim').addEventListener('click', closeValeDrawer);
 function beat(id){ const e = $('#' + id); if (e) e.classList.add('on'); }
 function unbeat(id){ const e = $('#' + id); if (e) e.classList.remove('on'); }
 
@@ -1404,7 +1709,32 @@ window.addEventListener('resize', checkCue);
 
 /* ── the clock ──────────────────────────────────── */
 const LIMIT = 360;
-let spent = 0, running = false, rescued = false, rescued2 = false;
+let spent = 0, running = false, rescued = false, rescued2 = false, rescueCount = 0;
+/* Further reprieves beyond Okonjo's and Vale's named ones — the clock must never
+   actually go negative on a first-time player, so if someone needs saving a third,
+   fourth, fifth time, one of these fires instead, chosen without repeating the last
+   one used. Each is worth a modest, randomised amount so the pressure never fully
+   disappears. */
+const EXTRA_RESCUES = [
+  {icon:'☕', text:'The guards on the monitor just clocked on for a coffee break.'},
+  {icon:'🚬', text:'Security stepped out to the loading bay for a smoke.'},
+  {icon:'📠', text:'Okonjo jammed the line to the monitoring desk with a burst of static.'},
+  {icon:'🚓', text:'A patrol car got flagged down two streets over. Everyone is watching that.'},
+  {icon:'📱', text:'Someone on the guard desk is arguing with their phone and not the cameras.'},
+  {icon:'🚚', text:'A delivery van is blocking the loading-bay camera.'},
+  {icon:'💡', text:'Vale flickers the corridor lights to cover the noise from your floor.'},
+  {icon:'🐦', text:'A pigeon set off a motion sensor two floors up. Everyone is checking that instead.'},
+  {icon:'🔧', text:'Okonjo "fixes" a fire door on the far side of the building. Loudly.'},
+  {icon:'📺', text:'The guard room’s football match just went to penalties.'}
+];
+let lastExtraRescue = null;
+function pickExtraRescue(){
+  let pick;
+  do { pick = EXTRA_RESCUES[Math.floor(Math.random() * EXTRA_RESCUES.length)]; }
+  while (pick === lastExtraRescue && EXTRA_RESCUES.length > 1);
+  lastExtraRescue = pick;
+  return pick;
+}
 function fmt(s){ s = Math.max(0, Math.round(s)); return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); }
 function drawClock(){
   const left = LIMIT - spent, c = $('#clock');
@@ -1419,30 +1749,87 @@ function pulseClock(sec){
   tag.className = 'timehit';
   tag.textContent = '−' + Math.round(sec) + 's';
   c.appendChild(tag);
-  setTimeout(() => tag.remove(), 950);
+  setTimeout(() => tag.remove(), 1650);
+  // Big hits also wash the whole top bar red, so the cost of a miss is
+  // felt even if you're looking at the puzzle and not the clock corner.
+  if (sec >= 15){
+    const bar = $('.topbar');
+    bar.classList.remove('flash'); void bar.offsetWidth; bar.classList.add('flash');
+    setTimeout(() => bar.classList.remove('flash'), 750);
+  }
 }
 function cost(sec){
   if (!running) return;
   spent += sec; drawClock();
   pulseClock(sec);
-  if (LIMIT - spent < 0 && !rescued){
-    rescued = true; spent = LIMIT - 90; drawClock();
-    toast('🚚 Okonjo bought you ninety seconds. Do not need another.');
-  } else if (LIMIT - spent < 0 && rescued && !rescued2){
-    rescued2 = true; spent = LIMIT - 30; drawClock();
-    toast('🕶️ Vale loops the corridor camera. Thirty seconds — that is everything I have left.');
+  valeTimeCheck();
+  if (LIMIT - spent < 0){
+    rescueCount++;
+    if (!rescued){
+      rescued = true; spent = LIMIT - 90; drawClock();
+      const msg = '🚚 Okonjo bought you ninety seconds. Do not need another.';
+      valeSuppressNext = true; toast(msg); valeSay(msg, 'rescue');
+    } else if (!rescued2){
+      rescued2 = true; spent = LIMIT - 30; drawClock();
+      const msg = '🕶️ Vale loops the corridor camera. Thirty seconds — that is everything I have left.';
+      valeSuppressNext = true; toast(msg); valeSay(msg, 'rescue');
+    } else {
+      const r = pickExtraRescue(), amt = 20 + Math.floor(Math.random() * 20);
+      spent = LIMIT - amt; drawClock();
+      const msg = r.icon + ' ' + r.text + ' ' + amt + ' seconds, maybe.';
+      valeSuppressNext = true; toast(msg); valeSay(msg, 'rescue');
+    }
   }
 }
 drawClock();
 
 /* ── the flashback ──────────────────────────────── */
+/* ── typewriter reveal for flashback bodies ────────
+   Flashback bodies are rich HTML (bold, code blocks, line breaks), so this
+   walks the rendered text nodes with a TreeWalker rather than re-typing
+   innerHTML character by character — that would corrupt the tags. Tapping
+   anywhere in the body (or the "tap to finish" hint) completes it instantly. */
+let fbTypeTimer = null;
+function typewriteHTML(el, html, speed){
+  clearInterval(fbTypeTimer);
+  el.innerHTML = html;
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  let node;
+  while ((node = walker.nextNode())){
+    if (node.textContent.trim() === '') continue;
+    nodes.push({ node, full: node.textContent });
+    node.textContent = '';
+  }
+  const veil = $('#fbVeil');
+  function finishAll(){
+    nodes.forEach(n => { n.node.textContent = n.full; });
+    veil.classList.remove('typing');
+    clearInterval(fbTypeTimer);
+    el._fbSkip = null;
+  }
+  if (!nodes.length){ veil.classList.remove('typing'); return; }
+  veil.classList.add('typing');
+  el._fbSkip = finishAll;
+  let ni = 0, ci = 0;
+  fbTypeTimer = setInterval(() => {
+    if (ni >= nodes.length){ finishAll(); return; }
+    const cur = nodes[ni];
+    ci += 2; // a couple of characters per tick reads as typed, not sluggish
+    cur.node.textContent = cur.full.slice(0, ci);
+    if (ci >= cur.full.length){ ni++; ci = 0; }
+  }, speed || 12);
+}
+$('#fbBody').addEventListener('click', () => { if ($('#fbBody')._fbSkip) $('#fbBody')._fbSkip(); });
+$('#fbSkipHint').addEventListener('click', () => { if ($('#fbBody')._fbSkip) $('#fbBody')._fbSkip(); });
+
 let fbBack = null;
 function flashback(o){
   $('#fbIcon').textContent = o.icon || '💡';
   $('#fbTag').textContent = o.tag || 'NEW IDEA';
   $('#fbWhen').textContent = o.when || 'EIGHT MONTHS EARLIER';
   $('#fbTitle').textContent = o.title;
-  $('#fbBody').innerHTML = o.body;
+  typewriteHTML($('#fbBody'), o.body);
   $('#fbBack').textContent = o.back || 'Back to the job →';
   fbBack = o.onBack || null;
   const total = o.total || 4, idx = o.index || 1;
@@ -1457,7 +1844,8 @@ function flashback(o){
   checkCue();
 }
 $('#fbBack').addEventListener('click', () => {
-  $('#fbVeil').classList.remove('on');
+  $('#fbVeil').classList.remove('on', 'typing');
+  clearInterval(fbTypeTimer);
   $('#fbTop').style.height = '0'; $('#fbBot').style.height = '0';
   document.body.style.overflow = '';
   if (fbBack) { const f = fbBack; fbBack = null; f(); }
@@ -1570,9 +1958,10 @@ function decodeShow(){
     $('#go1b').disabled = false;
     toast('🔓 VAULT — that is the combination.');
   } else {
-    beat('bWrong'); cost(8);
-    // wrong guesses get their own red "try again" look, not the same green
-    // the correct answer gets — and a shake, so it's obvious without reading text.
+    beat('bWrong');
+    // Free experimentation, same as the second door: trying a wrong number here
+    // costs no clock time at all. Only the framing (red/shake) tells you it
+    // missed — nothing else is taken from you for guessing.
     valBlank.classList.remove('ok', 'no'); void valBlank.offsetWidth;
     valBlank.classList.add('retry', 'no');
   }
@@ -1581,11 +1970,11 @@ wire({
   code:'#varCode', term:'#varTerm', opts:'#nameOpts .opt, #valOpts .opt', first:'name',
   slots:{
     name:{ ok:['shift','shift_amount'], weak:['x','thing'],
-      ask:'Give the box a name. Any of these will run — but one of them will still make sense tomorrow.',
-      why:{ x:'It runs. But <b>x</b> tells the next person nothing. In three weeks that person is you.',
-            thing:'It runs. <b>thing</b> is not a name, it is a shrug.' } },
+      ask:'Give the box a name — click one of the four choices below. All four are accepted; one of them will still make sense to you tomorrow.',
+      why:{ x:'✅ Accepted — <b>x</b> runs exactly the same as any other name; the computer does not care. But in three weeks nobody reading <b>x</b> — including you — will remember what it holds. That is the only problem with it.',
+            thing:'✅ Accepted — <b>thing</b> works too. But it is not really a name, it is a shrug: it could mean anything.' } },
     val:{ ok:['3','5','7','11','19'],
-      ask:'Now put a number in it. Nobody knows which — so try one.' }
+      ask:'Now try a number below — any one. Nobody is told which shift is right; that is the point. Guess, watch what comes out, guess again. Wrong guesses cost you no time here.' }
   },
   onFill:(k, v, weak) => {
     if (k === 'name'){
@@ -1875,7 +2264,13 @@ function enterRoom(ix){
 $('#btnRunRoom').addEventListener('click', async () => {
   const r = ROOMS[roomIx];
   $('#btnRunRoom').disabled = true;
+  // Every press of Run is a fresh, independent search — re-roll the hidden box so
+  // trying a different step count (or retrying after a miss) is a real new trial,
+  // not a rerun against a target you already know from an earlier attempt.
+  roomPrize = Math.floor(Math.random() * r.n);
   const boxes = $$('#wallR .bx');
+  boxes.forEach(b => { b.className = 'bx spin'; b.textContent = '?'; });
+  await sleep(150);
   for (let k = 1; k <= roomReps; k++){
     boxes.forEach(b => { b.className = 'bx spin'; });
     await sleep(230);
@@ -2044,19 +2439,40 @@ const QUIZ = [
     why:'That is the whole point. The oracle is just a rule that recognises the answer when it sees it — and you had already written it.' }
 ];
 let quizScore = 0, quizDone = 0;
+/* Fisher–Yates, non-mutating — used to reorder the quiz itself and each
+   question's answer options so a second playthrough isn't just memorised. */
+function shuffled(arr){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function shuffleQuiz(src){
+  return shuffled(src).map(item => {
+    const order = shuffled(item.a.map((txt, i) => i));
+    return { q: item.q, why: item.why, a: order.map(i => item.a[i]), c: order.indexOf(item.c) };
+  });
+}
 function finish(){
+  quizScore = 0; quizDone = 0;
+  const QUIZ_ROUND = shuffleQuiz(QUIZ);
   const left = LIMIT - spent;
   $('#outTitle').textContent = left > 0 ? 'Out, with ' + fmt(left) + ' to spare.' : 'Out — by the skin of your teeth.';
-  const rescueLine = rescued2 ? ' Okonjo and then Vale both covered for you. Nobody needs to know.'
-    : (rescued ? ' Okonjo covered for you once. Nobody needs to know.' : '');
+  const rescueLine = rescueCount === 0 ? ''
+    : rescueCount === 1 ? ' Okonjo covered for you once. Nobody needs to know.'
+    : rescueCount === 2 ? ' Okonjo and then Vale both covered for you. Nobody needs to know.'
+    : ` Okonjo, Vale, and then whatever the two of them could improvise covered for you —
+       ${rescueCount} close calls in all. Nobody needs to know how close.`;
   $('#outLede').innerHTML = `You went in never having written a line of code. You came out having written
     <b>four programming constructs</b> and run a real quantum search algorithm — the actual one, with the
     actual arithmetic, on this device.` + rescueLine;
   $('#vsCF').textContent = handTotal;
   $('#vsQF').textContent = stepTotal;
 
-  const box = $('#quiz'); box.innerHTML = '';
-  QUIZ.forEach((item, qi) => {
+  const box = $('#quiz'); box.innerHTML = ''; $('#quizOut').style.display = 'none';
+  QUIZ_ROUND.forEach((item, qi) => {
     const c = document.createElement('div');
     c.className = 'card'; c.style.padding = '16px 15px'; c.style.marginBottom = '10px';
     c.innerHTML = `<div style="font-weight:700;margin-bottom:9px">${qi+1}. ${item.q}</div>`;
@@ -2079,9 +2495,9 @@ function finish(){
         const w = document.createElement('div');
         w.className = 'term'; w.innerHTML = (ai === item.c ? '<span class="ok">✓ </span>' : '<span class="err">✗ </span>') + item.why;
         c.appendChild(w);
-        if (quizDone === QUIZ.length){
+        if (quizDone === QUIZ_ROUND.length){
           const o = $('#quizOut'); o.style.display = 'block';
-          o.innerHTML = `<span class="ok">${quizScore} out of ${QUIZ.length}.</span> ` +
+          o.innerHTML = `<span class="ok">${quizScore} out of ${QUIZ_ROUND.length}.</span> ` +
             (quizScore >= 4 ? 'That is a real understanding of what you just did.'
                             : 'Worth a second run — the ideas stick faster the second time.') +
             `<button class="btn gold" id="toBigPicture" style="margin-top:14px">See what it all builds to →</button>`;
@@ -2108,6 +2524,14 @@ const REALM_NS = [4,8,16,32,64], REALM_COLS = [4,4,4,8,8];
 let realmN = 16, realmMode = 'c', realmConcepts = new Set(['until']);
 let realmBlocks = [], realmSlots = [], realmFilled = {}, realmBlankFilled = {};
 let armed = null; /* {kind:'block',id} | {kind:'value',blankKey,value} */
+
+/* Build-up state: the program is no longer assembled all at once. `realmStages`
+   is the ordered list of stage keys for this run (baseline first, always);
+   `realmStageIx` is which one is active; `realmPushedStages` guards against
+   pushing the same stage's slots/blocks twice; `realmPhase` is
+   'staging' → 'final' → optionally 'converted' once the Convert button is used. */
+let realmStages = [], realmStageIx = 0, realmPushedStages = new Set();
+let realmPhase = 'staging', realmStageTested = false, realmStageLog = [];
 
 function realmDefaults(mode){ return mode === 'q' ? new Set(['counted','variable']) : new Set(['until']); }
 function bestKRange(N){
@@ -2137,7 +2561,7 @@ function renderConceptBoxes(){
   });
   $('#rConceptNote').textContent = realmMode === 'q'
     ? 'Until loop is greyed out here — a quantum search has to commit to a step count before it looks, so there is nothing left to keep re-testing.'
-    : 'Tick as many as you like — each one adds a real block you will drag into place. Tick both loops and you can compare them yourself.';
+    : 'Tick as many as you like — you will build them up one at a time, testing each addition before the next. Tick both loops and you can compare them yourself.';
 }
 $$('#rConcepts .conceptbox').forEach(cb => cb.addEventListener('click', () => {
   const c = cb.dataset.c;
@@ -2150,57 +2574,176 @@ renderConceptBoxes();
 $('#rHome').addEventListener('click', () => go('s00'));
 $('#rHome2').addEventListener('click', () => go('s00'));
 $('#rAgain').addEventListener('click', () => go('sR'));
-$('#rDeploy').addEventListener('click', () => { buildRealm(); go('sRP'); });
+$('#rDeploy').addEventListener('click', () => { startRealmPlay(); go('sRP'); });
 
-function buildRealm(){
-  const N = realmN, mode = realmMode, C = realmConcepts;
-  realmBlocks = []; realmSlots = []; realmFilled = {}; realmBlankFilled = {}; armed = null;
-  $('#rpSlug').textContent = 'QUANTUM REALM · ' + (mode === 'q' ? 'QUANTUM MODE' : 'CLASSIC MODE');
-  $('#rpTitle').textContent = mode === 'q' ? `Search ${N} boxes the quantum way` : `Search ${N} boxes by hand`;
-  $('#rpLede').textContent = mode === 'q'
-    ? 'Drag each block into the slot it belongs in, then drag a value into any blank. On touch, tap a block to arm it, then tap the slot.'
-    : 'Drag each block into the slot it belongs in, in the order the search actually happens. On touch, tap a block, then tap the slot.';
+/* ── stage order + copy, per mode ─────────────────────────────── */
+function classicStageOrder(C){
+  const order = ['baseline'];
+  if (C.has('variable')) order.push('variable');
+  if (C.has('until') || C.has('counted')) order.push('loop');
+  if (C.has('conditional')) order.push('conditional');
+  return order;
+}
+function quantumStageOrder(C){
+  const order = ['baseline'];
+  if (C.has('conditional')) order.push('oracle');
+  if (C.has('counted')) order.push('counted');
+  if (C.has('counted') && C.has('variable')) order.push('variable');
+  return order;
+}
+const STAGE_INFO = {
+  c: {
+    baseline: { badge:'👣', short:'Baseline', title:'The baseline search',
+      blurb:() => 'Every search starts here: check box 0, then box 1, then box 2 — stopping the instant you find it. No variable, no loop, no conditional yet, and nothing to drag either. Press Test it and see how many boxes that takes.' },
+    variable: { badge:'📦', short:'Variable', title:'Add: a variable',
+      blurb:() => 'Drag it into the code below. A variable lets you decide where the search begins, instead of that being baked in.' },
+    loop: { badge:'🔁', short:'Loop', title:'Add: a loop',
+      blurb:(C) => (C.has('until') && C.has('counted'))
+        ? 'Drag one in — you picked both kinds, so try the until loop first and test it, then swap in the counted loop and test again. Watch what actually changes.'
+        : C.has('until') ? 'Drag it in. An until loop stops the moment it succeeds — no more, no less.'
+        : 'Drag it in. A counted loop repeats a fixed number of times, whether or not it already succeeded.' },
+    conditional: { badge:'🔀', short:'Conditional', title:'Add: a conditional',
+      blurb:() => "Drag it in. This makes the decision explicit and reusable — remember this rule, it's about to become something else entirely." }
+  },
+  q: {
+    baseline: { badge:'👣', short:'Baseline', title:'The baseline quantum search',
+      blurb:() => 'Every box gets spun into superposition, nudged once, then measured. Nothing to drag yet — press Test it and see what one lonely step gets you.' },
+    oracle: { badge:'🔀', short:'Oracle', title:'Add: an oracle',
+      blurb:() => 'Drag it in. This is the exact same rule as a conditional — just phrased as a phase-flip instead of a yes/no.' },
+    counted: { badge:'🔂', short:'Repeated steps', title:'Add: repeated steps',
+      blurb:() => "Drag it in. It's pre-set to the mathematically best count for this many boxes — test it and compare to one step alone." },
+    variable: { badge:'📦', short:'Your step count', title:'Control the step count yourself',
+      blurb:() => 'Now drag in a step count of your own choosing — try fewer than best, more than best, and the exact best. Watch the odds rise, then fall if you overshoot.' }
+  }
+};
 
-  if (mode === 'c'){
-    if (C.has('variable')){
+/* ── pushing a stage's slots/blocks — additive, except two quantum stages
+   that deliberately UPGRADE something already on screen (see comments) ── */
+function pushStageBlocks(key){
+  const N = realmN, C = realmConcepts;
+  if (realmMode === 'c'){
+    if (key === 'variable'){
       realmSlots.push({id:'setup', label:'SETUP', accepts:['blk_var']});
       realmBlocks.push({id:'blk_var', slot:'setup',
         html:'<span class="var">start</span> <span class="kw">=</span> <span class="blankchip" data-blank="startval">?</span>',
         blank:{key:'startval', options:[{v:0,label:'0'},{v:Math.floor(N/4)||1,label:String(Math.floor(N/4)||1)},{v:Math.floor(N/2),label:String(Math.floor(N/2))}]}});
-    }
-    const loopOpts = [];
-    if (C.has('until')) loopOpts.push({id:'blk_until', html:'<span class="kw">until</span> <span class="var">found</span><span class="kw">:</span>'});
-    if (C.has('counted')) loopOpts.push({id:'blk_counted', html:`<span class="kw">repeat</span> <span class="num">${N}</span> <span class="kw">times:</span>`});
-    if (loopOpts.length){
+    } else if (key === 'loop'){
+      const loopOpts = [];
+      if (C.has('until')) loopOpts.push({id:'blk_until', html:'<span class="kw">until</span> <span class="var">found</span><span class="kw">:</span>'});
+      if (C.has('counted')) loopOpts.push({id:'blk_counted', html:`<span class="kw">repeat</span> <span class="num">${N}</span> <span class="kw">times:</span>`});
       realmSlots.push({id:'loop', label:'HOW DO YOU KEEP GOING', accepts:loopOpts.map(o=>o.id)});
       loopOpts.forEach(o => realmBlocks.push({id:o.id, slot:'loop', html:o.html}));
-    }
-    if (C.has('conditional')){
+    } else if (key === 'conditional'){
       realmSlots.push({id:'check', label:'THE CHECK', accepts:['blk_check']});
       realmBlocks.push({id:'blk_check', slot:'check', html:'<span class="kw">if</span> <span class="var">box</span> <span class="kw">==</span> <span class="var">target</span><span class="kw">:</span> <span class="fn">flag</span>()'});
     }
+    /* 'baseline': nothing to push — the empty program IS the baseline. */
   } else {
-    realmSlots.push({id:'setup', label:'SETUP', accepts:['blk_spin']});
-    realmBlocks.push({id:'blk_spin', slot:'setup', html:'<span class="kw">all_boxes</span>.<span class="fn">spin</span>()'});
-    if (C.has('conditional')){
+    if (key === 'baseline'){
+      realmSlots.push({id:'setup', label:'SETUP', accepts:['blk_spin']});
+      realmBlocks.push({id:'blk_spin', slot:'setup', html:'<span class="kw">all_boxes</span>.<span class="fn">spin</span>()'});
+      realmSlots.push({id:'search', label:'THE SEARCH', accepts:['blk_single']});
+      realmBlocks.push({id:'blk_single', slot:'search', html:'<span class="fn">mark</span>(); <span class="fn">boost</span>()'});
+      realmSlots.push({id:'look', label:'LOOK', accepts:['blk_look']});
+      realmBlocks.push({id:'blk_look', slot:'look', html:'<span class="fn">look</span>()'});
+      /* Trivial infrastructure — auto-place it. There's nothing pedagogically
+         interesting to drag until the oracle/counted stages. */
+      realmFilled['setup'] = 'blk_spin'; realmFilled['search'] = 'blk_single'; realmFilled['look'] = 'blk_look';
+    } else if (key === 'oracle'){
       realmSlots.push({id:'oracle', label:'THE ORACLE', accepts:['blk_oracle']});
       realmBlocks.push({id:'blk_oracle', slot:'oracle', html:'<span class="kw">if</span> <span class="var">box</span> <span class="kw">==</span> <span class="var">key</span><span class="kw">:</span> <span class="fn">mark</span>()'});
-    }
-    realmSlots.push({id:'search', label:'THE SEARCH', accepts: C.has('counted') ? ['blk_repeat'] : ['blk_single']});
-    if (C.has('counted')){
-      const opts = bestKRange(N).map(v => ({v, label:String(v)}));
+    } else if (key === 'counted'){
+      /* Upgrade the SEARCH slot from a single step to a repeated one, fixed at
+         the best count for now — auto-placed, so there's still nothing to
+         drag until the 'variable' stage hands control of the number over. */
+      realmBlocks = realmBlocks.filter(b => b.id !== 'blk_single');
+      delete realmFilled['search'];
+      const slot = realmSlots.find(s => s.id === 'search');
+      slot.accepts = ['blk_repeat'];
       realmBlocks.push({id:'blk_repeat', slot:'search',
         html: `<span class="kw">repeat</span> <span class="blankchip" data-blank="steps">?</span> <span class="kw">times:</span> <span class="fn">${C.has('conditional')?'oracle':'mark'}</span>(); <span class="fn">boost</span>()`,
-        blank: C.has('variable') ? {key:'steps', options:opts} : null,
-        autoBlank: !C.has('variable') ? {key:'steps', value:bestK(N)} : null});
-    } else {
-      realmBlocks.push({id:'blk_single', slot:'search',
-        html: `<span class="fn">${C.has('conditional')?'oracle':'mark'}</span>(); <span class="fn">boost</span>()`});
+        autoBlank:{key:'steps', value:bestK(N)}});
+      realmFilled['search'] = 'blk_repeat'; realmBlankFilled['steps'] = bestK(N);
+    } else if (key === 'variable'){
+      /* Upgrade blk_repeat's fixed count into a real, draggable choice. */
+      const blk = realmBlocks.find(b => b.id === 'blk_repeat');
+      if (blk){
+        delete blk.autoBlank; delete realmBlankFilled['steps'];
+        blk.blank = {key:'steps', options: bestKRange(N).map(v => ({v, label:String(v)}))};
+      }
     }
-    realmSlots.push({id:'look', label:'LOOK', accepts:['blk_look']});
-    realmBlocks.push({id:'blk_look', slot:'look', html:'<span class="fn">look</span>()'});
   }
+}
+
+function renderBadges(){
+  const wrap = $('#rBadges'); if (!wrap) return;
+  wrap.innerHTML = realmStages.map((key, ix) => {
+    const info = STAGE_INFO[realmMode][key];
+    const done = realmPhase !== 'staging' || ix < realmStageIx || (ix === realmStageIx && realmStageTested);
+    const now = realmPhase === 'staging' && ix === realmStageIx && !done;
+    return `<span class="stagebadge${done?' done':''}${now?' now':''}"><span class="ic">${info.badge}</span>${info.short}</span>`;
+  }).join('');
+}
+function logStage(key, text){
+  const info = STAGE_INFO[realmMode][key];
+  realmStageLog.push({icon:info.badge, title:info.short, text});
+  $('#rStageLog').innerHTML = realmStageLog.map(l =>
+    `<div class="stagelog-row"><span class="ic">${l.icon}</span><b>${l.title}:</b> ${l.text}</div>`).join('');
+}
+function pct(p){ return (p*100).toFixed(1) + '%'; }
+function buildInsight(key, m){
+  if (m.mode === 'c'){
+    if (key === 'baseline') return `Found it after ${m.foundAt} box${m.foundAt>1?'es':''} checked, starting from box 0. That's the number to beat.`;
+    if (key === 'variable') return `Same search, but starting from box ${m.start} this time — the count changes with where you start, but the method doesn't.`;
+    if (key === 'loop') return m.usesCounted
+      ? `A counted loop ran on regardless — it still found it at ${m.foundAt}, but wouldn't have known to stop even if the target had been the very last box. Try the until loop and compare.`
+      : `An until loop stops the instant it's found — ${m.foundAt} box${m.foundAt>1?'es':''}, no more, no less.`;
+    if (key === 'conditional') return `Same result, ${m.foundAt} box${m.foundAt>1?'es':''} checked — but now the decision to flag a match is an explicit, reusable rule. Remember it; it's about to become something else entirely.`;
+  } else {
+    if (key === 'baseline') return `One search step: ${pct(m.p)} odds. ${m.hit ? "You got lucky this time — it won't hold up." : 'Often not enough on its own.'}`;
+    if (key === 'oracle') return `Same odds as before — but now the rule mark() uses is explicit and inspectable instead of implicit. That's the oracle.`;
+    if (key === 'counted') return `${m.k} step${m.k>1?'s':''} (the best count for ${m.N} boxes): ${pct(m.p)} odds. Compare that to one lonely step — this is the real mechanism, not doing everything "at once".`;
+    if (key === 'variable'){
+      const best = bestK(m.N);
+      if (m.k === best) return `You picked the mathematically best count (${m.k}) — ${pct(m.p)} odds.`;
+      if (m.k < best) return `${m.k} steps under-amplifies — only ${pct(m.p)}. The best count here is ${best}.`;
+      return `${m.k} steps overshoots the best count (${best}) — odds actually fall back to ${pct(m.p)}. More is not always better.`;
+    }
+  }
+  return '';
+}
+
+function startRealmPlay(){
+  const N = realmN, mode = realmMode;
+  realmBlocks = []; realmSlots = []; realmFilled = {}; realmBlankFilled = {}; armed = null;
+  realmStageLog = []; realmPushedStages = new Set(); realmPhase = 'staging'; realmStageIx = 0; realmStageTested = false;
+  realmStages = mode === 'c' ? classicStageOrder(realmConcepts) : quantumStageOrder(realmConcepts);
+  $('#rpSlug').textContent = 'QUANTUM REALM · ' + (mode === 'q' ? 'QUANTUM MODE' : 'CLASSIC MODE');
+  $('#rpTitle').textContent = mode === 'q' ? `Build a quantum search for ${N} boxes` : `Build a search for ${N} boxes, by hand`;
+  $('#rpLede').textContent = 'Start with the simplest version, test it, then add one piece and test again — drag a block onto the slot it belongs in, or tap to arm it, then tap the slot.';
+  $('#rBadges').style.display = ''; $('#rStageCard').style.display = '';
+  $('#rConvertBtn').style.display = 'none';
+  $('#rFinalBanner').style.display = 'none';
+  $('#rConvertPanel').style.display = 'none'; $('#rConvertPanel').innerHTML = '';
+  $('#rStageLog').innerHTML = '';
+  enterStage(0);
+}
+function enterStage(ix){
+  realmStageIx = ix; realmStageTested = false;
+  const key = realmStages[ix];
+  if (!realmPushedStages.has(key)){ pushStageBlocks(key); realmPushedStages.add(key); }
+  const info = STAGE_INFO[realmMode][key];
+  $('#rStageEyebrow').textContent = `STAGE ${ix+1} OF ${realmStages.length}`;
+  $('#rStageTitle').textContent = info.title;
+  $('#rStageBlurb').textContent = info.blurb(realmConcepts);
+  $('#rInsight').style.display = 'none';
+  $('#rContinue').style.display = 'none';
+  $('#rResult').style.display = 'none';
+  $('#rRun').style.display = ''; $('#rRun').disabled = false;
+  $('#rRun').textContent = ix === realmStages.length - 1 ? '▶ Test the final version' : '▶ Test it';
   renderRealmUI();
+  renderBadges();
+  checkCue();
 }
 
 function blockDisplayHtml(b){
@@ -2286,20 +2829,22 @@ function attachBlankTarget(el, blankKey){
   });
 }
 function renderRealmBlanks(){
-  const pending = realmBlocks.filter(b => realmFilled[b.slot] === b.id && b.blank);
+  /* Only surface blanks that still need a value — once one is filled, the
+     slot above already shows it inline (e.g. "start = 0 ✓"), so repeating
+     it here as an empty leftover box is just clutter. */
+  const pending = realmBlocks.filter(b => realmFilled[b.slot] === b.id && b.blank && realmBlankFilled[b.blank.key] === undefined);
   const brow = $('#rBlanks'), vwrap = $('#rValues');
   brow.innerHTML = ''; vwrap.innerHTML = '';
   if (!pending.length){ brow.style.display='none'; vwrap.style.display='none'; return; }
   brow.style.display = 'flex'; vwrap.style.display = 'flex';
   pending.forEach(b => {
-    const filled = realmBlankFilled[b.blank.key];
     const t = document.createElement('div');
-    t.className = 'slot' + (filled !== undefined ? ' filled' : '');
+    t.className = 'slot';
     t.innerHTML = `<span class="sl-tag">DRAG THE VALUE FOR "${b.blank.key === 'steps' ? 'search steps' : 'start'}"</span>` +
-      `<span class="blankchip${filled!==undefined?' filled':''}">${filled!==undefined?filled:'?'}</span>`;
+      `<span class="blankchip">?</span>`;
     attachBlankTarget(t, b.blank.key);
     brow.appendChild(t);
-    if (filled === undefined) b.blank.options.forEach(o => {
+    b.blank.options.forEach(o => {
       const chip = document.createElement('div');
       chip.className = 'block val'; chip.draggable = true; chip.textContent = o.label;
       attachValueChip(chip, b.blank.key, o.v);
@@ -2317,6 +2862,9 @@ function renderRealmUI(){
     attachBlockDrag(el, b.id);
     bwrap.appendChild(el);
   });
+  /* Nothing left to drag this stage (auto-filled infrastructure, or every
+     block already placed) — an empty palette box just reads as unfinished. */
+  bwrap.style.display = bwrap.children.length ? '' : 'none';
   const swrap = $('#rSlots'); swrap.innerHTML = '';
   realmSlots.forEach(s => {
     const el = document.createElement('div');
@@ -2335,9 +2883,9 @@ function renderRealmUI(){
   checkCue();
 }
 
-$('#rRun').addEventListener('click', runRealm);
-async function runRealm(){
-  $('#rRun').disabled = true;
+/* ── run a single simulation, animate it, and hand back metrics so the
+   staged flow can turn them into an insight line ──────────────────── */
+async function simulateAndRender(){
   const N = realmN, cols = REALM_COLS[REALM_NS.indexOf(N)];
   const wall = $('#rWall'); wall.style.gridTemplateColumns = `repeat(${cols},1fr)`; wall.innerHTML = '';
   const target = Math.floor(Math.random() * N);
@@ -2357,7 +2905,7 @@ async function runRealm(){
     for (let s = 1; s <= k; s++){
       await sleep(220);
       const p = conf(N, s);
-      $('#rOddsN').textContent = (p*100).toFixed(1) + '%';
+      $('#rOddsN').textContent = pct(p);
       $('#rOddsFill').style.width = (p*100) + '%';
       $('#rOddsL').textContent = `after ${s} search step${s>1?'s':''}`;
     }
@@ -2365,11 +2913,13 @@ async function runRealm(){
     const pick = hit ? target : (target + 1 + Math.floor(Math.random() * (N - 1))) % N;
     boxes.forEach((b, i) => { if (i === pick){ b.className = 'bx hit'; b.textContent = hit ? '🔑' : '✕'; } else { b.className = 'bx shut'; b.textContent = ''; } });
     $('#rOut').innerHTML = hit
-      ? `<span class="ok">Found it. ${k} search step${k>1?'s':''}, ${(p*100).toFixed(1)}% odds.</span>`
-      : `<span class="err">Missed — at ${(p*100).toFixed(1)}% that was always possible. The best step count for ${N} boxes is ${bestK(N)}.</span>`;
+      ? `<span class="ok">Found it. ${k} search step${k>1?'s':''}, ${pct(p)} odds.</span>`
+      : `<span class="err">Missed — at ${pct(p)} that was always possible. The best step count for ${N} boxes is ${bestK(N)}.</span>`;
     $('#rVs').style.display = 'grid';
     $('#rVsCK').textContent = 'BY HAND, WORST CASE'; $('#rVsCN').textContent = N; $('#rVsCS').textContent = 'boxes opened';
     $('#rVsQK').textContent = 'YOU, QUANTUM'; $('#rVsQN').textContent = k; $('#rVsQS').textContent = 'search step' + (k>1?'s':'');
+    toast('Run complete.'); checkCue();
+    return {mode:'q', N, k, p, hit};
   } else {
     const start = realmBlankFilled['startval'] !== undefined ? realmBlankFilled['startval'] : 0;
     const usesCounted = realmFilled['loop'] === 'blk_counted';
@@ -2389,9 +2939,122 @@ async function runRealm(){
     $('#rVs').style.display = 'grid';
     $('#rVsCK').textContent = 'YOU, BY HAND'; $('#rVsCN').textContent = foundAt; $('#rVsCS').textContent = 'boxes opened';
     $('#rVsQK').textContent = 'QUANTUM WOULD TAKE'; $('#rVsQN').textContent = best; $('#rVsQS').textContent = 'search step' + (best>1?'s':'');
+    toast('Run complete.'); checkCue();
+    return {mode:'c', N, start, usesCounted, foundAt, best};
   }
-  toast('Run complete.');
-  checkCue();
+}
+function showInsight(text){
+  if (!text) return;
+  $('#rInsightTxt').textContent = text;
+  $('#rInsight').style.display = 'flex';
+}
+
+/* ── the Test it click: run a stage's simulation, log + explain it, then
+   either open the door to the next stage or land on the final banner ── */
+async function handleRunClick(){
+  $('#rRun').disabled = true;
+  const m = await simulateAndRender();
+  if (realmPhase === 'staging'){
+    const key = realmStages[realmStageIx];
+    realmStageTested = true;
+    const line = buildInsight(key, m);
+    logStage(key, line);
+    showInsight(line);
+    renderBadges();
+    if (realmStageIx < realmStages.length - 1){
+      $('#rRun').style.display = 'none';
+      $('#rContinue').style.display = '';
+    } else {
+      realmPhase = 'final';
+      $('#rContinue').style.display = 'none';
+      $('#rRun').disabled = false;
+      $('#rRun').textContent = '↻ Run it again';
+      $('#rFinalBanner').style.display = 'block';
+      $('#rConvertBtn').style.display = '';
+      $('#rConvertBtn').textContent = realmMode === 'q' ? '⇄ Convert to Classic' : '⇄ Convert to Quantum';
+    }
+  } else {
+    $('#rRun').disabled = false;
+  }
+}
+$('#rRun').addEventListener('click', handleRunClick);
+$('#rContinue').addEventListener('click', () => enterStage(realmStageIx + 1));
+$('#rConvertBtn').addEventListener('click', convertRealmMode);
+
+/* ── fill in anything left undragged so a converted program is complete
+   and runnable immediately — used only after Convert, never mid-stage ── */
+function autoFillRemainingBlanks(){
+  realmSlots.forEach(s => {
+    if (!realmFilled[s.id] && s.accepts && s.accepts.length){
+      const blockId = s.accepts[0];
+      const b = realmBlocks.find(x => x.id === blockId);
+      realmFilled[s.id] = blockId;
+      if (b && b.autoBlank) realmBlankFilled[b.autoBlank.key] = b.autoBlank.value;
+    }
+  });
+  realmBlocks.forEach(b => {
+    if (realmFilled[b.slot] === b.id && b.blank && realmBlankFilled[b.blank.key] === undefined){
+      realmBlankFilled[b.blank.key] = b.blank.key === 'steps' ? bestK(realmN) : b.blank.options[0].v;
+    }
+  });
+}
+
+/* ── the Convert button: honestly remap concepts between modes rather than
+   pretending a line-by-line code transform exists — some things carry over
+   1:1, some genuinely have no equivalent, and the panel says which is which ── */
+function convertRealmMode(){
+  const fromMode = realmMode, toMode = fromMode === 'q' ? 'c' : 'q', fromC = realmConcepts;
+  const toC = new Set(), mapping = [];
+  if (fromMode === 'c'){
+    mapping.push({from:'Baseline search', to:'Baseline quantum search', dropped:false});
+    if (fromC.has('variable')) mapping.push({from:'Variable start position',
+      to:'no equivalent — a quantum search explores every position at once, so there is nowhere to "start"', dropped:true});
+    if (fromC.has('until') || fromC.has('counted')){
+      toC.add('counted');
+      mapping.push(fromC.has('counted')
+        ? {from:'Counted loop', to:'Repeated steps (fixed count)', dropped:false}
+        : {from:'Until loop (stop when found)', to:'Repeated steps (fixed count) — a quantum search must commit to a step count before it looks', dropped:false});
+    }
+    if (fromC.has('conditional')){ toC.add('conditional'); mapping.push({from:'Conditional (if box == target)', to:'Oracle (if box == key)', dropped:false}); }
+  } else {
+    mapping.push({from:'Baseline quantum search', to:'Baseline search', dropped:false});
+    if (fromC.has('conditional')){ toC.add('conditional'); mapping.push({from:'Oracle', to:'Conditional', dropped:false}); }
+    if (fromC.has('counted')){ toC.add('counted'); mapping.push({from:'Repeated steps', to:'Counted loop', dropped:false}); }
+    if (fromC.has('variable')) mapping.push({from:'Your chosen step count',
+      to:'no equivalent — a classical loop just runs its fixed count; there is nothing to "amplify" by choosing a bigger number', dropped:true});
+  }
+
+  realmMode = toMode; realmConcepts = toC;
+  realmBlocks = []; realmSlots = []; realmFilled = {}; realmBlankFilled = {}; armed = null;
+  realmStages = toMode === 'c' ? classicStageOrder(toC) : quantumStageOrder(toC);
+  realmPushedStages = new Set();
+  realmStages.forEach(key => { pushStageBlocks(key); realmPushedStages.add(key); });
+  autoFillRemainingBlanks();
+  realmPhase = 'converted'; realmStageIx = realmStages.length - 1; realmStageTested = false;
+
+  const N = realmN;
+  $('#rpSlug').textContent = 'QUANTUM REALM · ' + (toMode === 'q' ? 'QUANTUM MODE' : 'CLASSIC MODE') + ' (converted)';
+  $('#rpTitle').textContent = toMode === 'q' ? `Build a quantum search for ${N} boxes` : `Build a search for ${N} boxes, by hand`;
+  $('#rpLede').textContent = `Converted from ${fromMode === 'q' ? 'quantum' : 'classic'} — here's what carried over, and what didn't.`;
+  $('#rBadges').style.display = 'none'; $('#rStageCard').style.display = 'none';
+  $('#rContinue').style.display = 'none'; $('#rResult').style.display = 'none';
+  $('#rFinalBanner').style.display = 'none'; $('#rInsight').style.display = 'none';
+  $('#rRun').style.display = ''; $('#rRun').disabled = false; $('#rRun').textContent = '▶ Test the converted version';
+  $('#rConvertBtn').textContent = toMode === 'q' ? '⇄ Convert to Classic' : '⇄ Convert to Quantum';
+  renderRealmUI();
+  showConvertPanel(fromMode, toMode, mapping);
+  toast('Converted to ' + (toMode === 'q' ? 'quantum' : 'classic') + '.');
+}
+function showConvertPanel(fromMode, toMode, mapping){
+  const panel = $('#rConvertPanel');
+  const fromLabel = fromMode === 'q' ? 'Quantum' : 'Classic', toLabel = toMode === 'q' ? 'Quantum' : 'Classic';
+  panel.innerHTML = `<div class="cp-head">⇄ CONVERTED: ${fromLabel.toUpperCase()} → ${toLabel.toUpperCase()}</div>` +
+    `<div class="convert-map">${mapping.map(m => `<div class="convert-map-row${m.dropped ? ' dropped' : ''}">` +
+      `<span class="from">${m.from}</span><span class="arrow">→</span><span class="to">${m.to}</span></div>`).join('')}</div>` +
+    `<p style="margin:10px 0 0;font-size:.82rem;color:var(--txt-3);line-height:1.5">${mapping.some(m=>m.dropped)
+      ? 'Some concepts have no equivalent — that is not a bug, it is the real difference between how the two search methods work. Everything else above carried across. You can convert back any time.'
+      : 'Everything carried across cleanly this time. You can convert back any time.'}</p>`;
+  panel.style.display = 'block';
 }
 
 renderActs();
