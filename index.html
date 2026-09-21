@@ -654,6 +654,23 @@ input[type="range"]::-moz-range-thumb{
 @media(max-width:480px){.realmvs{grid-template-columns:1fr}}
 .rv-k{font-family:var(--fm);font-weight:800;font-size:.72rem;letter-spacing:.1em;color:var(--txt-3);margin-bottom:6px}
 .rv-line{color:var(--txt-3);font-size:.8rem;min-height:1.3em}
+/* the "pill window" — one rule, two machines, shown side by side so the
+   player can actually compare the code, not just watch two box-walls and
+   take the difference on faith. Reuses the shared .code component (same
+   token colours as every other code block in the build) so this reads as
+   the same language the player has been writing all night, just handed to
+   a different machine — echoing the Ledger's own "you wrote one rule and
+   handed it to a different machine" beat. */
+.rv-code{margin-top:10px;text-align:left}
+.rv-pill{
+  display:inline-block;font-family:var(--fm);font-weight:800;font-size:.58rem;
+  letter-spacing:.14em;padding:5px 12px;border-radius:100px;margin-bottom:8px;
+  background:rgba(255,255,255,.08);color:var(--txt-2);border:1px solid var(--edge-2);
+}
+.realmvs-side.quantum .rv-pill{background:rgba(69,227,255,.15);color:var(--cyan);border-color:rgba(69,227,255,.4)}
+.rv-code-body{font-size:.74rem;line-height:1.85;padding:12px 13px;margin:0;transition:box-shadow .3s,border-color .3s}
+.rv-code-body.active{border-color:var(--cyan);box-shadow:0 0 0 1px rgba(69,227,255,.3),0 0 20px rgba(69,227,255,.25)}
+.realmvs-side:not(.quantum) .rv-code-body.active{border-color:var(--edge-2);box-shadow:0 0 0 1px rgba(255,255,255,.18),0 0 16px rgba(255,255,255,.12)}
 
 .insight{
   display:flex;gap:10px;align-items:flex-start;margin-top:12px;padding:12px 14px;
@@ -1592,7 +1609,7 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
 
       <div class="slider-row">
         <div class="slider-top"><span class="sl-l">HOW MANY BOXES</span><span class="sl-n" id="rNVal">16</span></div>
-        <input type="range" id="rN" min="0" max="4" step="1" value="2">
+        <input type="range" id="rN" min="0" max="10" step="1" value="2">
       </div>
 
       <button class="btn q" id="rDeploy">Run the comparison →</button>
@@ -1616,13 +1633,21 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
       <div class="realmvs">
         <div class="realmvs-side">
           <div class="rv-k">💻 BY HAND</div>
-          <div class="wall" id="rWallC" style="max-width:260px;margin:10px auto"></div>
+          <div class="wall" id="rWallC" style="margin:10px auto"></div>
           <div class="centre mono rv-line" id="rLineC">Ready.</div>
+          <div class="rv-code">
+            <span class="rv-pill">CLASSICAL.PY</span>
+            <div class="code rv-code-body" id="rCodeC"></div>
+          </div>
         </div>
-        <div class="realmvs-side">
+        <div class="realmvs-side quantum">
           <div class="rv-k">⚛ QUANTUM</div>
-          <div class="wall q" id="rWallQ" style="max-width:260px;margin:10px auto"></div>
+          <div class="wall q" id="rWallQ" style="margin:10px auto"></div>
           <div class="centre mono rv-line" id="rLineQ">Ready.</div>
+          <div class="rv-code">
+            <span class="rv-pill">QUANTUM.PY</span>
+            <div class="code rv-code-body" id="rCodeQ"></div>
+          </div>
         </div>
       </div>
 
@@ -2818,8 +2843,28 @@ $('#pickRealm').addEventListener('click', () => go('sR'));
    with the same quantum search, at that size, and see what it actually
    cost each of them. Same conf()/bestK() maths as everywhere else in the
    build — not a separate or simplified model. */
-const REALM_NS = [4,8,16,32,64], REALM_COLS = [4,4,4,8,8];
+/* Pushed well past the original 4–64 range on request ("go much higher") —
+   up to 4096, an 1024x spread. bestK(N) only grows like roughly sqrt(N), so
+   the classical-vs-quantum gap keeps visibly widening the whole way up
+   (~4x fewer steps at N=4, ~82x fewer at N=4096 — verified in Python
+   alongside the game's own conf()/bestK(), not just eyeballed). Column
+   count and wall width scale to keep a few-thousand-box grid legible
+   rather than a fixed-size box shrinking into a hairline; per-box/per-step
+   delays taper down as N grows so a walk through 4096 boxes stays a few
+   seconds, not minutes — the low end (N<=64, k<=6) keeps the exact timing
+   this always had. */
+const REALM_NS = [4,8,16,32,64,128,256,512,1024,2048,4096];
 let realmN = 16;
+function realmCols(N){ return Math.max(4, Math.round(Math.sqrt(N))); }
+function realmGap(cols){ return cols > 24 ? 2 : cols > 12 ? 3 : 6; }
+function realmWallWidth(cols){ return Math.min(440, Math.max(200, cols * 13)); }
+function classicDelay(N){ return Math.max(2, Math.round(55 * 64 / Math.max(N, 64))); }
+function quantumStepDelay(k){ return Math.max(40, Math.round(240 * 6 / Math.max(k, 6))); }
+function sizeWall(el, cols){
+  el.style.gridTemplateColumns = `repeat(${cols},1fr)`;
+  el.style.maxWidth = realmWallWidth(cols) + 'px';
+  el.style.gap = realmGap(cols) + 'px';
+}
 
 $('#rN').addEventListener('input', () => {
   realmN = REALM_NS[+$('#rN').value];
@@ -2834,12 +2879,36 @@ $('#rNVal').textContent = realmN;
 $('#rHome').addEventListener('click', () => location.reload());
 $('#rHome2').addEventListener('click', () => location.reload());
 $('#rAgain').addEventListener('click', () => go('sR'));
+/* "Pill window" code, one per side — same shared .code token colours as
+   every other code block in the build, and the same repeat()/mark()/boost()
+   vocabulary Room One and the Ledger already taught, so this reads as the
+   same rule handed to a different machine rather than a new mini-language. */
+function classicCodeHtml(N){
+  return `<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> ` +
+    `<span class="fn">range</span>(<span class="num">${N}</span>):<br>` +
+    `<span class="ind"><span class="kw">if</span> <span class="var">box</span>[<span class="var">i</span>] ` +
+    `<span class="kw">==</span> <span class="var">key</span>:<br>` +
+    `<span class="ind"><span class="kw">return</span> <span class="var">i</span></span></span><br>` +
+    `<span class="cm"># worst case: ${N} checks</span>`;
+}
+function quantumCodeHtml(N, k, p){
+  return `<span class="fn">grover</span>(<span class="var">boxes</span>, <span class="var">key</span>)<br>` +
+    `<span class="ind"><span class="kw">repeat</span> <span class="num">${k}</span> <span class="kw">times:</span><br>` +
+    `<span class="ind"><span class="fn">mark</span>(); <span class="fn">boost</span>()</span></span><br>` +
+    `<span class="kw">return</span> <span class="var">best_guess</span><br>` +
+    `<span class="cm"># ${pct(p)} odds, ${k} step${k > 1 ? 's' : ''}</span>`;
+}
 $('#rDeploy').addEventListener('click', () => {
   $('#rpN').textContent = realmN;
   $('#rWallC').innerHTML = ''; $('#rWallQ').innerHTML = '';
   $('#rLineC').textContent = 'Ready.'; $('#rLineQ').textContent = 'Ready.';
   $('#rVs').style.display = 'none'; $('#rInsight').style.display = 'none';
   $('#rRun').disabled = false; $('#rRun').textContent = '▶ Run both';
+  // the code panels show the real rule for this size immediately — the
+  // player can read both versions before ever pressing Run.
+  const k = bestK(realmN), p = conf(realmN, k);
+  $('#rCodeC').innerHTML = classicCodeHtml(realmN);
+  $('#rCodeQ').innerHTML = quantumCodeHtml(realmN, k, p);
   go('sRP');
 });
 
@@ -2849,49 +2918,71 @@ function pct(p){ return (p*100).toFixed(1) + '%'; }
    build uses everywhere else ("BY HAND, WORST CASE" on every other vs-tile):
    the "prize" always sits in the very last box, so the animation always
    shows the full N-box scan the worst-case number actually describes,
-   rather than a random trial that might get lucky and undersell it. */
+   rather than a random trial that might get lucky and undersell it.
+   Ticks are capped at 120 regardless of N (revealing several boxes per
+   tick once N is big enough) so a 4096-box wall still finishes in a few
+   watchable seconds instead of minutes, or several thousand chained
+   setTimeouts each getting clamped to the browser's own minimum delay. */
 async function runClassicWall(N, cols){
-  const wall = $('#rWallC'); wall.style.gridTemplateColumns = `repeat(${cols},1fr)`; wall.innerHTML = '';
+  const wall = $('#rWallC'); sizeWall(wall, cols); wall.innerHTML = '';
+  const codeEl = $('#rCodeC'); codeEl.classList.add('active');
+  // built off-DOM in one fragment, then attached in a single append — at
+  // N up to 4096 this avoids thousands of one-at-a-time inserts into an
+  // already-live grid, each of which would otherwise nudge a reflow.
+  const frag = document.createDocumentFragment();
   const boxes = [];
   for (let i = 0; i < N; i++){
     const b = document.createElement('div');
     b.className = 'bx'; b.textContent = ''; b.style.setProperty('--i', i);
-    wall.appendChild(b); boxes.push(b);
+    frag.appendChild(b); boxes.push(b);
   }
-  for (let i = 0; i < N; i++){
-    $('#rLineC').textContent = `checking box ${i+1} of ${N}…`;
-    if (i === N - 1){ boxes[i].className = 'bx hit'; boxes[i].textContent = '🔑'; }
-    else { boxes[i].className = 'bx shut'; boxes[i].textContent = ''; }
+  wall.appendChild(frag);
+  const perTick = Math.max(1, Math.ceil(N / 120));
+  let revealed = 0;
+  while (revealed < N){
+    const next = Math.min(N, revealed + perTick);
+    for (let i = revealed; i < next; i++){
+      if (i === N - 1){ boxes[i].className = 'bx hit'; boxes[i].textContent = '🔑'; }
+      else { boxes[i].className = 'bx shut'; boxes[i].textContent = ''; }
+    }
+    revealed = next;
+    $('#rLineC').textContent = `checking box ${revealed} of ${N}…`;
     await sleep(55);
   }
+  codeEl.classList.remove('active');
   sfx.hit();
   $('#rLineC').textContent = `found it — ${N} of ${N} checked.`;
 }
 async function runQuantumWall(N, cols, k, p){
-  const wall = $('#rWallQ'); wall.style.gridTemplateColumns = `repeat(${cols},1fr)`; wall.innerHTML = '';
+  const wall = $('#rWallQ'); sizeWall(wall, cols); wall.innerHTML = '';
+  const codeEl = $('#rCodeQ'); codeEl.classList.add('active');
+  const frag = document.createDocumentFragment();
   const boxes = [];
   for (let i = 0; i < N; i++){
     const b = document.createElement('div');
     b.className = 'bx spin'; b.textContent = '?'; b.style.setProperty('--i', i);
-    wall.appendChild(b); boxes.push(b);
+    frag.appendChild(b); boxes.push(b);
   }
+  wall.appendChild(frag);
   $('#rLineQ').textContent = 'spinning into superposition…';
   await sleep(450);
+  const stepDelay = quantumStepDelay(k);
   for (let s = 1; s <= k; s++){
     $('#rLineQ').textContent = `search step ${s} of ${k}…`;
-    await sleep(240);
+    await sleep(stepDelay);
   }
   boxes.forEach((b, i) => {
     if (i === N - 1){ b.className = 'bx hit'; b.textContent = '🔑'; }
     else { b.className = 'bx shut'; b.textContent = ''; }
   });
+  codeEl.classList.remove('active');
   sfx.hit();
   $('#rLineQ').textContent = `found it — ${k} search step${k>1?'s':''}, ${pct(p)} odds.`;
 }
 async function runRealmComparison(){
   $('#rRun').disabled = true;
   sfx.run();
-  const N = realmN, cols = REALM_COLS[REALM_NS.indexOf(N)];
+  const N = realmN, cols = realmCols(N);
   const k = bestK(N), p = conf(N, k);
   $('#rVs').style.display = 'none'; $('#rInsight').style.display = 'none';
   await Promise.all([ runClassicWall(N, cols), runQuantumWall(N, cols, k, p) ]);

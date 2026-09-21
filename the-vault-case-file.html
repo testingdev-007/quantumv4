@@ -262,6 +262,8 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
 
 
 <div class="texture"></div>
+<body>
+
 <div class="wrap">
 
 <nav class="rail" id="rail">
@@ -333,11 +335,15 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
 
   <h3>Nobody can be hard-locked out by the clock</h3>
   <p>If the six minutes run out, Okonjo buys ninety seconds with a line of dialogue — and if that
-  also runs out, Vale buys a further thirty as a last, smaller favour. Two rescues, each spent once,
-  so a learner essentially never sees the clock go negative; the clock never actually ends the
-  session even if both are used. A tool for absolute beginners who describe themselves as
-  anxious about technology cannot have a failure state that ends the activity. The tension is
-  motivational, never punitive.</p>
+  also runs out, Vale buys a further thirty as a named, on-screen favour. This is now a hard
+  guarantee, not a two-strike allowance: if a learner needs <i>more</i> rescuing than that (an early
+  build genuinely let this happen, and a tester reached negative time by Act 2–3 — unacceptable for a
+  first-time coder), the clock keeps rescuing indefinitely — a rotating pool of small, randomised,
+  in-fiction excuses ("the guards just clocked on for a coffee break," "a pigeon set off a motion
+  sensor two floors up," and more) each buy a further 20–39 seconds, never repeating twice in a row.
+  The clock is structurally incapable of going negative on any playthrough. A tool for absolute
+  beginners who describe themselves as anxious about technology cannot have a failure state that ends
+  the activity. The tension is motivational, never punitive.</p>
 
   <h3>Every job ends by naming the career it feeds into</h3>
   <p>After each task, a "job complete" screen names the construct just used and a specific bank tech
@@ -372,13 +378,17 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
   </div>
   <h3>The mechanics</h3>
   <p>The clock is 360 seconds and only starts once "Touch the door" is pressed. Every action costs
-  time: opening a box by hand costs 4s, a search step costs 8s, a wrong cipher guess costs 8s, a
-  missed room attempt costs 20s, each ledger account read costs roughly 1s. Every deduction now also
-  pulses the clock and pops a small floating "&minus;Ns" tag, so the cost actually registers.
-  If time would go negative, <b>Okonjo buys ninety seconds once</b>, with a toast — and if it would go
-  negative <i>again</i>, <b>Vale buys a further thirty seconds</b>, once, with a toast of her own. Only
-  after both are spent can the clock go negative, and even then the debrief stays light — "Out — by
-  the skin of your teeth." instead of naming time to spare.</p>
+  time: opening a box by hand costs 4s, a search step costs 8s, a missed room attempt costs 20s, each
+  ledger account read costs roughly 1s. Trying different shift numbers on the first door — and the
+  until-loop door right after it — costs nothing at all; both are deliberately free to experiment
+  with. Every deduction pulses the clock and pops a small floating "&minus;Ns" tag, so the cost
+  actually registers. If time would go negative, <b>Okonjo buys ninety seconds once</b>, with a
+  toast — and if it would go negative <i>again</i>, <b>Vale buys a further thirty seconds</b>, once.
+  If a learner needs still more rescuing than that, an open-ended pool of randomised, non-repeating
+  in-fiction excuses each buy a further 20–39 seconds, indefinitely — the clock cannot go negative on
+  <i>any</i> playthrough, however slowly someone works. The debrief stays light for a clean run ("Out,
+  with [time] to spare.") versus a rescued one ("Out — by the skin of your teeth."), and names how
+  many close calls happened.</p>
   <div class="warn-box">
     <div class="lab">⏱ Timing reality check</div>
     <p>Six minutes is a narrative device, not a session-length promise. A facilitated run — reading
@@ -410,12 +420,16 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
       <span class="ico">◈ FILE 1-A</span><span class="txt">Answer key — the decoder</span><span class="chev">▸</span>
     </div>
     <div class="declass-body">
-      <p><b>Name the box</b> — <code>shift</code> / <code>shift_amount</code> = correct (runs, and
-      reads well). <code>x</code> / <code>thing</code> = accepted, but flagged weak: "it runs, but in
-      a month nobody reading <code>x</code> knows what x <i>is</i>."</p>
-      <p><b>Put a number in it</b> — options are 3, 5, 7, 11, 19. <b>Only 7 is correct</b> — the
-      secret word is <code>VAULT</code> shifted by 7 to give <code>CHBSA</code>. Any other number
-      decodes to gibberish and costs 8 seconds.</p>
+      <p><b>Name the box</b> — <code>shift</code> / <code>shift_amount</code> = correct (solid green).
+      <code>x</code> / <code>thing</code> = accepted, with a tip — a dashed green border and a 💡
+      mark, not amber (amber was dropped; testers read it as a rejection when the actual message is
+      "this works, here's a style tip"): "it runs, but in a month nobody reading <code>x</code> knows
+      what x <i>is</i>."</p>
+      <p><b>Put a number in it</b> — options are 3, 5, 7, 11, 19, explicitly framed as free guesses.
+      <b>Only 7 is correct</b> — the secret word is <code>VAULT</code> shifted by 7 to give
+      <code>CHBSA</code>. Any other number decodes to gibberish, and costs nothing — the per-guess
+      time cost was removed to match the until-loop door right after it, which never charged per
+      guess either.</p>
     </div>
   </div>
 
@@ -513,6 +527,25 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
       N=4, not a game-balance choice. This periodic overshoot is explored properly at scale in the
       next task.</p>
     </div>
+  </div>
+
+  <div class="note flash">
+    <div class="lab">⚡ Flash-forward — "You just ran Grover's algorithm"</div>
+    <p>Right after this win, a full-screen "flash-forward" names the mechanism outright. Its wording
+    was substantially simplified in a later revision, after feedback that the original was too dense
+    for both children and adult learners with zero tech background — the facts didn't change, only
+    the language: <i>"Spin, mark, boost, look. What you just did has a real name: Grover's algorithm,
+    worked out by a scientist called Lov Grover in 1996<span class="cite" data-ref="8">8</span>. It's
+    a genuine way to search through a big pile of unsorted things — and it beats checking one at a
+    time."</i> One concrete before/after number replaces the earlier "quadratically faster" phrasing —
+    <i>"Check a million things one at a time: a million steps. Hand the same search to a quantum
+    computer: about a thousand steps"</i> — then it closes on a single concrete stakes example (banks
+    already exploring this exact idea for one suspicious transaction out of millions — tying directly
+    into the Ledger task next) rather than a list of three, tying back to the same bank research-team
+    claim below<span class="cite" data-ref="15">15</span>. Same overlay mechanics as the four
+    flashbacks (typewriter reveal, tap to finish, a progress dial, a back button) but on a cool
+    cyan/violet theme with its own sound cue and a confetti burst, so it reads as a bigger, more
+    electric beat than the calm sepia-toned flashbacks.</p>
   </div>
 
   <div class="note">
@@ -622,11 +655,37 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
         <tr><th>Slot</th><th>Correct</th><th>Why the traps are traps</th></tr>
         <tr><td><code>op1</code></td><td class="ok"><code>&gt;</code></td><td><code>&lt;</code> finds small movements, not large. <code>==</code> matches only exactly £10,000.</td></tr>
         <tr><td><code>lim</code></td><td class="ok"><code>10000</code></td><td><code>100</code> flags everything; <code>1000000</code> flags nothing.</td></tr>
-        <tr><td><code>op2</code></td><td class="ok"><code>!=</code></td><td><code>=</code> <b>assigns</b> a value — it can't sit inside a test at all. The single most common real-world beginner bug in conditional logic.</td></tr>
+        <tr><td><code>op2</code></td><td class="ok"><code>!=</code></td><td><code>=</code> is the <b>label maker</b> — it would overwrite <code>country</code> instead of asking a question, and can't sit inside a test at all. The single most common real-world beginner bug in conditional logic.</td></tr>
         <tr><td><code>ctry</code></td><td class="ok"><code>"UK"</code></td><td><code>UK</code> unquoted is a reference to a <i>variable</i> called UK, which was never created. <code>"10000"</code> answers the wrong question in text form.</td></tr>
       </table></div>
     </div>
   </div>
+
+  <div class="note">
+    <div class="lab">◆ The <code>=</code> / <code>==</code> / <code>!=</code> picker, redesigned</div>
+    <p>An earlier version only explained this via a one-line legend plus a beat that fired after a
+    right or wrong guess — feedback was that it wasn't landing, and part of the problem was the
+    picker's own layout: a single row labelled "COMPARISONS" had the assignment operator <code>=</code>
+    sitting in the middle of it, undermining the very distinction being taught. The picker is now built
+    around the distinction itself: a plain-language line sits above both groups —
+    <i>"<code>=</code> is a label maker — it sticks a value onto something and changes it.
+    <code>==</code> and <code>!=</code> don't change anything at all; they just ask a yes-or-no
+    question. Only a question belongs in an <code>if</code>."</i> — followed by two visually separate
+    groups: <b>ASKS A QUESTION</b> (<code>&gt;</code> <code>&lt;</code> <code>==</code> <code>!=</code>,
+    "true or false — nothing changes") and <b>SETS A VALUE</b> (<code>=</code> alone, its own accent
+    colour, "not a question — changes what's stored"). The same wording now appears in three places a
+    learner meets it — this picker, the pre-Ledger flashback, and the in-puzzle beat — rather than
+    three different explanations of the same thing.</p>
+  </div>
+
+  <div class="vs" style="margin-bottom:18px">
+    <div class="vs-side classic"><div class="k">Classical scan</div><div class="n">≤64</div><div class="s">accounts read, one at a time</div></div>
+    <div class="vs-mid">VS</div>
+    <div class="vs-side quantum"><div class="k">Quantum scan</div><div class="n">6</div><div class="s">search steps · 99.7% certain</div></div>
+  </div>
+  <p style="font-size:.9rem;color:var(--txt-3);margin-top:-10px">The quantum scan now shows that
+  99.7% climbing live, step by step, on the same odds-meter component Room One already taught the
+  learner to read — not all 64 boxes glowing at once with no explanation.</p>
 
   <h3>The oracle, made literal</h3>
   <p>The build's own line does real technical work, not just narrative flourish: <i>"You did not
@@ -637,24 +696,70 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
   instead of a True/False return<span class="cite" data-ref="6">6</span>. This isn't a simplification
   for beginners; it's the literally correct relationship.</p>
 
-  <div class="vs">
-    <div class="vs-side classic"><div class="k">Classical scan</div><div class="n">≤64</div><div class="s">accounts read, one at a time</div></div>
-    <div class="vs-mid">VS</div>
-    <div class="vs-side quantum"><div class="k">Quantum scan</div><div class="n">6</div><div class="s">search steps · 99.7% certain</div></div>
+  <div class="declass" data-key="t4b">
+    <div class="declass-bar" onclick="toggleDeclass(this)">
+      <span class="ico">◈ FILE 4-B</span><span class="txt">Task 4b — an actual period-finding mechanic</span><span class="chev">▸</span>
+    </div>
+    <div class="declass-body">
+      <p>Flagging the account used to be the end of Task 4. It no longer is: pressing "Flagged. Now
+      unmask the account →" moves to a new scene (<code>s4b</code>) where the learner is told the
+      flagged account's real reference is masked behind a number, <code>N = 91</code>, and cracks it
+      themselves rather than being told about it afterward — Shor's algorithm, not narrated this time
+      but actually run, at a scale small enough to do by hand.</p>
+      <p><b>The mechanic:</b> the learner repeatedly presses "Try the next power of 3," each press
+      computing <code>3^x mod 91</code> and appending it to a visible chip sequence. The true
+      sequence — verified independently before this was built — is <b>3, 9, 27, 81, 61, 1</b>: six
+      presses, 3 seconds each, until the remainder loops back to 1. That loop-length (6) is the
+      <b>period</b>. The activity halves it (3), compares <code>3³−1</code> and <code>3³+1</code>
+      against 91 — <code>gcd(3³−1,91)=13</code>, <code>gcd(3³+1,91)=7</code> — and the two hidden
+      factors fall out: <b>91 = 7 × 13</b>, revealed with a decrypted routing code. No player choice
+      or failure state, deliberately — like Mark+Boost in Room One, one new idea introduced guided,
+      not a puzzle with wrong answers.</p>
+      <p>A genuine, correct worked example (a=3, N=91=7×13, r=6), chosen and verified before any of
+      this was built precisely because it's classroom-tractable by hand while still being real
+      arithmetic. The build is explicit about the scaling gap, in the beat that fires once the pattern
+      is found: <i>"By hand, you multiplied this out step by step; a real bank reference number is
+      hundreds of digits longer, and 'step by step' stops being an option long before you get
+      there."</i></p>
+    </div>
+  </div>
+
+  <div class="note flash">
+    <div class="lab">⚡ Flash-forward — "You just found a period. That is Shor's algorithm."</div>
+    <p>Once Task 4b is complete, a second flash-forward fires right before the closing screen — this
+    is where the Grover-≠-Shor distinction is made explicitly, on screen, by name. Unlike the first
+    draft of this flash-forward (written before the period-finding mechanic existed), it now ties
+    directly to what the learner just did: <i>"Worth being precise here: the shift cipher on that
+    first door was brute force, not quantum — you just tried every shift until one made a word. And
+    Grover's algorithm, the search you ran twice tonight, does not break encryption either; at best it
+    roughly halves the effective strength of a key."</i> It then names what the learner just did by
+    hand — hunting for where <code>3^x mod 91</code> looped back to 1, then splitting that loop-length
+    in half to reveal 91 = 7 × 13 — as <b>the actual method behind Shor's algorithm</b>, published by
+    Peter Shor in 1994<span class="cite" data-ref="17">17</span>: <i>"You did it by hand because 91 is
+    tiny. A real encryption key is a number hundreds of digits long… A large enough quantum computer
+    would not do anything different to what you just did; it would just find that same repeating
+    pattern almost instantly, for a number that size."</i> It closes on the same harvest-now-decrypt-later
+    / post-quantum-migration framing as the sourced note below — a second, more detailed pass at the
+    same warning, not a replacement for it.</p>
   </div>
 
   <div class="warn-box">
-    <div class="lab">⚠ Important — read before anyone technical asks</div>
-    <p><b>Grover's algorithm and "harvest now, decrypt later" are not the same threat</b> — the
-    build correctly teaches Grover, but blurs this for narrative pace. Grover gives a <i>quadratic</i>
-    speedup against brute-force search — practically, symmetric keys (like AES) just need roughly
-    double the length to stay safe. The far bigger threat behind harvest-now-decrypt-later is a
-    <b>different</b> algorithm, <b>Shor's algorithm</b>, which gives an <i>exponential</i> speedup at
-    factoring — the hard problem today's public-key cryptography (RSA, ECC) relies on. Shor's
-    algorithm is not taught anywhere in this build. If asked "is this Shor's algorithm?" — no, this
-    teaches Grover; the reason organisations are migrating cryptography right now is mostly about
-    Shor, but the underlying warning is correct regardless of which algorithm eventually does the
-    breaking.</p>
+    <div class="lab">⚠ Read before anyone technical asks</div>
+    <p><b>Grover's algorithm and "harvest now, decrypt later" are still not the same threat</b>, even
+    now that both are named — and one of them actually run — on screen. Grover gives a
+    <i>quadratic</i> speedup against brute-force search — practically, symmetric keys (like AES) just
+    need roughly double the length to stay safe, a known, manageable mitigation; the flash-forward now
+    states this precisely ("at best it roughly halves the effective strength of a key") rather than
+    leaving it implied. The far bigger threat behind harvest-now-decrypt-later is <b>Shor's
+    algorithm</b>, which gives an <i>exponential</i> speedup at factoring — the hard problem today's
+    public-key cryptography (RSA, ECC) relies on. If asked "is this Shor's algorithm?" — yes, in the
+    sense that matters: the learner performed real period-finding arithmetic by hand, on a genuine
+    worked example (a=3, N=91=7×13, r=6), which is precisely the classical arithmetic step Shor's
+    algorithm accelerates. What the build does <i>not</i> claim is that a quantum computer was
+    involved, or that this scales to a real key — it's explicit about both, and the direct search
+    puzzles throughout the rest of the build (Rooms One–Three, the Ledger's scan) remain Grover's
+    algorithm, unchanged. The underlying warning is correct regardless of which algorithm eventually
+    does the breaking, and is now demonstrated as well as named.</p>
   </div>
 
   <h3>"Save now, decrypt later" — sourced</h3>
@@ -688,7 +793,9 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
   <div class="warn-box">
     <div class="lab">⚠ The UK quantum statistic — read this before anyone asks</div>
     <p>On screen: <i>"About 3,000 people work in quantum in the UK… aiming for 100,000-plus jobs…
-    Source: UK Quantum Skills Taskforce / NQCC."</i> There's a real discrepancy worth knowing:</p>
+    Source: National Quantum Computing Centre (NQCC)."</i> (The citation used to read "UK Quantum
+    Skills Taskforce / NQCC" — narrowed to NQCC alone because, as below, the Taskforce's own report
+    doesn't actually support this pairing of numbers.) There's a real discrepancy worth knowing:</p>
     <p>The exact <b>"~3,000 now / 100,000+ target"</b> pairing traces to a March 2026 blog post by
     the NQCC's Director<span class="cite" data-ref="12">12</span> — legitimate and attributable, but
     a blog post with no sourcing given for either number. The more rigorously sourced <b>UK Quantum
@@ -720,108 +827,100 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
   <div class="eyebrow">07 · Optional module</div>
   <h2 class="title">The Quantum Realm — the sandbox</h2>
   <p class="subtitle">Not part of the story. Reachable from the opening card (§01) or the Big Picture
-  screen (§06). No clock, no narrative — a construction kit for practising the same real search
-  algorithm on the learner's own terms.</p>
+  screen (§06). No clock, no narrative — a head-to-head comparison for practising the same real
+  search algorithm on the learner's own terms, at any scale from four boxes up to four thousand and
+  ninety-six.</p>
 
   <h3>What it is, and why it exists</h3>
   <p>Every task in the main story is a fixed, single worked example — a deliberate scaffold (§00,
   worked-example effect), and scaffolds are meant to come off. The Realm is the un-scaffolded
-  version: the learner sets the problem size, picks classical or quantum, chooses <i>which</i> of the
-  four constructs to practise, and assembles the whole program out of draggable blocks before running
-  it. This is a shift from a fixed worked example to <b>learner-controlled, variable practice</b> —
-  deliberately varying what's combined and how, rather than repeating one fixed sequence, is one of
-  the better-evidenced ways to build a skill that transfers beyond the exact example it was learned
+  version: the learner sets the problem size and watches the same by-hand search and the same quantum
+  search the story already taught run side by side, at whatever scale they choose, with both
+  versions' actual code shown for direct comparison. This is <b>learner-controlled, variable
+  practice</b> — rerunning an already-learned concept at a self-chosen scale, one of the
+  better-evidenced ways to build a skill that transfers beyond the exact example it was learned
   on<span class="cite" data-ref="16">16</span>.</p>
+
+  <div class="note">
+    <div class="lab">◆ Third time's the landing</div>
+    <p>Two earlier approaches — a build-it-yourself sandbox with staged construct introduction and a
+    bidirectional Convert feature, then a full-screen circuit-canvas rebuild of that same drag-and-drop
+    premise — were both tried and both explicitly rejected: the underlying interaction (assembling a
+    program yourself, however presented) was the wrong fit for a closing activity, not the visuals
+    around it. The version below removed the building entirely rather than reworking it again, and
+    landed as intended — unreserved positive feedback, with two further extensions requested and
+    delivered (the code panels and the extended size range, both below).</p>
+  </div>
 
   <div class="declass" data-key="realm">
     <div class="declass-bar" onclick="toggleDeclass(this)">
-      <span class="ico">◈ FILE R-A</span><span class="txt">The setup screen</span><span class="chev">▸</span>
+      <span class="ico">◈ FILE R-A</span><span class="txt">The setup and comparison screens</span><span class="chev">▸</span>
     </div>
     <div class="declass-body">
-      <p><b>How many boxes</b> — a slider snapped to 4/8/16/32/64, the same clean multiples as the
-      story's own rooms.</p>
-      <p><b>Classic or quantum</b> — a segmented toggle. Choosing Quantum disables "until loop"
-      specifically, with an on-screen reason: a quantum search has to commit to a step count before
-      it looks, so there's nothing left to keep re-testing. Not an arbitrary restriction — Grover's
-      algorithm genuinely requires the iteration count fixed in advance.</p>
-      <p><b>Which constructs to practise</b> — up to four tick-boxes, gated sensibly by mode. Ticking
-      more than one no longer means dragging them all in at once — it means the build below
-      introduces them one at a time, testing each addition before the next. Unticking one entirely
-      removes that piece of the program and the engine substitutes a sensible default — not cosmetic
-      filtering.</p>
+      <p><b>One control: how many boxes</b> — a slider with eleven stops (4, 8, 16, 32, 64, 128, 256,
+      512, 1024, 2048, 4096), a 1,024× spread from smallest to largest. No mode toggle, nothing to
+      tick — both classical and quantum run automatically at whatever size is picked. "Run the
+      comparison" goes straight to the comparison screen with both sides' code already visible, before
+      either side has run.</p>
+      <p><b>Two columns, 💻 BY HAND and ⚛ QUANTUM</b> — each a wall of boxes sized to N, a live
+      one-line status ("checking box 40 of 64…", "search step 3 of 6…"), and — new since the
+      strip-back — a rounded "pill" code panel labelled <code>CLASSICAL.PY</code> /
+      <code>QUANTUM.PY</code> underneath, reusing the exact shared code token-colouring every other
+      code block in the build uses.</p>
+      <p><b>The code is generated from the real N and the real <code>bestK(N)</code></b> and appears
+      the moment the size is deployed — readable before "Run both" is ever pressed. The classical
+      panel is a plain <code>for</code>/<code>if</code>/<code>return</code> scan; the quantum panel
+      reuses the exact vocabulary the build already taught — <code>mark()</code>, <code>boost()</code>,
+      <code>repeat N times:</code> — so it reads as the same rule handed to a different machine,
+      echoing the Ledger's own "you wrote one rule and handed it to a different machine" beat, now
+      made literal in side-by-side code. Each panel glows while its own wall animates and stops when
+      that side finishes.</p>
+      <p><b>"Run both" runs concurrently</b>, not sequentially. The classical wall always plays out its
+      full worst case (key in the last box checked) while the quantum side runs its <code>bestK(N)</code>
+      steps — so at every size, quantum visibly finishes first and the classical wall is still
+      working, reinforcing the gap rather than just stating it. Once both finish, a result tile and a
+      live insight line appear — e.g. at 64 boxes: <i>"by hand that's up to 64 checks; the same search
+      only needs 6 quantum steps (about 99.7% odds of the very first grab landing on it) — roughly
+      10.7× fewer."</i></p>
     </div>
   </div>
 
-  <div class="declass" data-key="realm-build">
+  <div class="declass" data-key="realm-scale">
     <div class="declass-bar" onclick="toggleDeclass(this)">
-      <span class="ico">◈ FILE R-B</span><span class="txt">The build — staged, not one-shot</span><span class="chev">▸</span>
+      <span class="ico">◈ FILE R-B</span><span class="txt">The gap widens with size — verified, not eyeballed</span><span class="chev">▸</span>
     </div>
     <div class="declass-body">
-      <p>This is the part that changed most, and for a specific reason: the original Realm handed the
-      learner every slot and block for their chosen constructs at once, with only a terse label on
-      each ("SETUP", "THE CHECK") and no explanation of what any of it meant or why it was in that
-      order — functionally a drag-and-drop exercise with the <i>teaching</i> stripped out. It now
-      works in stages instead.</p>
-      <p><b>It opens on the simplest possible version.</b> Classic mode starts on the bare baseline —
-      check box 0, then 1, then 2, stopping the instant the target is found — with nothing yet to
-      drag. Quantum mode starts on one lonely search step: spin every box, nudge once, measure. A
-      stage card above the build explains in plain language what the <i>current</i> construct is and
-      why it's being added, before the learner touches anything.</p>
-      <p><b>"Test it" runs only the version that exists right now</b>, and returns an insight line
-      computed live from that specific result — e.g. <i>"3 steps (the best count for 16 boxes): 96.1%
-      odds. Compare that to one lonely step."</i> These are generated from the same
-      <code>conf(N,k)</code>/<code>bestK(N)</code> functions as the main story (§04), never scripted
-      text.</p>
-      <p><b>Only after a stage is tested does "Continue" unlock the next one.</b> A row of badges
-      fills in as each stage completes, and a running log beneath the build keeps one line per stage
-      — a build history, not just a changing current state.</p>
-      <p><b>Drag-and-drop is kept, and pointed at what matters.</b> Trivial, non-optional plumbing
-      (spinning the boxes, looking at the result) is placed automatically — dragging is reserved for
-      the stages that represent a real choice: the variable, the loop type, the conditional, the
-      oracle, and the step count. Real HTML5 drag-and-drop on a mouse; on touch, tapping a block
-      "arms" it and tapping the slot places it — full parity, not a degraded fallback.</p>
-      <p><b>Worth knowing:</b> tick both loop constructs in Classic mode and the loop stage's blurb
-      says to try the until loop first and test it, then swap in the counted loop and test again — a
-      live, self-directed rerun of Task 1's own until-vs-counted contrast. A counted loop genuinely
-      completes its full stated count even after finding the target — a behavioural difference the
-      learner watches happen.</p>
-      <p><b>In quantum mode</b>, "repeated steps" and "your own step count" are separate stages on
-      purpose — repeated steps first fixes the loop at the mathematically best count (still nothing
-      to drag, since the point is that repetition itself is the mechanism); only if "your own step
-      count" was also ticked does that number become a real, draggable choice, so the learner can try
-      fewer than best, more than best, or exactly best, and watch the odds rise and then fall on
-      overshoot.</p>
-    </div>
-  </div>
-
-  <div class="declass" data-key="realm-convert">
-    <div class="declass-bar" onclick="toggleDeclass(this)">
-      <span class="ico">◈ FILE R-C</span><span class="txt">Convert — the closing move</span><span class="chev">▸</span>
-    </div>
-    <div class="declass-body">
-      <p>Once the full build is tested, a Convert button appears in the code window. It rebuilds the
-      same problem in the <i>other</i> paradigm — classical to quantum, or back again, any number of
-      times — and prints a line-by-line map of what happened to every concept the learner built. Some
-      things carry across directly (a conditional and an oracle are the same rule, just phrased
-      differently — <code>if box == target</code> becomes <code>if box == key</code>). Others have no
-      equivalent, and the panel gives the actual reason rather than a generic "not supported": a
-      chosen starting position has nothing to become in quantum mode, because a quantum search
-      inspects every position at once and has nowhere to "start"; a chosen step count has nothing to
-      become in classical mode, because a classical loop just runs its fixed count. This is
-      deliberately not a code transform dressed up as insight — the honest answer to "can you convert
-      this" is "mostly, and here's exactly where it breaks down and why," the same standard of
-      honesty the rest of the build holds itself to (§00). It's also, deliberately, the last thing the
-      sandbox does.</p>
+      <p>Because <code>bestK(N)</code> grows only roughly like √N, the ratio between the two sides
+      keeps climbing across the whole range — confirmed independently in Python alongside the game's
+      own <code>conf()</code>/<code>bestK()</code> functions, not just assumed:</p>
+      <div class="tablewrap"><table>
+        <tr><th>N</th><th>Best k</th><th>Odds</th><th>Classical ÷ quantum</th></tr>
+        <tr><td>4</td><td>1</td><td>100.0%</td><td>~4.0×</td></tr>
+        <tr><td>8</td><td>2</td><td>94.5%</td><td>~4.0×</td></tr>
+        <tr><td>16</td><td>3</td><td>96.1%</td><td>~5.3×</td></tr>
+        <tr><td>32</td><td>4</td><td>99.9%</td><td>~8.0×</td></tr>
+        <tr><td>64</td><td>6</td><td>99.7%</td><td>~10.7×</td></tr>
+        <tr><td>128</td><td>8</td><td>99.6%</td><td>~16.0×</td></tr>
+        <tr><td>256</td><td>12</td><td>99.99%</td><td>~21.3×</td></tr>
+        <tr><td>512</td><td>17</td><td>99.9%</td><td>~30.1×</td></tr>
+        <tr><td>1024</td><td>25</td><td>99.95%</td><td>~41.0×</td></tr>
+        <tr><td>2048</td><td>35</td><td>100.0%</td><td>~58.5×</td></tr>
+        <tr><td>4096</td><td>50</td><td>99.99%</td><td>~81.9×</td></tr>
+      </table></div>
+      <p><b>A facilitator-only note on the top of the range:</b> at 4096 boxes the classical wall's
+      animation takes several seconds longer than at smaller sizes — per-box/per-step delay tapers
+      down as N and k grow (batched in ticks, capped regardless of N) so even the largest size stays a
+      watchable few seconds, while the original 4–64 range plays at exactly the timing it always has.
+      Pushing the slider all the way is still comfortably inside a single demonstration.</p>
     </div>
   </div>
 
   <div class="warn-box">
     <div class="lab">◆ Delivery note</div>
-    <p>No clock, no wrong path out — well suited to "free practice" time at the end of a session, or
-    as its own five-to-ten minute standalone activity for someone who's already done the full heist;
-    building up a version and converting it back and forth is a natural closing beat. Not a test; the
-    only failure mode at any stage is an incomplete program, which just leaves "Test it" disabled with
-    the still-empty slot visible — the same honest-locked-gate pattern as the rest of the build (§00, §09).</p>
+    <p>No clock, no build, no wrong path out — well suited to "free practice" time at the end of a
+    session, or as its own two-minute standalone activity for someone who's already done the full
+    heist; picking a few sizes and watching the gap widen is a natural, low-effort closing beat. One
+    slider, one button — nothing to get stuck on and nothing that can be built incorrectly.</p>
   </div>
 </section>
 
@@ -853,17 +952,14 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
   the fastest way to show it.</div></div>
   <div class="dnote"><span class="ic">🟰</span><div class="b"><b>The second is <code>=</code> vs
   <code>==</code>/<code>!=</code></b> in the Ledger. It's the most common real beginner bug in the
-  world — say so, it's reassuring.</div></div>
+  world — say so, it's reassuring. The picker is now built around the distinction itself (two
+  visually separate groups — "asks a question" vs. "sets a value," §05), so pointing at the two
+  groups directly tends to land faster than re-explaining it verbally.</div></div>
   <div class="dnote"><span class="ic">♿</span><div class="b"><b>Accessibility.</b> Every interaction
-  in the main heist (Acts 0–5) is click/tap — no drag-and-drop — and the build respects
+  in the entire build — the main heist (Acts 0–5) and the Quantum Realm sandbox (§07) alike — is
+  click/tap based; there is no drag-and-drop anywhere in the current build. The build respects
   <code>prefers-reduced-motion</code>. No external fonts or scripts, so it runs on locked-down
-  machines. The one exception is the Quantum Realm sandbox (§07), which uses drag-and-drop by design
-  — but ships a full tap-to-arm, tap-to-place fallback with no functional difference from a real
-  drag. Nothing in the build requires a drag gesture to complete.</div></div>
-  <div class="dnote"><span class="ic">📍</span><div class="b"><b>The "next step is below" pill.</b> A
-  floating prompt now appears automatically whenever the button a learner needs is scrolled out of
-  view, and taps through to it. If someone says they're "stuck" on a finished-looking screen, check
-  for the pill before assuming anything is broken.</div></div>
+  machines.</div></div>
   <div class="dnote"><span class="ic">🎬</span><div class="b"><b>Going deeper.</b> The four
   flashbacks each carry a worked code example independent of the heist — the fastest way to show
   someone the idea in isolation if the story framing isn't landing for them personally. The Quantum
@@ -892,6 +988,7 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
     <li id="ref14">Hulleman, C. S., &amp; Harackiewicz, J. M. (2009). "Promoting Interest and Performance in High School Science Classes." <i>Science</i>, 326(5958), 1410–1412.<span class="caveat">Utility-value intervention: connecting material to personal/future relevance measurably improved both interest and grades, not just self-reported enjoyment.</span></li>
     <li id="ref15">Rehman, M. U. "Top Global Banks Exploring Quantum Technologies in 2026." <i>The Quantum Insider</i>, March 27, 2026. <a href="https://thequantuminsider.com/2026/03/27/15-plus-global-banks-probing-the-wonderful-world-of-quantum-technologies/" target="_blank" rel="noopener">thequantuminsider.com</a> — HSBC, Barclays, Goldman Sachs and JPMorgan Chase quantum research programmes independently verified in this source as of publication.</li>
     <li id="ref16">Schmidt, R. A., &amp; Bjork, R. A. (1992). "New Conceptualizations of Practice: Common Principles in Three Paradigms Suggest New Concepts for Training." <i>Psychological Science</i>, 3(4), 207–217.<span class="caveat">Varied, learner-directed practice produces better retention and transfer than fixed repeated drills, even though it often feels harder during the practice itself.</span></li>
+    <li id="ref17">Shor, P. W. (1994). "Algorithms for quantum computation: discrete logarithms and factoring." <i>Proceedings 35th Annual Symposium on Foundations of Computer Science</i>, 124–134. See also Shor, P. W. (1997), "Polynomial-Time Algorithms for Prime Factorization and Discrete Logarithms on a Quantum Computer," <i>SIAM J. Computing</i>, 26(5), 1484–1509.<span class="caveat">Cited for Task 4b's interactive period-finding mechanic and the Shor's-algorithm flash-forward (§05) — the build runs a genuine worked example (a=3, N=91=7×13, r=6) by hand, at a scale small enough for a learner to complete; it never claims to run this algorithm on quantum hardware or at real-key scale.</span></li>
   </ol>
 </section>
 
@@ -982,6 +1079,8 @@ const GLOSS = [
   {t:'Oracle', q:true, d:'In Grover’s algorithm, a subroutine that flips the phase of any state satisfying a condition. Formally the same kind of object as a classical boolean if-test.'},
   {t:'Grover’s algorithm', q:true, d:'A quantum search algorithm giving a quadratic speedup for unstructured search — roughly √N oracle calls instead of a classical N (worst case) or N/2 (average). Proven optimal.'},
   {t:'Quadratic speedup', q:true, d:'Time scales with the square root of the classical time — not a fixed multiple, and not exponential.'},
+  {t:'Shor’s algorithm', q:true, d:'A different quantum algorithm (Peter Shor, 1994) giving an exponential speedup at factoring large numbers and discrete logarithms — the hard problems RSA, Diffie-Hellman and ECC rely on. As of Task 4b (§05), a real worked example of its period-finding method (a=3, N=91=7×13, r=6) is run by hand on screen, not just narrated, before a flash-forward names it directly. Not the same algorithm as Grover’s — the direct search puzzles (Rooms One–Three, the Ledger’s scan) remain Grover’s algorithm, unchanged.'},
+  {t:'Period-finding', q:true, d:'The classical arithmetic step at the heart of Shor’s algorithm: repeatedly computing powers of a chosen number modulo N until the remainders repeat, then using the repeat length (the period) to split N into its factors. A quantum computer finds the period almost instantly for numbers too large to do by hand; Task 4b (§05) is this same method, done by hand, at a scale small enough to actually complete.'},
 ];
 const grid = document.getElementById('glossGrid'), empty = document.getElementById('glossEmpty');
 function renderGloss(filter){
