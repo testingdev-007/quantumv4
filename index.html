@@ -391,6 +391,7 @@ h3{font-size:1.05rem;font-weight:700;margin-bottom:7px}
 .opt.str{background:rgba(61,255,168,.15);color:var(--good);border-color:rgba(61,255,168,.42)}
 .opt.op{background:rgba(139,123,255,.15);color:var(--violet);border-color:rgba(139,123,255,.42)}
 .opt.flash{animation:flash 1s ease-in-out infinite}
+.opt.sel{box-shadow:0 0 0 2px #fff inset,0 0 14px rgba(255,255,255,.28)}
 @keyframes flash{0%,100%{box-shadow:0 0 0 0 rgba(61,255,168,0)}50%{box-shadow:0 0 0 3px rgba(61,255,168,.8),0 0 20px rgba(61,255,168,.6)}}
 
 .term{
@@ -399,6 +400,11 @@ h3{font-size:1.05rem;font-weight:700;margin-bottom:7px}
   padding:11px 13px;min-height:3em;color:var(--txt-2);
 }
 .term .err{color:var(--bad)} .term .ok{color:var(--good)} .term .tip{color:var(--gold)}
+
+/* ── the finished-heist celebration banner (s5) ────────────────── */
+.finale{position:relative;display:flex;justify-content:center;margin:4px 0 6px;height:58px}
+.finale-trophy{font-size:2.7rem;filter:drop-shadow(0 0 22px rgba(245,196,81,.55));animation:trophyPop .6s cubic-bezier(.2,1.6,.3,1) both}
+@keyframes trophyPop{from{transform:scale(.4) rotate(-10deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
 
 /* ── beats ──────────────────────────────────────────────────── */
 .beat{
@@ -586,7 +592,7 @@ h3{font-size:1.05rem;font-weight:700;margin-bottom:7px}
 }
 
 
-/* ── opening choice: Quantum Heist vs Quantum Realm ────────────── */
+/* ── opening choice: Quantum Heist vs Quantum Playground ───────── */
 .choicegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:18px}
 .choicecard{
   position:relative;border-radius:20px;padding:26px 20px 22px;text-align:center;overflow:hidden;
@@ -719,7 +725,7 @@ body.realm-visual .atmos::before{
    duration) — .realmstage fades itself in instead, safely, since a fixed
    element's own position is always viewport-relative regardless of a
    transform on itself. ── */
-#sR, #sRP{ animation:none; }
+#sR, #sRV, #sRL, #sRK, #sRC, #sRS, #sRE, #sRQ{ animation:none; }
 .realmstage{
   position:fixed; inset:0; z-index:5; overflow-y:auto; -webkit-overflow-scrolling:touch;
   animation:realmstageIn .5s cubic-bezier(.16,.9,.24,1) both;
@@ -754,6 +760,81 @@ body.realm-visual input[type="range"]::-moz-range-thumb{background:linear-gradie
    too, so nothing in the sandbox still reads as borrowed from the job */
 body.realm-visual .btn.gold{background:linear-gradient(135deg,#1E9FC4,#45E3FF);color:#022029;box-shadow:0 8px 28px rgba(69,227,255,.38)}
 body.realm-visual .btn.ghost{border-color:rgba(69,227,255,.28)}
+
+/* ── QUANTUM PLAYGROUND: card menu + seven mini-labs ───────────────
+   Replaces the old single slider+compare screen with a menu of seven
+   bite-sized activities. Every card below reuses a component already
+   proven elsewhere (the box wall, .code panels, .opt pickers, the
+   .odds meter, chip sequences) rather than inventing new visual
+   language per card, so the whole Playground still reads as one
+   place, not seven different mini-apps bolted together. */
+.pggrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:26px 0 6px}
+.pgcard{
+  position:relative;border-radius:16px;padding:20px 18px;text-align:left;cursor:pointer;
+  border:1px solid var(--edge-2);background:linear-gradient(168deg,var(--glass),rgba(255,255,255,.015));
+  backdrop-filter:blur(8px);transition:transform .25s cubic-bezier(.2,1,.3,1),border-color .25s,box-shadow .25s;
+}
+.pgcard:hover{transform:translateY(-4px);border-color:rgba(69,227,255,.5);box-shadow:0 18px 40px rgba(69,227,255,.18)}
+.pg-icon{font-size:1.9rem;margin-bottom:8px;filter:drop-shadow(0 0 12px rgba(69,227,255,.4))}
+.pg-tag{font-family:var(--fm);font-weight:800;font-size:.58rem;letter-spacing:.16em;color:var(--cyan);margin-bottom:7px}
+.pgcard h3{font-size:1.02rem;margin-bottom:6px;line-height:1.3}
+.pgcard p{color:var(--txt-2);font-size:.83rem;line-height:1.5;margin:0}
+
+/* the small back-link row shown at the top of every card scene */
+.pgback{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.pgback .btn{width:auto;padding:9px 15px;font-size:.72rem}
+
+/* a generic dark text field — the QRNG seed box and the certificate's
+   name field are the only two free-text inputs in the whole build */
+.tf{
+  width:100%;font-family:var(--fm);font-size:.95rem;color:var(--txt);
+  background:rgba(0,0,0,.4);border:1px solid var(--edge-2);border-radius:10px;
+  padding:10px 13px;outline:none;transition:border-color .2s;
+}
+.tf:focus{border-color:var(--cyan)}
+.tf::placeholder{color:var(--txt-3)}
+
+/* number-sequence chips — classical vs quantum randomness, reusing the
+   Shor's-sequence chip's proportions under a construct-neutral name */
+.numrow{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0;min-height:40px}
+.numchip{
+  font-family:var(--fm);font-weight:800;font-size:.82rem;padding:8px 12px;border-radius:9px;
+  animation:chipIn .3s cubic-bezier(.2,1.4,.3,1) both;
+}
+.numchip.classic{color:var(--bad);background:rgba(255,78,100,.12);border:1px solid rgba(255,78,100,.35)}
+.numchip.quantum{color:var(--cyan);background:rgba(69,227,255,.12);border:1px solid var(--cyan-dim)}
+
+/* ── the certificate — printable, heist-gold themed (not the cyan
+   Playground skin), since it's awarded for finishing the story, not
+   the sandbox. #sCert stays a normal (non-realm-visual) scene inside
+   the shared 860px shell, and the print rule below isolates it. ── */
+.certificate{
+  border:2px solid rgba(245,196,81,.5); border-radius:18px; padding:34px 24px;
+  text-align:center; background:linear-gradient(168deg,rgba(245,196,81,.08),rgba(255,255,255,.015));
+  position:relative; margin:18px 0;
+}
+.certificate::before, .certificate::after{
+  content:"✦"; position:absolute; top:14px; color:var(--gold); font-size:1.1rem; opacity:.6;
+}
+.certificate::before{left:16px} .certificate::after{right:16px}
+.cert-k{font-family:var(--fm);font-weight:800;font-size:.64rem;letter-spacing:.24em;color:var(--gold);margin-bottom:14px}
+.cert-name{
+  display:block;width:100%;max-width:420px;margin:8px auto 14px;font-size:1.6rem;font-weight:800;
+  color:#fff;font-family:var(--fd);text-align:center;background:transparent;
+  border:none;border-bottom:1px solid var(--edge-2);padding-bottom:10px;outline:none;
+}
+.cert-name:focus{border-bottom-color:var(--gold)}
+.cert-name::placeholder{color:var(--txt-3);font-weight:400;font-size:1.15rem}
+.cert-body{font-size:.92rem;color:var(--txt-2);line-height:1.6;max-width:480px;margin:0 auto 16px}
+.cert-tiles{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:10px}
+.cert-tiles span{font-family:var(--fm);font-size:.7rem;font-weight:700;color:var(--txt-2);background:rgba(255,255,255,.06);border:1px solid var(--edge-2);border-radius:100px;padding:6px 12px}
+.cert-sign{font-size:.74rem;color:var(--txt-3);margin-top:10px}
+@media print{
+  .topbar, .toast, #valeTab, #valeDrawer { display:none!important }
+  .scene:not(#sCert){ display:none!important }
+  #sCert{ display:block!important; animation:none!important }
+  #sCert .pgback, #certPrintBtn, #certBackBtn { display:none!important }
+}
 
 /* ── misc ───────────────────────────────────────────────────── */
 .note{background:rgba(245,196,81,.08);border:1px solid rgba(245,196,81,.28);border-radius:13px;padding:13px 15px;margin:14px 0;font-size:.92rem;line-height:1.55}
@@ -955,10 +1036,10 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
     <div class="choicecard realm" id="pickRealm">
       <div class="cc-icon">⚛</div>
       <div class="cc-tag">THE SANDBOX · GO STRAIGHT IN</div>
-      <h2>Quantum Realm</h2>
-      <p>Set the box count, pick classic or quantum, choose which constructs to use, then drag real
-      code blocks together and see if you can find the key.</p>
-      <button class="btn q">Enter the realm →</button>
+      <h2>Quantum Playground</h2>
+      <p>Seven quantum mini-labs — search, encryption, true randomness and more — each with a classical
+      machine and a quantum one racing side by side, real code shown for both.</p>
+      <button class="btn q">Enter the playground →</button>
     </div>
   </div>
 </section>
@@ -1529,6 +1610,7 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
 <section class="scene" id="s5">
   <div class="card">
     <div class="slug">05:0? · OUT</div>
+    <div class="finale" id="finaleBurst"><div class="finale-trophy">🏆</div></div>
     <h1 id="outTitle">Out of the building.</h1>
     <p class="lede" id="outLede"></p>
 
@@ -1561,7 +1643,31 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
     <div id="quiz"></div>
     <div class="term" id="quizOut" style="display:none"></div>
 
-    <button class="btn ghost" id="again">↺ Run it again</button>
+    <div class="row">
+      <button class="btn ghost" id="again">↺ Run it again</button>
+      <button class="btn gold" id="getCert">🎓 Get your certificate →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CERT · CERTIFICATE OF COMPLETION ═══════════ -->
+<section class="scene" id="sCert">
+  <div class="card">
+    <div class="pgback"><button class="btn ghost" id="certBackBtn">← Back</button></div>
+    <div class="certificate" id="certificateBlock">
+      <div class="cert-k">THE VAULT · CERTIFICATE OF COMPLETION</div>
+      <input class="cert-name" id="certName" placeholder="Type your name" maxlength="60">
+      <div class="cert-body">completed the Quantum Heist &mdash; cracked a cipher, ran a real quantum search
+      algorithm, and lifted a ledger that put four people away, in one job, under a six-minute clock.</div>
+      <div class="cert-tiles">
+        <span>📦 Variable</span><span>🔁 Until loop</span><span>🔂 Counted loop</span>
+        <span>🔀 Conditional</span><span>⚛ Superposition</span><span>📡 Interference</span>
+      </div>
+      <div class="cert-sign" id="certDate"></div>
+    </div>
+    <button class="btn gold" id="certPrintBtn">🖨 Print / save as PDF</button>
+    <p style="text-align:center;color:var(--txt-3);font-size:.78rem;margin-top:8px">Uses your browser's own
+    print dialog &mdash; choose &ldquo;Save as PDF&rdquo; there if you want a file rather than a printout.</p>
   </div>
 </section>
 
@@ -1588,81 +1694,429 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
       <div class="career"><div class="ck">JOB THREE</div><div class="role"><span class="ic">🤖</span><span class="rt">Automation Engineer</span></div><p>Counted loops, running the batch jobs nobody wants to do by hand.</p></div>
       <div class="career"><div class="ck">JOB FOUR</div><div class="role"><span class="ic">🕵️</span><span class="rt">Risk &amp; Financial Crime Analyst</span></div><p>Conditionals, flagging the one transaction that breaks the rule.</p></div>
     </div>
-    <div class="note c"><b>Want to keep going?</b> The Quantum Realm lets you set your own box count, choose
-    classic or quantum, pick which of these constructs to build with, and drag the real code together yourself.</div>
+    <div class="note c"><b>Want to keep going?</b> The Quantum Playground has seven more mini-labs &mdash;
+    the same head-to-head search up to 4096 boxes, plus encryption, true randomness, and every construct
+    from tonight, each shown classical versus quantum, side by side.</div>
     <div class="row">
       <button class="btn ghost" id="s6again">↺ Run the job again</button>
-      <button class="btn q" id="toRealmFromEnd">⚛ Enter the Quantum Realm →</button>
+      <button class="btn q" id="toRealmFromEnd">⚛ Enter the Quantum Playground →</button>
     </div>
   </div>
 </section>
 
-<!-- ═══════════ R · QUANTUM REALM — CONFIGURE ═══════════ -->
+<!-- ═══════════ R · QUANTUM PLAYGROUND — MENU ═══════════ -->
 <section class="scene" id="sR">
   <div class="realmstage">
-    <div class="realmstage-inner realmstage-inner-narrow">
-      <div class="slug q">QUANTUM REALM</div>
-      <h1>Watch the gap widen.</h1>
-      <p class="lede">Pick a room size. Then watch the same by-hand search you did tonight run side by side
-        with the same quantum search, for that size &mdash; no building required, just the two of them,
-        head to head.</p>
+    <div class="realmstage-inner">
+      <div class="slug q">QUANTUM PLAYGROUND</div>
+      <h1 class="centre">Seven mini-labs. No clock.</h1>
+      <p class="lede centre" style="max-width:640px;margin-left:auto;margin-right:auto">Pick one. Every lab
+        puts a classical machine and a quantum one side by side on the same job, shows you the real code for
+        both, and ties back to a job that actually exists in a bank right now.</p>
 
-      <div class="slider-row">
-        <div class="slider-top"><span class="sl-l">HOW MANY BOXES</span><span class="sl-n" id="rNVal">16</span></div>
-        <input type="range" id="rN" min="0" max="10" step="1" value="2">
+      <div class="pggrid">
+        <div class="pgcard" data-go="sRV">
+          <div class="pg-icon">📦</div>
+          <div class="pg-tag">TEACHES · VARIABLE</div>
+          <h3>One box, or many at once</h3>
+          <p>A classical variable holds one value. A quantum register can hold many &mdash; at the same time.</p>
+        </div>
+        <div class="pgcard" data-go="sRL">
+          <div class="pg-icon">🔁</div>
+          <div class="pg-tag">TEACHES · UNTIL LOOP</div>
+          <h3>Guess until sure &mdash; or commit first</h3>
+          <p>Classical can keep going till it works. Quantum has to commit to a step count before it looks.</p>
+        </div>
+        <div class="pgcard" data-go="sRK">
+          <div class="pg-icon">🔂</div>
+          <div class="pg-tag">TEACHES · COUNTED LOOP</div>
+          <h3>The odds calculator</h3>
+          <p>Drag the size and the step count and watch the real odds rise, peak, and fall again.</p>
+        </div>
+        <div class="pgcard" data-go="sRC">
+          <div class="pg-icon">🔀</div>
+          <div class="pg-tag">TEACHES · CONDITIONAL</div>
+          <h3>Write the rule, any size</h3>
+          <p>Build your own if-rule, then run it against a wall of any size &mdash; by hand and by quantum machine.</p>
+        </div>
+        <div class="pgcard" data-go="sRS">
+          <div class="pg-icon">🔑</div>
+          <div class="pg-tag">EVERYTHING TOGETHER</div>
+          <h3>Watch the gap widen</h3>
+          <p>The same head-to-head search you ran tonight &mdash; from 4 boxes up to 4096.</p>
+        </div>
+        <div class="pgcard" data-go="sRE">
+          <div class="pg-icon">🔐</div>
+          <div class="pg-tag">A REAL-WORLD THREAT</div>
+          <h3>Crack your own cipher</h3>
+          <p>Encrypt a message with a secret key, then race a classical machine against a quantum one to find it.</p>
+        </div>
+        <div class="pgcard" data-go="sRQ">
+          <div class="pg-icon">🎲</div>
+          <div class="pg-tag">NOT COVERED TONIGHT</div>
+          <h3>True randomness</h3>
+          <p>A classical "random" number is a formula in disguise. A quantum one genuinely isn't.</p>
+        </div>
       </div>
 
-      <button class="btn q" id="rDeploy">Run the comparison →</button>
-      <button class="btn ghost" id="rHome" style="margin-top:10px">← Back</button>
+      <button class="btn ghost" id="rHome" style="margin-top:24px">← Back to the start</button>
     </div>
   </div>
 </section>
 
-<!-- ═══════════ RP · QUANTUM REALM — HEAD TO HEAD COMPARISON ═══════════ -->
-<section class="scene" id="sRP">
+<!-- ═══════════ RV · VARIABLE ═══════════ -->
+<section class="scene" id="sRV">
   <div class="realmstage">
     <div class="realmstage-inner realmstage-inner-narrow">
+      <div class="pgback"><button class="btn ghost pgback-btn">← Playground</button></div>
+      <div class="slug q">VARIABLE</div>
+      <h1>One box, or many at once.</h1>
+      <p class="lede">A classical variable holds exactly one value &mdash; reassigning it just overwrites what
+        was there. A quantum register set up in superposition genuinely holds many values together, until you
+        measure it. Pick how many qubits, then load both.</p>
+
+      <div class="slider-row">
+        <div class="slider-top"><span class="sl-l">QUBITS</span><span class="sl-n" id="rvQVal">4</span></div>
+        <input type="range" id="rvQ" min="1" max="10" step="1" value="4">
+      </div>
+      <div class="centre mono rv-line" style="margin-bottom:4px">= <span id="rvCount">16</span> values held at once, in superposition</div>
+
+      <button class="btn q" id="rvRun">▶ Load the variable / register</button>
+
+      <div class="realmvs" id="rvOut" style="display:none">
+        <div class="realmvs-side">
+          <div class="rv-k">💻 CLASSICAL VARIABLE</div>
+          <div class="wall" id="rvWallC" style="margin:10px auto;grid-template-columns:1fr;max-width:90px"></div>
+          <div class="centre mono rv-line" id="rvLineC">Ready.</div>
+          <div class="rv-code"><span class="rv-pill">CLASSICAL.PY</span><div class="code rv-code-body" id="rvCodeC"></div></div>
+        </div>
+        <div class="realmvs-side quantum">
+          <div class="rv-k">⚛ QUANTUM REGISTER</div>
+          <div class="wall q" id="rvWallQ" style="margin:10px auto"></div>
+          <div class="centre mono rv-line" id="rvLineQ">Ready.</div>
+          <div class="rv-code"><span class="rv-pill">QUANTUM.PY</span><div class="code rv-code-body" id="rvCodeQ"></div></div>
+        </div>
+      </div>
+      <div class="insight" id="rvInsight" style="display:none"><span class="ic">💡</span><span id="rvInsightTxt"></span></div>
+
+      <div class="career" id="rvCareer" style="display:none">
+        <div class="ck">REAL BANK TECH ROLE</div>
+        <div class="role"><span class="ic">📈</span><span class="rt">Quantitative Analyst</span></div>
+        <p>A classical risk model updates one market scenario's numbers at a time. Banks exploring quantum
+        computing are looking at holding many scenarios at once for exactly this kind of Monte Carlo-style
+        simulation &mdash; the same idea you just loaded into a register.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ RL · UNTIL LOOP ═══════════ -->
+<section class="scene" id="sRL">
+  <div class="realmstage">
+    <div class="realmstage-inner realmstage-inner-narrow">
+      <div class="pgback"><button class="btn ghost pgback-btn">← Playground</button></div>
+      <div class="slug q">UNTIL LOOP</div>
+      <h1>Guess until sure &mdash; or commit first.</h1>
+      <p class="lede">16 boxes, one key, hidden somewhere new each time. A classical until loop can keep
+        guessing for as long as it takes. A quantum search can't &mdash; it has to commit to a step count
+        <b>before</b> it looks.</p>
+
+      <div class="realmvs">
+        <div class="realmvs-side">
+          <div class="rv-k">💻 UNTIL LOOP</div>
+          <div class="wall" id="rlWallC" style="margin:10px auto"></div>
+          <div class="centre mono rv-line" id="rlLineC">Ready.</div>
+          <button class="btn ghost" id="rlRunC" style="margin-top:10px">▶ Guess until found</button>
+        </div>
+        <div class="realmvs-side quantum">
+          <div class="rv-k">⚛ QUANTUM — COMMIT FIRST</div>
+          <div class="wall q" id="rlWallQ" style="margin:10px auto"></div>
+          <div class="centre mono rv-line" id="rlLineQ">Ready.</div>
+          <div class="slider-row" style="margin:10px 0 2px">
+            <div class="slider-top"><span class="sl-l">STEPS TO COMMIT</span><span class="sl-n" id="rlKVal">4</span></div>
+            <input type="range" id="rlK" min="1" max="8" step="1" value="4">
+          </div>
+          <button class="btn q" id="rlRunQ">🔒 Commit &amp; run</button>
+        </div>
+      </div>
+
+      <div class="vs" id="rlVs" style="display:none">
+        <div class="vs-side classic"><div class="k">THIS RUN</div><div class="n" id="rlVsCN">—</div><div class="s">guesses (worst case: 16)</div></div>
+        <div class="vs-mid">VS</div>
+        <div class="vs-side quantum"><div class="k">COMMITTED</div><div class="n" id="rlVsQN">—</div><div class="s">steps, fixed in advance</div></div>
+      </div>
+      <div class="insight" id="rlInsight" style="display:none"><span class="ic">💡</span><span id="rlInsightTxt"></span></div>
+
+      <div class="career" id="rlCareer" style="display:none">
+        <div class="ck">REAL BANK TECH ROLE</div>
+        <div class="role"><span class="ic">🛠️</span><span class="rt">IT Operations Engineer</span></div>
+        <p>A classical retry-until-it-works loop is exactly how a lot of banking infrastructure recovers from a
+        failed payment or a dropped connection. Quantum programs can't do that yet &mdash; every run is a fixed
+        job, planned and submitted in advance, which is part of why quantum computing today runs on scheduled
+        batches, not on-demand retries.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ RK · COUNTED LOOP ═══════════ -->
+<section class="scene" id="sRK">
+  <div class="realmstage">
+    <div class="realmstage-inner realmstage-inner-narrow">
+      <div class="pgback"><button class="btn ghost pgback-btn">← Playground</button></div>
+      <div class="slug q">COUNTED LOOP</div>
+      <h1>The odds calculator.</h1>
+      <p class="lede">A counted loop says "do it exactly N times." Drag the size and the step count below and
+        watch the real odds &mdash; the same maths running everywhere else in this build &mdash; rise, peak,
+        and fall again if you overshoot.</p>
+
+      <div class="slider-row">
+        <div class="slider-top"><span class="sl-l">BOXES (N)</span><span class="sl-n" id="rkNVal">64</span></div>
+        <input type="range" id="rkN" min="0" max="10" step="1" value="4">
+      </div>
+      <div class="slider-row">
+        <div class="slider-top"><span class="sl-l">SEARCH STEPS (K)</span><span class="sl-n" id="rkKVal">6</span></div>
+        <input type="range" id="rkK" min="1" max="60" step="1" value="6">
+      </div>
+
+      <div class="odds">
+        <div class="odds-top"><span class="odds-n" id="rkPct">99.7%</span><span class="odds-l">odds of finding it</span></div>
+        <div class="odds-rail"><div class="odds-fill" id="rkFill" style="width:99.7%"></div></div>
+      </div>
+
+      <div class="vs">
+        <div class="vs-side classic"><div class="k">CLASSICAL WORST CASE</div><div class="n" id="rkClassical">64</div><div class="s">checks, always</div></div>
+        <div class="vs-mid">VS</div>
+        <div class="vs-side quantum"><div class="k">YOUR STEPS</div><div class="n" id="rkYourK">6</div><div class="s">best k is <span id="rkBest">6</span></div></div>
+      </div>
+      <button class="btn q" id="rkJump" style="margin-top:4px">Jump to best k</button>
+      <div class="insight" id="rkInsight"><span class="ic">💡</span><span id="rkInsightTxt"></span></div>
+
+      <div class="career">
+        <div class="ck">REAL BANK TECH ROLE</div>
+        <div class="role"><span class="ic">🤖</span><span class="rt">Automation Engineer</span></div>
+        <p>Automation Engineers size batch jobs by exactly this kind of count &mdash; how many times to repeat
+        a step. Unlike a classical batch job, doing a quantum search more times than its best count doesn't
+        just waste time &mdash; it can make the result worse.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ RC · CONDITIONAL ═══════════ -->
+<section class="scene" id="sRC">
+  <div class="realmstage">
+    <div class="realmstage-inner">
+      <div class="pgback"><button class="btn ghost pgback-btn">← Playground</button></div>
+      <div class="slug q">CONDITIONAL</div>
+      <h1>Write the rule, any size.</h1>
+      <p class="lede">Build your own if-rule &mdash; the exact shape the Ledger used &mdash; then run it
+        against a wall of any size, by hand and by quantum machine.</p>
+
+      <div class="picker">
+        <div class="pick-grp">
+          <div class="pick-lab">IF AMOUNT …</div>
+          <div class="opts" id="rcOpOpts">
+            <span class="opt op sel" data-v="&gt;">&gt; 10,000</span>
+            <span class="opt op" data-v="&lt;">&lt; 10,000</span>
+            <span class="opt op" data-v="==">== 10,000</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slider-row">
+        <div class="slider-top"><span class="sl-l">ACCOUNTS TO SEARCH</span><span class="sl-n" id="rcNVal">64</span></div>
+        <input type="range" id="rcN" min="0" max="10" step="1" value="4">
+      </div>
+
+      <button class="btn q" id="rcRun">▶ Run the rule</button>
+
+      <div class="realmvs" id="rcOut" style="display:none">
+        <div class="realmvs-side">
+          <div class="rv-k">💻 BY HAND</div>
+          <div class="wall" id="rcWallC" style="margin:10px auto"></div>
+          <div class="centre mono rv-line" id="rcLineC">Ready.</div>
+          <div class="rv-code"><span class="rv-pill">CLASSICAL.PY</span><div class="code rv-code-body" id="rcCodeC"></div></div>
+        </div>
+        <div class="realmvs-side quantum">
+          <div class="rv-k">⚛ QUANTUM</div>
+          <div class="wall q" id="rcWallQ" style="margin:10px auto"></div>
+          <div class="centre mono rv-line" id="rcLineQ">Ready.</div>
+          <div class="rv-code"><span class="rv-pill">QUANTUM.PY</span><div class="code rv-code-body" id="rcCodeQ"></div></div>
+        </div>
+      </div>
+
+      <div class="vs" id="rcVs" style="display:none">
+        <div class="vs-side classic"><div class="k">THIS RUN</div><div class="n" id="rcVsCN">—</div><div class="s">accounts read (worst case: <span id="rcVsCW">—</span>)</div></div>
+        <div class="vs-mid">VS</div>
+        <div class="vs-side quantum"><div class="k">QUANTUM</div><div class="n" id="rcVsQN">—</div><div class="s">search steps</div></div>
+      </div>
+      <div class="insight" id="rcInsight" style="display:none"><span class="ic">💡</span><span id="rcInsightTxt"></span></div>
+
+      <div class="career" id="rcCareer" style="display:none">
+        <div class="ck">REAL BANK TECH ROLE</div>
+        <div class="role"><span class="ic">🕵️</span><span class="rt">Risk &amp; Financial Crime Analyst</span></div>
+        <p>Fraud and anti-money-laundering rules are exactly this shape &mdash; a condition that flags the one
+        record out of thousands that breaks it. You just picked the rule yourself.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ RS · SEARCH — HEAD TO HEAD COMPARISON ═══════════ -->
+<section class="scene" id="sRS">
+  <div class="realmstage">
+    <div class="realmstage-inner">
+      <div class="pgback"><button class="btn ghost pgback-btn">← Playground</button></div>
       <div class="realmstage-head">
-        <div class="slug q" id="rpSlug">QUANTUM REALM · <span id="rpN">16</span> BOXES</div>
-        <h2>Same search. Same size. Two machines.</h2>
-        <p class="lede">One box is the key. Watch a classical computer check them one at a time, and a
-          quantum computer amplify its way to the answer &mdash; then look at what it actually cost each
-          of them.</p>
+        <div class="slug q" id="rsSlug">SEARCH · <span id="rsNTag">16</span> BOXES</div>
+        <h2>Watch the gap widen.</h2>
+        <p class="lede">One box is the key, hidden somewhere new every run. Watch a classical computer check
+          them one at a time, and a quantum computer amplify its way to the answer &mdash; then look at what
+          it actually cost each of them.</p>
+      </div>
+
+      <div class="slider-row" style="max-width:520px;margin-left:auto;margin-right:auto">
+        <div class="slider-top"><span class="sl-l">HOW MANY BOXES</span><span class="sl-n" id="rsNVal">16</span></div>
+        <input type="range" id="rsN" min="0" max="10" step="1" value="2">
       </div>
 
       <div class="realmvs">
         <div class="realmvs-side">
           <div class="rv-k">💻 BY HAND</div>
-          <div class="wall" id="rWallC" style="margin:10px auto"></div>
-          <div class="centre mono rv-line" id="rLineC">Ready.</div>
-          <div class="rv-code">
-            <span class="rv-pill">CLASSICAL.PY</span>
-            <div class="code rv-code-body" id="rCodeC"></div>
-          </div>
+          <div class="wall" id="rsWallC" style="margin:10px auto"></div>
+          <div class="centre mono rv-line" id="rsLineC">Ready.</div>
+          <div class="rv-code"><span class="rv-pill">CLASSICAL.PY</span><div class="code rv-code-body" id="rsCodeC"></div></div>
         </div>
         <div class="realmvs-side quantum">
           <div class="rv-k">⚛ QUANTUM</div>
-          <div class="wall q" id="rWallQ" style="margin:10px auto"></div>
-          <div class="centre mono rv-line" id="rLineQ">Ready.</div>
-          <div class="rv-code">
-            <span class="rv-pill">QUANTUM.PY</span>
-            <div class="code rv-code-body" id="rCodeQ"></div>
-          </div>
+          <div class="wall q" id="rsWallQ" style="margin:10px auto"></div>
+          <div class="centre mono rv-line" id="rsLineQ">Ready.</div>
+          <div class="rv-code"><span class="rv-pill">QUANTUM.PY</span><div class="code rv-code-body" id="rsCodeQ"></div></div>
         </div>
       </div>
 
-      <button class="btn q" id="rRun">▶ Run both</button>
+      <button class="btn q" id="rsRun">▶ Run both</button>
 
-      <div class="vs" id="rVs" style="display:none">
-        <div class="vs-side classic"><div class="k">BY HAND, WORST CASE</div><div class="n" id="rVsCN">—</div><div class="s">boxes opened</div></div>
+      <div class="vs" id="rsVs" style="display:none">
+        <div class="vs-side classic"><div class="k">THIS RUN</div><div class="n" id="rsVsCN">—</div><div class="s">boxes opened (worst case: <span id="rsVsCW">—</span>)</div></div>
         <div class="vs-mid">VS</div>
-        <div class="vs-side quantum"><div class="k">QUANTUM</div><div class="n" id="rVsQN">—</div><div class="s">search steps</div></div>
+        <div class="vs-side quantum"><div class="k">QUANTUM</div><div class="n" id="rsVsQN">—</div><div class="s">search steps, always</div></div>
       </div>
-      <div class="insight" id="rInsight" style="display:none"><span class="ic">💡</span><span id="rInsightTxt"></span></div>
+      <div class="insight" id="rsInsight" style="display:none"><span class="ic">💡</span><span id="rsInsightTxt"></span></div>
 
-      <div class="row realmstage-foot">
-        <button class="btn ghost" id="rAgain">↺ Try a different size</button>
-        <button class="btn gold" id="rHome2">🏠 Back to the start</button>
+      <div class="career" id="rsCareer" style="display:none">
+        <div class="ck">REAL BANK TECH ROLE</div>
+        <div class="role"><span class="ic">⚛</span><span class="rt">Quantum Computing Researcher</span></div>
+        <p>Several major banks now run dedicated quantum computing research teams exploring search problems
+        exactly like this one, at far larger scale.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ RE · ENCRYPTION / DECRYPTION ═══════════ -->
+<section class="scene" id="sRE">
+  <div class="realmstage">
+    <div class="realmstage-inner">
+      <div class="pgback"><button class="btn ghost pgback-btn">← Playground</button></div>
+      <div class="slug q">ENCRYPTION</div>
+      <h1>Crack your own cipher.</h1>
+      <p class="lede">A message is encrypted with a secret key &mdash; one key out of a keyspace you choose.
+        Race a classical machine trying keys one at a time against a quantum machine amplifying its way there.</p>
+
+      <div class="term centre" id="reCipher" style="font-size:1rem">🔐 INTERCEPTED: <b>"QGSNU VKPX ZLHOT"</b></div>
+
+      <div class="slider-row">
+        <div class="slider-top"><span class="sl-l">POSSIBLE KEYS</span><span class="sl-n" id="reNVal">64</span></div>
+        <input type="range" id="reN" min="0" max="10" step="1" value="4">
+      </div>
+
+      <div class="realmvs">
+        <div class="realmvs-side">
+          <div class="rv-k">💻 BRUTE FORCE</div>
+          <div class="wall" id="reWallC" style="margin:10px auto"></div>
+          <div class="centre mono rv-line" id="reLineC">Ready.</div>
+          <div class="rv-code"><span class="rv-pill">CLASSICAL.PY</span><div class="code rv-code-body" id="reCodeC"></div></div>
+        </div>
+        <div class="realmvs-side quantum">
+          <div class="rv-k">⚛ QUANTUM</div>
+          <div class="wall q" id="reWallQ" style="margin:10px auto"></div>
+          <div class="centre mono rv-line" id="reLineQ">Ready.</div>
+          <div class="rv-code"><span class="rv-pill">QUANTUM.PY</span><div class="code rv-code-body" id="reCodeQ"></div></div>
+        </div>
+      </div>
+
+      <button class="btn q" id="reRun">▶ Run both</button>
+
+      <div class="vs" id="reVs" style="display:none">
+        <div class="vs-side classic"><div class="k">THIS RUN</div><div class="n" id="reVsCN">—</div><div class="s">keys tried (worst case: <span id="reVsCW">—</span>)</div></div>
+        <div class="vs-mid">VS</div>
+        <div class="vs-side quantum"><div class="k">QUANTUM</div><div class="n" id="reVsQN">—</div><div class="s">search steps</div></div>
+      </div>
+      <div class="insight" id="reInsight" style="display:none"><span class="ic">💡</span><span id="reInsightTxt"></span></div>
+
+      <div class="note c" id="reNote" style="display:none"><b>This is exactly the threat behind "harvest now,
+        decrypt later."</b> Grover's algorithm only gives a <i>quadratic</i> speedup against brute-forcing a
+        key like this one &mdash; which is why symmetric keys just need to get longer to stay safe. It's
+        Shor's algorithm &mdash; the one you used to crack the ledger's account number &mdash; that actually
+        breaks the public-key encryption protecting things like card details online, which is why NIST
+        finalised new post-quantum standards in August 2024.</div>
+
+      <div class="career" id="reCareer" style="display:none">
+        <div class="ck">REAL BANK TECH ROLE</div>
+        <div class="role"><span class="ic">🔐</span><span class="rt">Security / Cryptography Engineer</span></div>
+        <p>Deciding how long a key needs to be, and against which kind of attack, is a real and current part
+        of this job &mdash; it's exactly why NIST's new post-quantum standards exist.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ RQ · TRUE RANDOMNESS (QRNG) ═══════════ -->
+<section class="scene" id="sRQ">
+  <div class="realmstage">
+    <div class="realmstage-inner realmstage-inner-narrow">
+      <div class="pgback"><button class="btn ghost pgback-btn">← Playground</button></div>
+      <div class="slug q">NOT COVERED TONIGHT</div>
+      <h1>True randomness.</h1>
+      <p class="lede">A classical "random" number is a formula in disguise &mdash; give it the same seed
+        twice and you get the same numbers twice. A quantum one genuinely isn't &mdash; there's no seed and
+        nothing to replay.</p>
+
+      <div class="pick-lab" style="margin-top:10px">CLASSICAL — TYPE A SEED</div>
+      <input class="tf" id="rqSeed" type="text" inputmode="numeric" placeholder="e.g. 42" style="max-width:200px;display:inline-block">
+      <div><button class="btn ghost" id="rqRunC" style="margin-top:10px">▶ Generate 12 numbers</button></div>
+      <div class="numrow" id="rqRowC"></div>
+      <div class="mono rv-line" id="rqLineC" style="min-height:1.3em"></div>
+
+      <div class="pick-lab" style="margin-top:18px">QUANTUM — MEASURE A QUBIT, 12 TIMES</div>
+      <button class="btn q" id="rqRunQ">▶ Generate 12 numbers</button>
+      <div class="numrow" id="rqRowQ"></div>
+      <div class="mono rv-line" id="rqLineQ" style="min-height:1.3em"></div>
+
+      <div class="insight" id="rqInsight" style="display:none"><span class="ic">💡</span><span id="rqInsightTxt"></span></div>
+
+      <div class="note" id="rqNote" style="display:none"><b>What this card can't actually show you.</b> The
+        numbers above all still come from your browser, not a real quantum chip &mdash; this page can't reach
+        one. What a real quantum random number generator exploits is that <b>measuring a qubit in
+        superposition is fundamentally unpredictable</b>, not just hard to predict &mdash; no seed, no
+        formula, nothing to replay, even in principle.</div>
+
+      <div class="note c" id="rqSource" style="display:none"><b>Banks are already using this.</b> In March
+        2025, JPMorgan Chase, Quantinuum, and three US national labs demonstrated certified random number
+        generation on a real quantum computer. HSBC has trialled quantum randomness technology alongside
+        post-quantum cryptography for securing digital assets. Quantum random number generators are also
+        sold specifically for banks' cryptographic key generation and Monte Carlo-style financial simulations.
+        <span style="display:block;margin-top:6px;font-size:.82rem;color:var(--txt-3)">Source: The Quantum
+        Insider (March 2026); ID Quantique</span></div>
+
+      <div class="career" id="rqCareer" style="display:none">
+        <div class="ck">REAL BANK TECH ROLE</div>
+        <div class="role"><span class="ic">🔐</span><span class="rt">Security / Cryptography Engineer</span></div>
+        <p>Every encryption key across a bank starts from a random number generator. If that generator is
+        even slightly predictable, every key built from it is weaker than it looks &mdash; which is exactly
+        why genuinely unpredictable randomness matters.</p>
       </div>
     </div>
   </div>
@@ -1750,9 +2204,13 @@ function burstConfetti(el, n){
 }
 
 /* ── scenes ─────────────────────────────────────── */
-const ORDER = ['s00','s0','s1','s1b','s1c','s1r','s2','s2b','s2c','s2r','s3','s3r','s4','s4b','s4r','s5','s6','sR','sRP'];
-const ACT_OF = {s00:0,s0:0,s1:1,s1b:1,s1c:1,s1r:1,s2:2,s2b:2,s2c:2,s2r:2,s3:3,s3r:3,s4:4,s4b:4,s4r:4,s5:5,s6:5,sR:0,sRP:0};
-const REALM_SCENES = ['s00','sR','sRP'];
+const ORDER = ['s00','s0','s1','s1b','s1c','s1r','s2','s2b','s2c','s2r','s3','s3r','s4','s4b','s4r','s5','sCert','s6',
+  'sR','sRV','sRL','sRK','sRC','sRS','sRE','sRQ'];
+const ACT_OF = {s00:0,s0:0,s1:1,s1b:1,s1c:1,s1r:1,s2:2,s2b:2,s2c:2,s2r:2,s3:3,s3r:3,s4:4,s4b:4,s4r:4,s5:5,sCert:5,s6:5,
+  sR:0,sRV:0,sRL:0,sRK:0,sRC:0,sRS:0,sRE:0,sRQ:0};
+/* every Quantum Playground scene — the menu plus all seven mini-labs — gets
+   the same untimed, Vale-free treatment the old single sR/sRP pair had. */
+const REALM_SCENES = ['s00','sR','sRV','sRL','sRK','sRC','sRS','sRE','sRQ'];
 let at = 's00';
 function renderActs(){
   const hud = $('.topbar');
@@ -1779,7 +2237,7 @@ function go(id){
   // Realm-only visual mode: the sandbox gets its own "quantum lab" skin
   // (see the "REALM VISUAL REDESIGN" CSS block) — scoped to sR/sRP only,
   // never s00, so the shared opening-choice screen keeps the heist look.
-  document.body.classList.toggle('realm-visual', id === 'sR' || id === 'sRP');
+  document.body.classList.toggle('realm-visual', REALM_SCENES.includes(id) && id !== 's00');
   // Every in-story message beeps, same as a Vale drawer message — the
   // `.comm` dialogue cards (Okonjo/Vale story beats) are messages too,
   // they just render inline instead of in the side drawer. A scene can
@@ -2785,6 +3243,11 @@ function finish(){
     actual arithmetic, on this device.` + rescueLine;
   $('#vsCF').textContent = handTotal;
   $('#vsQF').textContent = stepTotal;
+  // a bigger moment than the old quiet debrief — this is a genuine
+  // achievement for a first-time coder, so it gets a real celebration:
+  // a louder confetti burst than anywhere else in the build, the finale
+  // chime, and a certificate the learner can actually keep.
+  setTimeout(() => { sfx.finale(); burstConfetti($('#finaleBurst'), 26); }, 200);
 
   const box = $('#quiz'); box.innerHTML = ''; $('#quizOut').style.display = 'none';
   QUIZ_ROUND.forEach((item, qi) => {
@@ -2830,6 +3293,16 @@ $('#again').addEventListener('click', () => location.reload());
 $('#s6again').addEventListener('click', () => location.reload());
 $('#toRealmFromEnd').addEventListener('click', () => go('sR'));
 
+/* ═══════════════ CERTIFICATE ═══════════════ */
+$('#getCert').addEventListener('click', () => {
+  $('#certDate').textContent = 'Verified against a real quantum search algorithm, run live · ' +
+    new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+  go('sCert');
+  setTimeout(() => $('#certName').focus(), 200);
+});
+$('#certBackBtn').addEventListener('click', () => go('s5'));
+$('#certPrintBtn').addEventListener('click', () => window.print());
+
 /* ═══════════════ OPENING CHOICE ═══════════════ */
 $('#pickHeist').addEventListener('click', () => go('s0'));
 $('#pickRealm').addEventListener('click', () => go('sR'));
@@ -2854,35 +3327,29 @@ $('#pickRealm').addEventListener('click', () => go('sR'));
    seconds, not minutes — the low end (N<=64, k<=6) keeps the exact timing
    this always had. */
 const REALM_NS = [4,8,16,32,64,128,256,512,1024,2048,4096];
-let realmN = 16;
 function realmCols(N){ return Math.max(4, Math.round(Math.sqrt(N))); }
 function realmGap(cols){ return cols > 24 ? 2 : cols > 12 ? 3 : 6; }
 function realmWallWidth(cols){ return Math.min(440, Math.max(200, cols * 13)); }
-function classicDelay(N){ return Math.max(2, Math.round(55 * 64 / Math.max(N, 64))); }
 function quantumStepDelay(k){ return Math.max(40, Math.round(240 * 6 / Math.max(k, 6))); }
 function sizeWall(el, cols){
   el.style.gridTemplateColumns = `repeat(${cols},1fr)`;
   el.style.maxWidth = realmWallWidth(cols) + 'px';
   el.style.gap = realmGap(cols) + 'px';
 }
-
-$('#rN').addEventListener('input', () => {
-  realmN = REALM_NS[+$('#rN').value];
-  $('#rNVal').textContent = realmN;
-});
-$('#rNVal').textContent = realmN;
+function pct(p){ return (p*100).toFixed(1) + '%'; }
+function randInt(n){ return Math.floor(Math.random() * n); }
 
 /* Both "back to the start" buttons go all the way back to s00 — which should
    mean a genuinely fresh start, not a scene change with last run's clock,
    rescue count and room state still sitting in memory. A full reload is the
-   same reset "#again"/"#s6again" already use, just reachable from the Realm. */
+   same reset "#again"/"#s6again" already use, just reachable from the
+   Playground menu. */
 $('#rHome').addEventListener('click', () => location.reload());
-$('#rHome2').addEventListener('click', () => location.reload());
-$('#rAgain').addEventListener('click', () => go('sR'));
+
 /* "Pill window" code, one per side — same shared .code token colours as
    every other code block in the build, and the same repeat()/mark()/boost()
-   vocabulary Room One and the Ledger already taught, so this reads as the
-   same rule handed to a different machine rather than a new mini-language. */
+   vocabulary Room One and the Ledger already taught, so every card reads as
+   the same rule handed to a different machine rather than a new language. */
 function classicCodeHtml(N){
   return `<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> ` +
     `<span class="fn">range</span>(<span class="num">${N}</span>):<br>` +
@@ -2898,64 +3365,49 @@ function quantumCodeHtml(N, k, p){
     `<span class="kw">return</span> <span class="var">best_guess</span><br>` +
     `<span class="cm"># ${pct(p)} odds, ${k} step${k > 1 ? 's' : ''}</span>`;
 }
-$('#rDeploy').addEventListener('click', () => {
-  $('#rpN').textContent = realmN;
-  $('#rWallC').innerHTML = ''; $('#rWallQ').innerHTML = '';
-  $('#rLineC').textContent = 'Ready.'; $('#rLineQ').textContent = 'Ready.';
-  $('#rVs').style.display = 'none'; $('#rInsight').style.display = 'none';
-  $('#rRun').disabled = false; $('#rRun').textContent = '▶ Run both';
-  // the code panels show the real rule for this size immediately — the
-  // player can read both versions before ever pressing Run.
-  const k = bestK(realmN), p = conf(realmN, k);
-  $('#rCodeC').innerHTML = classicCodeHtml(realmN);
-  $('#rCodeQ').innerHTML = quantumCodeHtml(realmN, k, p);
-  go('sRP');
-});
 
-function pct(p){ return (p*100).toFixed(1) + '%'; }
-
-/* Worst case, always, for the classical wall — the same honest framing this
-   build uses everywhere else ("BY HAND, WORST CASE" on every other vs-tile):
-   the "prize" always sits in the very last box, so the animation always
-   shows the full N-box scan the worst-case number actually describes,
-   rather than a random trial that might get lucky and undersell it.
-   Ticks are capped at 120 regardless of N (revealing several boxes per
-   tick once N is big enough) so a 4096-box wall still finishes in a few
-   watchable seconds instead of minutes, or several thousand chained
-   setTimeouts each getting clamped to the browser's own minimum delay. */
-async function runClassicWall(N, cols){
-  const wall = $('#rWallC'); sizeWall(wall, cols); wall.innerHTML = '';
-  const codeEl = $('#rCodeC'); codeEl.classList.add('active');
-  // built off-DOM in one fragment, then attached in a single append — at
-  // N up to 4096 this avoids thousands of one-at-a-time inserts into an
-  // already-live grid, each of which would otherwise nudge a reflow.
+/* ── shared classical/quantum wall runner — Search, Conditional and
+   Encryption all reduce to "find the one right item in a wall of N",
+   just relabelled, so they share this pair of functions rather than each
+   reimplementing the animation. The target box is randomised on every
+   run (never fixed at the last position); the classical side stops the
+   moment it reaches the target, so "this run" genuinely varies while the
+   labelled "worst case" stays the honest, position-independent N it
+   always was — which sets up the real insight: quantum's step count
+   never varies with luck, classical's does. Ticks are still capped at
+   ~120 regardless of N, so a big wall stays watchable, not a wait. */
+async function runClassicWall(N, cols, target, els, verb, emoji){
+  const wall = els.wall; sizeWall(wall, cols); wall.innerHTML = '';
+  if (els.code) els.code.classList.add('active');
   const frag = document.createDocumentFragment();
   const boxes = [];
   for (let i = 0; i < N; i++){
     const b = document.createElement('div');
-    b.className = 'bx'; b.textContent = ''; b.style.setProperty('--i', i);
+    b.className = 'bx'; b.style.setProperty('--i', i);
     frag.appendChild(b); boxes.push(b);
   }
   wall.appendChild(frag);
+  const scanLen = target + 1;
   const perTick = Math.max(1, Math.ceil(N / 120));
   let revealed = 0;
-  while (revealed < N){
-    const next = Math.min(N, revealed + perTick);
+  while (revealed < scanLen){
+    const next = Math.min(scanLen, revealed + perTick);
     for (let i = revealed; i < next; i++){
-      if (i === N - 1){ boxes[i].className = 'bx hit'; boxes[i].textContent = '🔑'; }
+      if (i === target){ boxes[i].className = 'bx hit'; boxes[i].textContent = emoji; }
       else { boxes[i].className = 'bx shut'; boxes[i].textContent = ''; }
     }
     revealed = next;
-    $('#rLineC').textContent = `checking box ${revealed} of ${N}…`;
+    els.line.textContent = `${verb} ${revealed} of ${N}…`;
     await sleep(55);
   }
-  codeEl.classList.remove('active');
+  if (els.code) els.code.classList.remove('active');
   sfx.hit();
-  $('#rLineC').textContent = `found it — ${N} of ${N} checked.`;
+  els.line.textContent = `found it — ${scanLen} of ${N} checked this run.`;
+  return scanLen;
 }
-async function runQuantumWall(N, cols, k, p){
-  const wall = $('#rWallQ'); sizeWall(wall, cols); wall.innerHTML = '';
-  const codeEl = $('#rCodeQ'); codeEl.classList.add('active');
+async function runQuantumWall(N, cols, k, p, target, els, emoji){
+  const wall = els.wall; sizeWall(wall, cols); wall.innerHTML = '';
+  if (els.code) els.code.classList.add('active');
   const frag = document.createDocumentFragment();
   const boxes = [];
   for (let i = 0; i < N; i++){
@@ -2964,40 +3416,413 @@ async function runQuantumWall(N, cols, k, p){
     frag.appendChild(b); boxes.push(b);
   }
   wall.appendChild(frag);
-  $('#rLineQ').textContent = 'spinning into superposition…';
+  els.line.textContent = 'spinning into superposition…';
   await sleep(450);
   const stepDelay = quantumStepDelay(k);
   for (let s = 1; s <= k; s++){
-    $('#rLineQ').textContent = `search step ${s} of ${k}…`;
+    els.line.textContent = `search step ${s} of ${k}…`;
     await sleep(stepDelay);
   }
   boxes.forEach((b, i) => {
-    if (i === N - 1){ b.className = 'bx hit'; b.textContent = '🔑'; }
+    if (i === target){ b.className = 'bx hit'; b.textContent = emoji; }
     else { b.className = 'bx shut'; b.textContent = ''; }
   });
-  codeEl.classList.remove('active');
+  if (els.code) els.code.classList.remove('active');
   sfx.hit();
-  $('#rLineQ').textContent = `found it — ${k} search step${k>1?'s':''}, ${pct(p)} odds.`;
+  els.line.textContent = `found it — ${k} search step${k>1?'s':''}, ${pct(p)} odds.`;
 }
-async function runRealmComparison(){
-  $('#rRun').disabled = true;
+
+/* ═══════ PLAYGROUND MENU ═══════ */
+$$('.pgcard').forEach(c => c.addEventListener('click', () => {
+  const id = c.dataset.go;
+  if (PG_RESET[id]) PG_RESET[id]();
+  go(id);
+}));
+$$('.pgback-btn').forEach(b => b.addEventListener('click', () => go('sR')));
+
+/* ═══════ VARIABLE ═══════ */
+let rvQ = 4;
+$('#rvQ').addEventListener('input', () => {
+  rvQ = +$('#rvQ').value;
+  $('#rvQVal').textContent = rvQ;
+  $('#rvCount').textContent = Math.pow(2, rvQ);
+});
+function resetVariableCard(){
+  rvQ = 4; $('#rvQ').value = 4; $('#rvQVal').textContent = 4; $('#rvCount').textContent = 16;
+  $('#rvOut').style.display = 'none'; $('#rvInsight').style.display = 'none'; $('#rvCareer').style.display = 'none';
+  $('#rvWallC').innerHTML = ''; $('#rvWallQ').innerHTML = '';
+  $('#rvLineC').textContent = 'Ready.'; $('#rvLineQ').textContent = 'Ready.';
+  $('#rvRun').disabled = false; $('#rvRun').textContent = '▶ Load the variable / register';
+}
+async function runVariableCard(){
+  const btn = $('#rvRun'); btn.disabled = true;
   sfx.run();
-  const N = realmN, cols = realmCols(N);
-  const k = bestK(N), p = conf(N, k);
-  $('#rVs').style.display = 'none'; $('#rInsight').style.display = 'none';
-  await Promise.all([ runClassicWall(N, cols), runQuantumWall(N, cols, k, p) ]);
-  $('#rVsCN').textContent = N;
-  $('#rVsQN').textContent = k;
-  $('#rVs').style.display = 'grid';
+  const q = rvQ, N = Math.pow(2, q);
+  $('#rvOut').style.display = 'grid'; $('#rvInsight').style.display = 'none';
+  const wallC = $('#rvWallC'); wallC.innerHTML = '';
+  const bx = document.createElement('div'); bx.className = 'bx spin'; bx.textContent = '?';
+  wallC.appendChild(bx);
+  $('#rvCodeC').innerHTML = `<span class="var">x</span> <span class="kw">=</span> <span class="num">7</span><br>` +
+    `<span class="cm"># one value</span><br><span class="var">x</span> <span class="kw">=</span> <span class="num">42</span><br>` +
+    `<span class="cm"># overwritten — still one value</span>`;
+  $('#rvLineC').textContent = 'holding one value…';
+  await sleep(500);
+  bx.className = 'bx hit'; bx.textContent = '7'; $('#rvLineC').textContent = 'x = 7';
+  await sleep(650);
+  bx.className = 'bx spin'; bx.textContent = '?';
+  await sleep(300);
+  bx.className = 'bx hit'; bx.textContent = '42'; $('#rvLineC').textContent = 'x = 42 — the 7 is gone.';
+
+  const cols = realmCols(N);
+  const wallQ = $('#rvWallQ'); sizeWall(wallQ, cols); wallQ.innerHTML = '';
+  const frag = document.createDocumentFragment(); const boxes = [];
+  for (let i = 0; i < N; i++){
+    const b = document.createElement('div'); b.className = 'bx spin'; b.textContent = '?'; b.style.setProperty('--i', i);
+    frag.appendChild(b); boxes.push(b);
+  }
+  wallQ.appendChild(frag);
+  $('#rvCodeQ').innerHTML = `<span class="var">reg</span> <span class="kw">=</span> <span class="fn">superpose</span>(<span class="var">qubits</span>=<span class="num">${q}</span>)<br>` +
+    `<span class="cm"># ${N} values, held together</span><br><span class="fn">measure</span>(<span class="var">reg</span>)<br>` +
+    `<span class="cm"># collapses to one, at random</span>`;
+  $('#rvLineQ').textContent = `${N} values, held together…`;
+  await sleep(700);
+  const landed = randInt(N);
+  boxes.forEach((b, i) => {
+    if (i === landed){ b.className = 'bx hit'; b.textContent = '●'; }
+    else { b.className = 'bx shut'; b.textContent = ''; }
+  });
+  sfx.hit();
+  $('#rvLineQ').textContent = 'measured — collapsed to one value.';
+
+  $('#rvInsightTxt').textContent = `The classical box never held more than one value — reassigning it just threw the old one away. The quantum register held all ${N} values together until the moment you measured it, then collapsed to a single one at random. That "many values, held together" state is the raw material every quantum algorithm — including the search you ran tonight — works with, before interference steers it toward one answer.`;
+  $('#rvInsight').style.display = 'flex'; $('#rvCareer').style.display = 'block';
+  btn.disabled = false; btn.textContent = '↺ Load again';
+}
+$('#rvRun').addEventListener('click', runVariableCard);
+
+/* ═══════ UNTIL LOOP ═══════ */
+let rlDone = {c:false, q:false}, rlUntilResult = 0, rlCommitK = 0, rlCommitP = 0;
+function resetUntilLoopCard(){
+  rlDone = {c:false, q:false};
+  $('#rlK').value = 4; $('#rlK').disabled = false; $('#rlKVal').textContent = 4;
+  $('#rlWallC').innerHTML = ''; $('#rlWallQ').innerHTML = '';
+  $('#rlLineC').textContent = 'Ready.'; $('#rlLineQ').textContent = 'Ready.';
+  $('#rlVs').style.display = 'none'; $('#rlInsight').style.display = 'none'; $('#rlCareer').style.display = 'none';
+  $('#rlRunC').disabled = false; $('#rlRunC').textContent = '▶ Guess until found';
+  $('#rlRunQ').disabled = false; $('#rlRunQ').textContent = '🔒 Commit & run';
+}
+$('#rlK').addEventListener('input', () => { $('#rlKVal').textContent = $('#rlK').value; });
+async function runUntilLoopClassic(){
+  const btn = $('#rlRunC'); btn.disabled = true;
+  sfx.run();
+  const N = 16, cols = realmCols(N);
+  const wall = $('#rlWallC'); sizeWall(wall, cols); wall.innerHTML = '';
+  const frag = document.createDocumentFragment(); const boxes = [];
+  for (let i = 0; i < N; i++){ const b = document.createElement('div'); b.className = 'bx'; b.style.setProperty('--i', i); frag.appendChild(b); boxes.push(b); }
+  wall.appendChild(frag);
+  const target = randInt(N);
+  const order = shuffled([...Array(N).keys()]);
+  let guesses = 0;
+  for (const i of order){
+    guesses++;
+    if (i === target){ boxes[i].className = 'bx hit'; boxes[i].textContent = '🔑'; }
+    else { boxes[i].className = 'bx shut'; boxes[i].textContent = ''; }
+    $('#rlLineC').textContent = `guess ${guesses}…`;
+    await sleep(180);
+    if (i === target) break;
+  }
+  sfx.hit();
+  $('#rlLineC').textContent = `found it — ${guesses} guess${guesses>1?'es':''} this run.`;
+  rlUntilResult = guesses; rlDone.c = true;
+  btn.disabled = false; btn.textContent = '↺ Guess again';
+  maybeShowUntilInsight();
+}
+async function runUntilLoopQuantum(){
+  const btn = $('#rlRunQ'); btn.disabled = true;
+  const slider = $('#rlK'); slider.disabled = true;
+  sfx.run();
+  const N = 16, cols = realmCols(N), k = +slider.value, p = conf(N, k);
+  const wall = $('#rlWallQ'); sizeWall(wall, cols); wall.innerHTML = '';
+  const frag = document.createDocumentFragment(); const boxes = [];
+  for (let i = 0; i < N; i++){ const b = document.createElement('div'); b.className = 'bx spin'; b.textContent = '?'; b.style.setProperty('--i', i); frag.appendChild(b); boxes.push(b); }
+  wall.appendChild(frag);
+  $('#rlLineQ').textContent = `${k} step${k>1?'s':''} committed — running…`;
+  await sleep(400);
+  for (let s = 1; s <= k; s++){ $('#rlLineQ').textContent = `search step ${s} of ${k}…`; await sleep(220); }
+  const target = randInt(N);
+  boxes.forEach((b, i) => { if (i === target){ b.className = 'bx hit'; b.textContent = '🔑'; } else { b.className = 'bx shut'; b.textContent = ''; } });
+  sfx.hit();
+  $('#rlLineQ').textContent = `done — ${k} step${k>1?'s':''}, ${pct(p)} odds.`;
+  rlCommitK = k; rlCommitP = p; rlDone.q = true;
+  slider.disabled = false;
+  btn.disabled = false; btn.textContent = '↺ Recommit & run';
+  maybeShowUntilInsight();
+}
+function maybeShowUntilInsight(){
+  if (!rlDone.c || !rlDone.q) return;
+  $('#rlVsCN').textContent = rlUntilResult;
+  $('#rlVsQN').textContent = rlCommitK;
+  $('#rlVs').style.display = 'grid';
+  $('#rlInsightTxt').textContent = `The until loop could keep going for as long as it took — this run, ${rlUntilResult} guess${rlUntilResult>1?'es':''}, could've been anywhere from 1 to 16. The quantum run couldn't do that: you had to commit to ${rlCommitK} step${rlCommitK>1?'s':''} — about ${pct(rlCommitP)} odds — before it started. Guess low and you undersell it; guess high and, like Room One, the odds swing back down. That's why Grover's algorithm has no "until" equivalent: reading the answer early collapses the superposition.`;
+  $('#rlInsight').style.display = 'flex'; $('#rlCareer').style.display = 'block';
+}
+$('#rlRunC').addEventListener('click', runUntilLoopClassic);
+$('#rlRunQ').addEventListener('click', runUntilLoopQuantum);
+
+/* ═══════ COUNTED LOOP — live odds calculator ═══════ */
+function updateCountedLoop(){
+  const N = REALM_NS[+$('#rkN').value];
+  const k = +$('#rkK').value;
+  $('#rkNVal').textContent = N; $('#rkKVal').textContent = k;
+  const p = conf(N, k);
+  $('#rkPct').textContent = pct(p);
+  $('#rkFill').style.width = Math.min(100, p*100) + '%';
+  $('#rkClassical').textContent = N; $('#rkYourK').textContent = k;
+  const best = bestK(N);
+  $('#rkBest').textContent = best;
   const ratio = N / k;
-  $('#rInsightTxt').textContent = `At ${N} boxes: by hand that's up to ${N} checks; the same search only needs ` +
-    `${k} quantum step${k>1?'s':''} (about ${pct(p)} odds of the very first grab landing on it) — roughly ` +
-    `${ratio.toFixed(1)}× fewer. Try a bigger size and watch that multiple grow.`;
-  $('#rInsight').style.display = 'flex';
-  $('#rRun').disabled = false; $('#rRun').textContent = '↺ Run it again';
+  let msg;
+  if (k < best) msg = `${k} step${k>1?'s':''} under-amplifies — the odds haven't peaked yet. Best for ${N} boxes is ${best}.`;
+  else if (k === best) msg = `${k} is the best step count for ${N} boxes — ${pct(p)} odds, about ${ratio.toFixed(1)}× fewer checks than the classical worst case.`;
+  else msg = `${k} steps overshoots the best of ${best} — the odds have swung back down, exactly like pressing Mark + Boost twice in Room One.`;
+  $('#rkInsightTxt').textContent = msg;
+}
+$('#rkN').addEventListener('input', () => {
+  const N = REALM_NS[+$('#rkN').value];
+  $('#rkK').max = Math.max(30, Math.round(bestK(N) * 3));
+  if (+$('#rkK').value > +$('#rkK').max) $('#rkK').value = $('#rkK').max;
+  updateCountedLoop();
+});
+$('#rkK').addEventListener('input', updateCountedLoop);
+$('#rkJump').addEventListener('click', () => {
+  const N = REALM_NS[+$('#rkN').value];
+  $('#rkK').value = bestK(N);
+  updateCountedLoop();
+});
+
+/* ═══════ CONDITIONAL — write the rule ═══════ */
+let rcOp = '>', rcN = 64;
+$$('#rcOpOpts .opt').forEach(o => o.addEventListener('click', () => {
+  $$('#rcOpOpts .opt').forEach(x => x.classList.remove('sel'));
+  o.classList.add('sel');
+  rcOp = o.dataset.v;
+}));
+$('#rcN').addEventListener('input', () => { rcN = REALM_NS[+$('#rcN').value]; $('#rcNVal').textContent = rcN; });
+function condClassicCodeHtml(N, op){
+  return `<span class="kw">for</span> <span class="var">account</span> <span class="kw">in</span> <span class="var">accounts</span>:<br>` +
+    `<span class="ind"><span class="kw">if</span> <span class="var">amount</span> <span class="kw">${op}</span> <span class="num">10000</span>:<br>` +
+    `<span class="ind"><span class="fn">flag</span>(<span class="var">account</span>)</span></span><br>` +
+    `<span class="cm"># worst case: ${N} accounts read</span>`;
+}
+function condQuantumCodeHtml(N, k, p, op){
+  return `<span class="fn">grover</span>(<span class="var">accounts</span>, <span class="var">amount</span> <span class="kw">${op}</span> <span class="num">10000</span>)<br>` +
+    `<span class="ind"><span class="kw">repeat</span> <span class="num">${k}</span> <span class="kw">times:</span><br>` +
+    `<span class="ind"><span class="fn">mark</span>(); <span class="fn">boost</span>()</span></span><br>` +
+    `<span class="kw">return</span> <span class="var">flagged</span><br>` +
+    `<span class="cm"># ${pct(p)} odds, ${k} step${k>1?'s':''}</span>`;
+}
+function resetConditionalCard(){
+  rcN = 64; $('#rcN').value = 4; $('#rcNVal').textContent = 64;
+  $$('#rcOpOpts .opt').forEach(x => x.classList.remove('sel'));
+  $$('#rcOpOpts .opt')[0].classList.add('sel'); rcOp = '>';
+  $('#rcOut').style.display = 'none'; $('#rcVs').style.display = 'none'; $('#rcInsight').style.display = 'none'; $('#rcCareer').style.display = 'none';
+  $('#rcWallC').innerHTML = ''; $('#rcWallQ').innerHTML = '';
+  $('#rcLineC').textContent = 'Ready.'; $('#rcLineQ').textContent = 'Ready.';
+  $('#rcRun').disabled = false; $('#rcRun').textContent = '▶ Run the rule';
+}
+async function runConditionalCard(){
+  const btn = $('#rcRun'); btn.disabled = true;
+  sfx.run();
+  const N = rcN, cols = realmCols(N), op = rcOp;
+  const k = bestK(N), p = conf(N, k);
+  const target = randInt(N);
+  $('#rcOut').style.display = 'grid'; $('#rcVs').style.display = 'none'; $('#rcInsight').style.display = 'none';
+  $('#rcCodeC').innerHTML = condClassicCodeHtml(N, op);
+  $('#rcCodeQ').innerHTML = condQuantumCodeHtml(N, k, p, op);
+  const elsC = {wall:$('#rcWallC'), line:$('#rcLineC'), code:$('#rcCodeC')};
+  const elsQ = {wall:$('#rcWallQ'), line:$('#rcLineQ'), code:$('#rcCodeQ')};
+  const [scanLen] = await Promise.all([
+    runClassicWall(N, cols, target, elsC, 'reading account', '🚩'),
+    runQuantumWall(N, cols, k, p, target, elsQ, '🚩'),
+  ]);
+  $('#rcVsCN').textContent = scanLen; $('#rcVsCW').textContent = N; $('#rcVsQN').textContent = k;
+  $('#rcVs').style.display = 'grid';
+  $('#rcInsightTxt').textContent = `Your rule — amount ${op} 10,000 — is now literally the thing being searched for: the quantum oracle IS the condition you picked. This run: ${scanLen} of ${N} accounts read by hand (worst case is always ${N}); the quantum search still took exactly ${k} step${k>1?'s':''}, about ${pct(p)} odds, no matter where the flagged account was sitting.`;
+  $('#rcInsight').style.display = 'flex'; $('#rcCareer').style.display = 'block';
+  btn.disabled = false; btn.textContent = '↺ Run it again';
   toast('Run complete.');
 }
-$('#rRun').addEventListener('click', runRealmComparison);
+$('#rcRun').addEventListener('click', runConditionalCard);
+
+/* ═══════ SEARCH — everything together, randomised target ═══════ */
+let rsN = 16;
+function updateSearchPreview(){
+  $('#rsNVal').textContent = rsN; $('#rsNTag').textContent = rsN;
+  const k = bestK(rsN), p = conf(rsN, k);
+  $('#rsCodeC').innerHTML = classicCodeHtml(rsN);
+  $('#rsCodeQ').innerHTML = quantumCodeHtml(rsN, k, p);
+}
+$('#rsN').addEventListener('input', () => { rsN = REALM_NS[+$('#rsN').value]; updateSearchPreview(); });
+function resetSearchCard(){
+  rsN = 16; $('#rsN').value = 2; updateSearchPreview();
+  $('#rsWallC').innerHTML = ''; $('#rsWallQ').innerHTML = '';
+  $('#rsLineC').textContent = 'Ready.'; $('#rsLineQ').textContent = 'Ready.';
+  $('#rsVs').style.display = 'none'; $('#rsInsight').style.display = 'none'; $('#rsCareer').style.display = 'none';
+  $('#rsRun').disabled = false; $('#rsRun').textContent = '▶ Run both';
+}
+async function runSearchCard(){
+  const btn = $('#rsRun'); btn.disabled = true;
+  sfx.run();
+  const N = rsN, cols = realmCols(N);
+  const k = bestK(N), p = conf(N, k);
+  const target = randInt(N);
+  $('#rsVs').style.display = 'none'; $('#rsInsight').style.display = 'none';
+  const elsC = {wall:$('#rsWallC'), line:$('#rsLineC'), code:$('#rsCodeC')};
+  const elsQ = {wall:$('#rsWallQ'), line:$('#rsLineQ'), code:$('#rsCodeQ')};
+  const [scanLen] = await Promise.all([
+    runClassicWall(N, cols, target, elsC, 'checking box', '🔑'),
+    runQuantumWall(N, cols, k, p, target, elsQ, '🔑'),
+  ]);
+  $('#rsVsCN').textContent = scanLen; $('#rsVsCW').textContent = N; $('#rsVsQN').textContent = k;
+  $('#rsVs').style.display = 'grid';
+  const ratio = N / k;
+  $('#rsInsightTxt').textContent = `This run: by hand that took ${scanLen} of ${N} checks (worst case is always ${N}) — quantum still took exactly ${k} step${k>1?'s':''} either way, about ${pct(p)} odds, regardless of where the key landed. That position-blindness is the real advantage, not luck. Roughly ${ratio.toFixed(1)}× fewer at worst case. Try a bigger size.`;
+  $('#rsInsight').style.display = 'flex'; $('#rsCareer').style.display = 'block';
+  btn.disabled = false; btn.textContent = '↺ Run it again';
+  toast('Run complete.');
+}
+$('#rsRun').addEventListener('click', runSearchCard);
+
+/* ═══════ ENCRYPTION ═══════ */
+const CIPHER_TEXT = 'QGSNU VKPX ZLHOT', PLAIN_TEXT = 'THE SIGNAL IS CLEAR';
+let reN = 64;
+function encClassicCodeHtml(N){
+  return `<span class="kw">for</span> <span class="var">key</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">${N}</span>):<br>` +
+    `<span class="ind"><span class="kw">if</span> <span class="fn">decrypt</span>(<span class="var">msg</span>, <span class="var">key</span>) <span class="kw">==</span> <span class="var">real_word</span>:<br>` +
+    `<span class="ind"><span class="kw">return</span> <span class="var">key</span></span></span><br>` +
+    `<span class="cm"># worst case: ${N} keys tried</span>`;
+}
+function encQuantumCodeHtml(N, k, p){
+  return `<span class="fn">grover</span>(<span class="var">keys</span>, <span class="var">msg</span>)<br>` +
+    `<span class="ind"><span class="kw">repeat</span> <span class="num">${k}</span> <span class="kw">times:</span><br>` +
+    `<span class="ind"><span class="fn">mark</span>(); <span class="fn">boost</span>()</span></span><br>` +
+    `<span class="kw">return</span> <span class="var">best_key</span><br>` +
+    `<span class="cm"># ${pct(p)} odds, ${k} step${k>1?'s':''}</span>`;
+}
+function updateEncPreview(){
+  $('#reNVal').textContent = reN;
+  const k = bestK(reN), p = conf(reN, k);
+  $('#reCodeC').innerHTML = encClassicCodeHtml(reN);
+  $('#reCodeQ').innerHTML = encQuantumCodeHtml(reN, k, p);
+}
+$('#reN').addEventListener('input', () => { reN = REALM_NS[+$('#reN').value]; updateEncPreview(); });
+function resetEncryptionCard(){
+  reN = 64; $('#reN').value = 4; updateEncPreview();
+  $('#reCipher').innerHTML = `🔐 INTERCEPTED: <b>"${CIPHER_TEXT}"</b>`;
+  $('#reWallC').innerHTML = ''; $('#reWallQ').innerHTML = '';
+  $('#reLineC').textContent = 'Ready.'; $('#reLineQ').textContent = 'Ready.';
+  $('#reVs').style.display = 'none'; $('#reInsight').style.display = 'none'; $('#reNote').style.display = 'none'; $('#reCareer').style.display = 'none';
+  $('#reRun').disabled = false; $('#reRun').textContent = '▶ Run both';
+}
+async function runEncryptionCard(){
+  const btn = $('#reRun'); btn.disabled = true;
+  sfx.run();
+  const N = reN, cols = realmCols(N);
+  const k = bestK(N), p = conf(N, k);
+  const target = randInt(N);
+  $('#reVs').style.display = 'none'; $('#reInsight').style.display = 'none';
+  const elsC = {wall:$('#reWallC'), line:$('#reLineC'), code:$('#reCodeC')};
+  const elsQ = {wall:$('#reWallQ'), line:$('#reLineQ'), code:$('#reCodeQ')};
+  const [scanLen] = await Promise.all([
+    runClassicWall(N, cols, target, elsC, 'trying key', '🔓'),
+    runQuantumWall(N, cols, k, p, target, elsQ, '🔓'),
+  ]);
+  $('#reCipher').innerHTML = `🔓 DECRYPTED: <b>"${PLAIN_TEXT}"</b>`;
+  $('#reVsCN').textContent = scanLen; $('#reVsCW').textContent = N; $('#reVsQN').textContent = k;
+  $('#reVs').style.display = 'grid';
+  $('#reInsightTxt').textContent = `This run: ${scanLen} of ${N} keys tried by brute force (worst case is always ${N}); quantum took exactly ${k} step${k>1?'s':''}, about ${pct(p)} odds — a real but only quadratic advantage.`;
+  $('#reInsight').style.display = 'flex'; $('#reNote').style.display = 'block'; $('#reCareer').style.display = 'block';
+  btn.disabled = false; btn.textContent = '↺ Run it again';
+  toast('Key found.');
+}
+$('#reRun').addEventListener('click', runEncryptionCard);
+
+/* ═══════ TRUE RANDOMNESS (QRNG) ═══════
+   The classical side is a genuinely seeded, genuinely deterministic PRNG
+   (mulberry32) — same seed always gives the same 12 numbers, so the "try
+   the same seed twice" claim is literally true, not simulated. The
+   quantum side is honestly caveated in the note below: it's still this
+   browser's own Math.random() under the hood, since this page has no way
+   to reach a real quantum chip — the card teaches the DIFFERENCE, and
+   says so outright, the same way Task 1's cipher is flagged as a teaching
+   prop rather than real cryptography. */
+function mulberry32(seed){
+  let a = seed >>> 0;
+  return function(){
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function hashSeed(str){
+  let h = 0;
+  for (let i = 0; i < str.length; i++){ h = (Math.imul(31, h) + str.charCodeAt(i)) | 0; }
+  return h >>> 0;
+}
+let rqLastSeed = null;
+function renderNumChips(container, nums, cls){
+  container.innerHTML = '';
+  nums.forEach((n, i) => {
+    const c = document.createElement('span');
+    c.className = 'numchip ' + cls; c.textContent = n;
+    c.style.animationDelay = (i*30) + 'ms';
+    container.appendChild(c);
+  });
+}
+function resetQRNGCard(){
+  $('#rqSeed').value = '';
+  $('#rqRowC').innerHTML = ''; $('#rqRowQ').innerHTML = '';
+  $('#rqLineC').textContent = ''; $('#rqLineQ').textContent = '';
+  $('#rqInsight').style.display = 'none'; $('#rqNote').style.display = 'none';
+  $('#rqSource').style.display = 'none'; $('#rqCareer').style.display = 'none';
+  rqLastSeed = null;
+}
+function maybeShowQrngExtras(){
+  if ($('#rqRowC').children.length && $('#rqRowQ').children.length){
+    $('#rqInsightTxt').textContent = `Run the classical side again with the exact same seed and you'll get the exact same 12 numbers, every time — it's a formula, not magic. There's no seed box on the quantum side because there's nothing to seed.`;
+    $('#rqInsight').style.display = 'flex';
+    $('#rqNote').style.display = 'block'; $('#rqSource').style.display = 'block'; $('#rqCareer').style.display = 'block';
+  }
+}
+$('#rqRunC').addEventListener('click', () => {
+  const seedText = $('#rqSeed').value.trim() || '42';
+  const seed = /^\d+$/.test(seedText) ? (+seedText) : hashSeed(seedText);
+  const rand = mulberry32(seed);
+  const nums = Array.from({length:12}, () => Math.floor(rand()*100));
+  renderNumChips($('#rqRowC'), nums, 'classic');
+  const repeat = rqLastSeed !== null && rqLastSeed === seed;
+  $('#rqLineC').textContent = repeat
+    ? `seed "${seedText}" again — identical sequence, exactly as before.`
+    : `seed "${seedText}" — run it again with the same seed and see what happens.`;
+  rqLastSeed = seed;
+  sfx.key();
+  maybeShowQrngExtras();
+});
+$('#rqRunQ').addEventListener('click', () => {
+  const nums = Array.from({length:12}, () => Math.floor(Math.random()*100));
+  renderNumChips($('#rqRowQ'), nums, 'quantum');
+  $('#rqLineQ').textContent = 'no seed — different every time, even asking twice in a row.';
+  sfx.key();
+  maybeShowQrngExtras();
+});
+
+/* every menu card's reset function, run just before its scene is shown so
+   a second visit never opens on a stale, already-run state */
+const PG_RESET = {
+  sRV: resetVariableCard, sRL: resetUntilLoopCard, sRK: updateCountedLoop,
+  sRC: resetConditionalCard, sRS: resetSearchCard, sRE: resetEncryptionCard, sRQ: resetQRNGCard,
+};
 
 renderActs();
 </script>
