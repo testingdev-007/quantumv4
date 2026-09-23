@@ -249,6 +249,24 @@ h3{font-size:1.05rem;font-weight:700;margin-bottom:7px}
 .fb-veil.typing .fb-skiphint{display:block}
 .fb-veil.typing .fb-body{cursor:pointer}
 
+/* ── fb-more: an optional "brief now, detail on demand" expander ──
+   Keeps the main .fb-body short and skippable, with the fuller technical
+   explanation tucked behind a click — never typed by the typewriter effect
+   (it lives outside #fbBody), so opening it never waits on animation. ── */
+.fb-more-wrap{margin:2px 0 14px}
+.fb-more-toggle{
+  display:inline-flex;align-items:center;gap:6px;font-family:var(--fm);font-weight:700;
+  font-size:.76rem;letter-spacing:.04em;color:var(--gold);background:rgba(245,196,81,.1);
+  border:1px solid rgba(245,196,81,.35);border-radius:100px;padding:7px 14px;cursor:pointer;
+}
+.fb-more-toggle:hover{background:rgba(245,196,81,.18)}
+.fb-more-body{
+  margin-top:10px;padding:13px 15px;border-radius:12px;color:var(--txt-2);font-size:.92rem;line-height:1.6;
+  background:rgba(0,0,0,.32);border:1px solid var(--edge-2);animation:insightIn .35s ease both;
+}
+.fb-more-body p{margin-bottom:10px} .fb-more-body p:last-child{margin-bottom:0}
+.fb-more-body b{color:var(--gold)}
+
 /* ── flashback: made to pop ────────────────────────────────── */
 .fb-strobe{position:fixed;inset:0;z-index:220;background:radial-gradient(ellipse at 50% 40%,#fff8ea,#f5c451 70%,#a3781f 100%);opacity:0;pointer-events:none}
 .fb-strobe.go{animation:strobe .45s ease-out}
@@ -329,6 +347,9 @@ h3{font-size:1.05rem;font-weight:700;margin-bottom:7px}
 }
 .fb-veil.q .fb-progress .d.done{ background:var(--cyan); box-shadow:0 0 9px var(--cyan); }
 .fb-veil.q .fb-body b{ color:var(--cyan); }
+.fb-veil.q .fb-more-toggle{ color:var(--cyan); background:rgba(69,227,255,.1); border-color:rgba(69,227,255,.35); }
+.fb-veil.q .fb-more-toggle:hover{ background:rgba(69,227,255,.18); }
+.fb-veil.q .fb-more-body b{ color:var(--cyan); }
 .fb-veil.q ~ .fb-bar::after{ background:linear-gradient(90deg,transparent,var(--cyan),#8B5CF6,transparent); }
 .fb-strobe.q{ background:radial-gradient(ellipse at 50% 40%,#eafcff,#45E3FF 65%,#5b3aa8 100%); }
 
@@ -423,9 +444,21 @@ h3{font-size:1.05rem;font-weight:700;margin-bottom:7px}
   border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;
   font-family:var(--fm);font-size:.62rem;color:var(--txt-3);cursor:pointer;
   transition:transform .18s,background .25s,box-shadow .25s,border-color .25s;
+  /* at a big wall (1024+ boxes) each grid column can be only a few px wide —
+     a grid item's default min-width is its own content's width, which for
+     even a single "?" or emoji glyph is bigger than that, so every column
+     refuses to shrink and the whole wall blows out past its container.
+     min-width/height:0 + overflow:hidden let a box go smaller than its own
+     glyph, which just clips invisibly at that scale rather than forcing
+     the grid wider than the screen. */
+  min-width:0;min-height:0;overflow:hidden;
 }
 .bx:hover{border-color:var(--edge-2);transform:translateY(-2px)}
 .bx.shut{background:linear-gradient(150deg,#1a1020,#12080f);border-color:rgba(255,78,100,.3);color:rgba(255,78,100,.6);cursor:default}
+.bx.check{
+  border-color:rgba(255,255,255,.55);box-shadow:0 0 0 1px rgba(255,255,255,.25),0 0 12px rgba(255,255,255,.2);
+  transform:scale(1.08);
+}
 .bx.spin{
   background:linear-gradient(150deg,rgba(69,227,255,.3),rgba(139,123,255,.25));
   border-color:var(--cyan);color:#fff;animation:spinbox .9s ease-in-out infinite;
@@ -435,7 +468,24 @@ h3{font-size:1.05rem;font-weight:700;margin-bottom:7px}
   background:linear-gradient(150deg,var(--gold),#ffdc82);border-color:#fff;color:#2a1e00;
   font-weight:800;transform:scale(1.16);box-shadow:0 0 30px var(--gold);z-index:2;
 }
-.wall.q .bx{animation-delay:calc(var(--i) * 18ms)}
+/* ── classical vs quantum, told apart at a glance, not just by a label ──
+   Squares that get physically opened one at a time (classical) vs round
+   "orbitals" that exist together until measured (quantum) — same shape
+   language a real Bloch-sphere/qubit diagram uses. The colour split
+   matters even more: previously a quantum box that collapsed to "not the
+   answer" (.spin → .shut) reused the exact same red "wrong guess" tint as
+   a classical box someone physically opened and got nothing — losing the
+   distinction right at the moment it mattered most, the resting state
+   most of a run is spent looking at. Quantum "not the measured one" now
+   stays in its own cool violet family instead of classical's warm red. */
+.wall.q .bx{
+  border-radius:50%; animation-delay:calc(var(--i) * 18ms);
+}
+.wall.q .bx.shut{
+  background:linear-gradient(150deg,#161233,#0c0a1f);
+  border-color:rgba(139,123,255,.35);color:rgba(139,123,255,.55);
+}
+.wall.q .bx.hit{ box-shadow:0 0 30px var(--gold),0 0 0 3px rgba(69,227,255,.5); }
 /* a box the player is meant to click directly (Room One's by-hand search) gets its
    own idle glow so "open boxes until you find it" has an obvious first move —
    .bx on its own only picks up a hover lift, which a first-time player never
@@ -466,6 +516,26 @@ h3{font-size:1.05rem;font-weight:700;margin-bottom:7px}
   animation:flow 1s linear infinite;
 }
 @keyframes flow{to{transform:translateX(20px)}}
+.odds-fill.peak{background:linear-gradient(90deg,var(--gold),var(--cyan));box-shadow:0 0 16px rgba(245,196,81,.6)}
+/* stands on its own row below the odds bar, never crowding the
+   percentage/label line above it at narrow widths */
+.peak-badge-row{text-align:center;margin-top:10px}
+.peak-badge{
+  display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-weight:800;font-size:.62rem;
+  letter-spacing:.04em;color:#3a2600;background:linear-gradient(135deg,var(--gold),#ffe29a);
+  border-radius:20px;padding:5px 13px;animation:pop .5s cubic-bezier(.2,1.4,.3,1) both;
+}
+
+/* ── gap bars: same-scale classical vs quantum work, side by side ── */
+.gapbars{margin:16px 0}
+.gapbar-row{margin-bottom:9px}
+.gapbar-lab{display:flex;justify-content:space-between;font-family:var(--fm);font-size:.72rem;margin-bottom:5px}
+.gapbar-lab.classic{color:var(--bad)} .gapbar-lab.quantum{color:var(--cyan)}
+.gapbar-track{height:10px;border-radius:6px;background:rgba(0,0,0,.5);overflow:hidden;box-shadow:inset 0 0 0 1px var(--edge)}
+.gapbar-fill{height:100%;border-radius:6px;transition:width .6s cubic-bezier(.2,.9,.3,1)}
+.gapbar-fill.classic{background:linear-gradient(90deg,var(--bad),#ff8a9a)}
+.gapbar-fill.quantum{background:linear-gradient(90deg,var(--cyan),var(--violet))}
+.gapbar-cap{font-size:.78rem;color:var(--txt-3);margin-top:2px}
 
 /* ── period-finding sequence (Shor's, simplified) ──────────────── */
 .shorseq{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px 0;min-height:44px}
@@ -504,6 +574,8 @@ h3{font-size:1.05rem;font-weight:700;margin-bottom:7px}
 .vs-mid{display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-weight:800;font-size:.78rem;color:var(--txt-3)}
 .vs-side .n.pop{animation:pop .5s cubic-bezier(.2,1.4,.3,1)}
 @keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+.vs-side.quantum.peak{border-color:var(--gold);box-shadow:0 0 18px rgba(245,196,81,.35)}
+.vs-side.quantum.peak .n{color:var(--gold)}
 
 /* ── the wave scope ─────────────────────────────────────────── */
 .scope{text-align:center;margin:16px 0}
@@ -684,6 +756,30 @@ input[type="range"]::-moz-range-thumb{
   font-size:.88rem;line-height:1.55;color:var(--txt);animation:insightIn .4s ease both;
 }
 .insight .ic{font-size:1.15rem;flex-shrink:0;line-height:1.3}
+
+/* ── .gloss: quick-definition tooltips on jargon words. (Named .gloss, not
+   .term — .term is already taken by the terminal-readout box above.)
+   The bubble itself is a single shared #glossTip element, position:fixed,
+   living outside every .realmstage — NOT a ::after on each .gloss span.
+   A ::after here would sit inside .realmstage (which has an implicit
+   overflow-x:auto the moment overflow-y is set — see sizeWall's comment
+   above), and an absolutely-positioned bubble centred on a word near the
+   edge of a narrow phone column can extend past that box's edge even
+   while invisible (opacity:0/visibility:hidden still occupies layout
+   space for scrollWidth purposes) — silently widening the scrollable
+   area exactly like the wall-overflow bug this build already hit once.
+   A fixed-position, JS-placed, viewport-clamped bubble outside the
+   scroll container can't do that regardless of where the word sits. ── */
+.gloss{ border-bottom:1px dotted rgba(69,227,255,.55); cursor:help; }
+.glosstip{
+  position:fixed;max-width:230px;background:#0b1020;border:1px solid var(--cyan-dim);
+  border-radius:9px;padding:9px 11px;font-family:var(--sans, -apple-system, sans-serif);
+  font-size:.74rem;font-weight:400;color:#e8f6ff;line-height:1.4;text-align:left;
+  opacity:0;visibility:hidden;pointer-events:none;transition:opacity .15s,transform .15s;
+  transform:translateY(4px);z-index:500;box-shadow:0 10px 30px rgba(0,0,0,.55);
+}
+.glosstip.show{ opacity:1;visibility:visible;transform:translateY(0); }
+@media(max-width:520px){.glosstip{max-width:170px;font-size:.7rem}}
 @keyframes insightIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
 .confetti-bit{
@@ -986,6 +1082,10 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
     <div class="fb-when" id="fbWhen">EIGHT MONTHS EARLIER</div>
     <h2 id="fbTitle"></h2>
     <div class="fb-body" id="fbBody"></div>
+    <div class="fb-more-wrap" id="fbMoreWrap" style="display:none">
+      <button class="fb-more-toggle" id="fbMoreToggle" type="button" aria-expanded="false">🔍 Tell me more</button>
+      <div class="fb-more-body" id="fbMoreBody" style="display:none"></div>
+    </div>
     <div class="fb-skiphint" id="fbSkipHint">tap to finish ▸</div>
     <button class="btn gold" id="fbBack">Back to the job →</button>
   </div>
@@ -993,6 +1093,7 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
 <div class="fb-bar top" id="fbTop"></div>
 <div class="fb-bar bot" id="fbBot"></div>
 <div class="fb-strobe" id="fbStrobe"></div>
+<div class="glosstip" id="glossTip"></div>
 
 <div class="topbar">
   <button class="mark" id="homeBtn" type="button" title="Start over from the beginning">THE VAULT</button>
@@ -1730,8 +1831,8 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
         <div class="pgcard" data-go="sRK">
           <div class="pg-icon">🔂</div>
           <div class="pg-tag">TEACHES · COUNTED LOOP</div>
-          <h3>The odds calculator</h3>
-          <p>Drag the size and the step count and watch the real odds rise, peak, and fall again.</p>
+          <h3>Pick a step count. Commit.</h3>
+          <p>No peeking mid-run &mdash; drag the size and the step count and watch the real odds rise, peak, and fall again.</p>
         </div>
         <div class="pgcard" data-go="sRC">
           <div class="pg-icon">🔀</div>
@@ -1772,14 +1873,14 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
       <div class="slug q">VARIABLE</div>
       <h1>One box, or many at once.</h1>
       <p class="lede">A classical variable holds exactly one value &mdash; reassigning it just overwrites what
-        was there. A quantum register set up in superposition genuinely holds many values together, until you
-        measure it. Pick how many qubits, then load both.</p>
+        was there. A <span class="gloss" tabindex="0" data-def="A row of qubits treated as one unit — like a classical register, but each qubit can hold a blend of 0 and 1 at once.">quantum register</span> set up in <span class="gloss" tabindex="0" data-def="Holding many possible values at once, instead of just one — until something measures it, which is when it snaps down to a single value.">superposition</span> genuinely holds many values together, until you
+        measure it. Pick how many <span class="gloss" tabindex="0" data-def="The quantum version of a bit. A classical bit is 0 or 1. A qubit can be a blend of both at once, until it's measured.">qubits</span>, then load both.</p>
 
       <div class="slider-row">
         <div class="slider-top"><span class="sl-l">QUBITS</span><span class="sl-n" id="rvQVal">4</span></div>
         <input type="range" id="rvQ" min="1" max="10" step="1" value="4">
       </div>
-      <div class="centre mono rv-line" style="margin-bottom:4px">= <span id="rvCount">16</span> values held at once, in superposition</div>
+      <div class="centre mono rv-line" style="margin-bottom:4px">= <span id="rvCount">16</span> values held at once, in <span class="gloss" tabindex="0" data-def="Holding many possible values at once, instead of just one — until something measures it, which is when it snaps down to a single value.">superposition</span></div>
 
       <button class="btn q" id="rvRun">▶ Load the variable / register</button>
 
@@ -1865,10 +1966,12 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
     <div class="realmstage-inner realmstage-inner-narrow">
       <div class="pgback"><button class="btn ghost pgback-btn">← Playground</button></div>
       <div class="slug q">COUNTED LOOP</div>
-      <h1>The odds calculator.</h1>
-      <p class="lede">A counted loop says "do it exactly N times." Drag the size and the step count below and
-        watch the real odds &mdash; the same maths running everywhere else in this build &mdash; rise, peak,
-        and fall again if you overshoot.</p>
+      <h1>Pick a step count. Commit. No peeking.</h1>
+      <p class="lede">Before a quantum search runs, you have to tell it exactly how many <span class="gloss" tabindex="0" data-def="Each round nudges the right answer's odds up and the wrong ones down — like tuning a radio dial closer to a station each pass.">amplification
+        rounds</span> to spend &mdash; you can't check partway through and decide to keep going, the way a classical
+        loop can. Too few rounds and you undersell it. Too many and, oddly, the odds swing back <em>down</em>.
+        This is the dial for that choice: drag BOXES to size the search, drag STEPS to choose the round count,
+        and watch what happens.</p>
 
       <div class="slider-row">
         <div class="slider-top"><span class="sl-l">BOXES (N)</span><span class="sl-n" id="rkNVal">64</span></div>
@@ -1879,15 +1982,28 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
         <input type="range" id="rkK" min="1" max="60" step="1" value="6">
       </div>
 
-      <div class="odds">
+      <div class="odds" id="rkOdds">
         <div class="odds-top"><span class="odds-n" id="rkPct">99.7%</span><span class="odds-l">odds of finding it</span></div>
         <div class="odds-rail"><div class="odds-fill" id="rkFill" style="width:99.7%"></div></div>
+        <div class="peak-badge-row" id="rkPeakBadge" style="display:none"><span class="peak-badge">🎯 peak step count — best possible odds for this many boxes</span></div>
+      </div>
+
+      <div class="gapbars">
+        <div class="gapbar-row">
+          <div class="gapbar-lab classic"><span>💻 classical checks</span><span id="rkGapC">64</span></div>
+          <div class="gapbar-track"><div class="gapbar-fill classic" id="rkGapCFill" style="width:100%"></div></div>
+        </div>
+        <div class="gapbar-row">
+          <div class="gapbar-lab quantum"><span>⚛ your quantum steps</span><span id="rkGapQ">6</span></div>
+          <div class="gapbar-track"><div class="gapbar-fill quantum" id="rkGapQFill" style="width:9%"></div></div>
+        </div>
+        <p class="gapbar-cap">Same-length bars would mean the same amount of work. Watch that gap widen as you push BOXES higher &mdash; that gap <em>is</em> the quantum speed-up.</p>
       </div>
 
       <div class="vs">
         <div class="vs-side classic"><div class="k">CLASSICAL WORST CASE</div><div class="n" id="rkClassical">64</div><div class="s">checks, always</div></div>
         <div class="vs-mid">VS</div>
-        <div class="vs-side quantum"><div class="k">YOUR STEPS</div><div class="n" id="rkYourK">6</div><div class="s">best k is <span id="rkBest">6</span></div></div>
+        <div class="vs-side quantum" id="rkVsQ"><div class="k">YOUR STEPS</div><div class="n" id="rkYourK">6</div><div class="s">best k is <span id="rkBest">6</span></div></div>
       </div>
       <button class="btn q" id="rkJump" style="margin-top:4px">Jump to best k</button>
       <div class="insight" id="rkInsight"><span class="ic">💡</span><span id="rkInsightTxt"></span></div>
@@ -1911,7 +2027,8 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
       <div class="slug q">CONDITIONAL</div>
       <h1>Write the rule, any size.</h1>
       <p class="lede">Build your own if-rule &mdash; the exact shape the Ledger used &mdash; then run it
-        against a wall of any size, by hand and by quantum machine.</p>
+        against a wall of any size, by hand and by quantum machine. That same rule is what a quantum
+        search calls an <span class="gloss" tabindex="0" data-def="A rule that recognises the right answer when it sees it — the quantum search uses it to steer toward that answer instead of checking one by one.">oracle</span>.</p>
 
       <div class="picker">
         <div class="pick-grp">
@@ -1972,7 +2089,7 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
         <div class="slug q" id="rsSlug">SEARCH · <span id="rsNTag">16</span> BOXES</div>
         <h2>Watch the gap widen.</h2>
         <p class="lede">One box is the key, hidden somewhere new every run. Watch a classical computer check
-          them one at a time, and a quantum computer amplify its way to the answer &mdash; then look at what
+          them one at a time, and a quantum computer <span class="gloss" tabindex="0" data-def="Each round nudges the right answer's odds up and the wrong ones down — like tuning a radio dial closer to a station each pass.">amplify</span> its way to the answer &mdash; then look at what
           it actually cost each of them.</p>
       </div>
 
@@ -2130,6 +2247,43 @@ details.more .b{font-size:.9rem;line-height:1.6;color:var(--txt-2);padding-top:8
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* ── quick-definition tooltips (.gloss) — one shared, position:fixed bubble
+   (#glossTip), placed and clamped to the viewport in JS on hover/focus/tap.
+   Fixed positioning keeps it outside every .realmstage's own scroll box, so
+   it can never widen that box's scrollWidth the way an inline ::after
+   could (see the CSS comment above .gloss for the full story). ── */
+let glossActive = null;
+function showGlossTip(el){
+  const tip = $('#glossTip');
+  tip.textContent = el.dataset.def || '';
+  tip.classList.add('show');
+  const r = el.getBoundingClientRect();
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  let left = r.left + r.width / 2 - tw / 2;
+  left = Math.max(8, Math.min(left, window.innerWidth - tw - 8));
+  let top = r.top - th - 8;
+  if (top < 8) top = r.bottom + 8; // not enough room above — flip below
+  tip.style.left = left + 'px';
+  tip.style.top = top + 'px';
+  glossActive = el;
+}
+function hideGlossTip(){ $('#glossTip').classList.remove('show'); glossActive = null; }
+document.addEventListener('mouseover', e => { const t = e.target.closest('.gloss'); if (t) showGlossTip(t); });
+document.addEventListener('mouseout', e => {
+  const t = e.target.closest('.gloss');
+  if (t && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('.gloss'))) hideGlossTip();
+});
+document.addEventListener('focusin', e => { const t = e.target.closest('.gloss'); if (t) showGlossTip(t); });
+document.addEventListener('focusout', e => { if (e.target.closest && e.target.closest('.gloss')) hideGlossTip(); });
+document.addEventListener('click', e => {
+  /* always show on tap rather than toggling — a real mouse click is
+     usually preceded by its own mouseover (which already opened it), so
+     "toggle" would read as "click closes the one you're pointing at";
+     tapping anywhere else is what dismisses it. */
+  const t = e.target.closest('.gloss');
+  if (t) showGlossTip(t); else hideGlossTip();
+});
 
 /* ── tiny sound engine — a few oscillator tones, no audio files at all.
    Every call is wrapped so a browser that blocks/lacks audio never breaks
@@ -2464,6 +2618,13 @@ function typewriteHTML(el, html, speed){
 }
 $('#fbBody').addEventListener('click', () => { if ($('#fbBody')._fbSkip) $('#fbBody')._fbSkip(); });
 $('#fbSkipHint').addEventListener('click', () => { if ($('#fbBody')._fbSkip) $('#fbBody')._fbSkip(); });
+$('#fbMoreToggle').addEventListener('click', () => {
+  const body = $('#fbMoreBody'), btn = $('#fbMoreToggle');
+  const opening = body.style.display === 'none';
+  body.style.display = opening ? 'block' : 'none';
+  btn.textContent = opening ? '▲ Show less' : '🔍 Tell me more';
+  btn.setAttribute('aria-expanded', String(opening));
+});
 
 let fbBack = null;
 function flashback(o){
@@ -2478,6 +2639,13 @@ function flashback(o){
   $('#fbWhen').textContent = o.when || 'EIGHT MONTHS EARLIER';
   $('#fbTitle').textContent = o.title;
   typewriteHTML($('#fbBody'), o.body);
+  /* "brief now, detail on demand": o.more is fuller technical explanation,
+     collapsed by default and shown only if o.more is provided — a flashback
+     with no o.more just doesn't show the toggle at all. */
+  const moreBody = $('#fbMoreBody'), moreToggle = $('#fbMoreToggle');
+  moreBody.style.display = 'none'; moreBody.innerHTML = o.more || '';
+  moreToggle.textContent = '🔍 Tell me more'; moreToggle.setAttribute('aria-expanded', 'false');
+  $('#fbMoreWrap').style.display = o.more ? 'block' : 'none';
   $('#fbBack').textContent = o.back || 'Back to the job →';
   fbBack = o.onBack || null;
   const total = o.total || 4, idx = o.index || 1;
@@ -2846,12 +3014,11 @@ $('#go2c').addEventListener('click', () => {
     icon:'🌀', index:1, total:2,
     tag:'QUANTUM LEAP 1 OF 2', when:'THIS ALREADY HAS A NAME',
     title:'You just ran Grover’s algorithm.',
-    body:`<p>Spin, mark, boost, look. What you just did has a real name: <b>Grover's algorithm</b>, worked
-      out by a scientist called Lov Grover in 1996. It's a genuine way to search through a big pile of
-      unsorted things — and it beats checking one at a time.</p>
-      <p>Four boxes doesn't look like much. But the bigger the pile gets, the bigger the advantage gets.
-      Check a million things one at a time: a million steps. Hand the same search to a quantum computer:
-      about a thousand steps.</p>
+    body:`<p>Spin, mark, boost, look. What you just did has a real name: <b>Grover's algorithm</b> — a genuine
+      way to search a big unsorted pile faster than checking one thing at a time.</p>`,
+    more:`<p>Worked out by a scientist called Lov Grover in 1996. Four boxes doesn't look like much, but the
+      bigger the pile gets, the bigger the advantage gets: check a million things one at a time and that's a
+      million steps; hand the same search to a quantum computer and it's about a thousand.</p>
       <p><b>Why it matters:</b> banks are already exploring this exact idea for finding the one suspicious
       transaction out of millions — which is exactly what you're about to do by hand, next room. Nobody's
       built a quantum computer fast enough to beat a laptop yet. But this is the algorithm everyone is racing
@@ -3138,23 +3305,15 @@ $('#cont4r').addEventListener('click', () => {
     icon:'🔓', index:2, total:2,
     tag:'QUANTUM LEAP 2 OF 2', when:'THE ONE THAT ACTUALLY BREAKS CODES',
     title:'You just found a period. That is Shor’s algorithm.',
-    body:`<p>Worth being precise here: the shift cipher on that first door was brute force, not quantum — you
-      just tried every shift until one made a word. And Grover’s algorithm, the search you ran twice tonight,
-      does not break encryption either; at best it roughly halves the effective strength of a key.</p>
-      <p>What you just did to crack that account number — hunting for the point where
-      <span class="mono">3^x mod 91</span> looped back round to 1, then splitting that loop-length in half to
-      reveal 91 = 7 × 13 — is the actual method behind <b>Shor’s algorithm</b>, published by Peter Shor in 1994.
-      You did it by hand because 91 is tiny. A real encryption key is a number hundreds of digits long, where
-      the same by-hand approach would take longer than the universe has existed — that is the entire reason RSA,
-      the padlock icon on every banking site, every card payment, every encrypted email, is considered safe
-      today. A large enough quantum computer would not do anything different to what you just did; it would
-      just find that same repeating pattern almost instantly, for a number that size.</p>
-      <p><b>Where it actually matters, right now:</b> banks and governments are not waiting for that computer
-      to exist. They are migrating to "post-quantum" encryption today, because a file intercepted this
-      afternoon can simply be <i>stored</i> and opened the moment a large enough machine arrives — years of
-      secrets, harvested now, decrypted later. NIST finalised the first set of post-quantum encryption
-      standards in 2024. This is a live migration project inside every major bank's technology team, not a
-      hypothetical one.</p>`,
+    body:`<p>Hunting for where <span class="mono">3^x mod 91</span> looped back round to 1, then splitting that
+      loop-length in half to reveal 91 = 7 × 13 — that's <b>Shor's algorithm</b>, the method that can actually
+      crack the codes protecting bank cards and websites.</p>`,
+    more:`<p>Published by Peter Shor in 1994, it's different from Grover's search. 91 is tiny, so you could do
+      it by hand. A real key is hundreds of digits long — a laptop would take longer than the universe has
+      existed; a big enough quantum computer wouldn't, it would find the same pattern almost instantly.</p>
+      <p><b>Why it matters now:</b> banks aren't waiting for that computer to exist. Data stolen today can be
+      stored and unlocked the moment one does — so the encryption itself is already being upgraded, ahead of
+      the threat.</p>`,
     back:'Get out →',
     onBack: () => { go('s5'); finish(); }
   });
@@ -3170,42 +3329,42 @@ const QUIZ_POOL = [
   [
     { q:'You wrote <span class="mono">shift = 7</span>. What is <span class="mono">shift</span>?',
       a:['A variable — a named box holding a value you can change','A loop','A function'], c:0,
-      why:'A named box with a value in it. You changed the value and the whole program behaved differently.' },
+      why:'Exactly — a named box with a value in it. You changed the value and the whole program behaved differently.' },
     { q:'You named a box <span class="mono">shift_amount</span> instead of just typing 7 everywhere it was needed. What did that actually buy you?',
       a:['Nothing — the computer runs it identically either way','One place to change the value instead of hunting down every 7','It makes the program run faster'], c:1,
-      why:'The computer really does not care what it is called — naming it is entirely for whoever reads or changes the code next, including you.' }
+      why:'Right — the computer does not care what it is called. Naming it is entirely for whoever reads or changes the code next, including you.' }
   ],
   [
-    { q:'You are trying keys on a lock and have no idea how many it will take. Which loop?',
-      a:['A counted loop — repeat 25 times','An until loop — keep going until it opens','Either is fine'], c:1,
-      why:'An until loop sets the finish line instead of the number. A counted loop either runs out early or carries on after it has already won.' },
-    { q:'What is the real difference between a counted loop and an until loop?',
-      a:['A counted loop repeats a fixed number of times; an until loop repeats until a condition is met','They are just two words for the same thing','A counted loop is for numbers, an until loop is for text'], c:0,
-      why:'One commits to a number up front. The other commits to a finish line and stops the moment it is reached, however many tries that takes.' }
+    { q:'You were trying shift numbers on the second door with no idea how many it would take. Which loop did the job?',
+      a:['A counted loop — repeat 25 times','An until loop — keep going until it opens','A variable'], c:1,
+      why:'Right — an until loop sets the finish line, not a number. It just keeps going until the condition is met, however many tries that takes.' },
+    { q:'What actually stops an until loop?',
+      a:['Running out of turns','Its stop condition becoming true','The programmer counting how many times to run it'], c:1,
+      why:'Exactly — an until loop does not know or care how many tries it will take. It stops the moment the condition it is watching for comes true.' }
+  ],
+  [
+    { q:'The next room needed the same instruction 3 times over. Instead of writing it out 3 times, what did you use?',
+      a:['A counted loop — repeat 3 times','An until loop','A conditional'], c:0,
+      why:'Right — a counted loop commits to a number up front: write the instruction once, say how many times.' },
+    { q:'What is the one thing a counted loop has to decide before it even starts?',
+      a:['Whether the answer is correct','How many times it will run','What the variable is called'], c:1,
+      why:'Exactly — a counted loop commits to its number in advance. Pick too few and it can stop before the job is done.' }
   ],
   [
     { q:'Why does <span class="mono">country = "UK"</span> not belong inside an <span class="mono">if</span>?',
       a:['It should be != instead of =','A single = assigns a value, it does not ask a question','Nothing wrong with it'], c:1,
-      why:'One = puts a value into something. == and != ask about two things. Only a question belongs in an if.' },
+      why:'Right — one = puts a value into something. == and != ask a question about two things. Only a question belongs in an if.' },
     { q:'Which of these actually asks "is amount not equal to zero"?',
       a:['<span class="mono">amount = 0</span>','<span class="mono">amount != 0</span>','<span class="mono">amount == 0</span>'], c:1,
-      why:'!= asks whether two things differ. A single = would have overwritten amount with 0 instead of asking anything at all.' }
+      why:'Exactly — != asks whether two things differ. A single = would have overwritten amount with 0 instead of asking anything at all.' }
   ],
   [
-    { q:'Room three had 64 boxes and took 6 search steps. Why so few?',
-      a:['Quantum computers are just faster','It checks every box at the same time and returns the answer','Each step tips the odds, and it takes about √64 of them'], c:2,
-      why:'Roughly the square root. It does not evaluate everything and hand you the answer — it amplifies the right one until grabbing it is near-certain.' },
-    { q:'If that room had 4 times as many boxes, would it take 4 times as many quantum search steps?',
-      a:['Yes — 4 times the boxes means 4 times the steps','No — the steps grow much more slowly than that (roughly the square root of the box count)','No — it would always take the same number of steps, whatever the size'], c:1,
-      why:'Steps scale with the square root of the box count, not the count itself — so 4 times the boxes only takes about 2 times the steps. That gap is exactly why the advantage gets bigger as the problem grows.' }
-  ],
-  [
-    { q:'Your ledger rule found the account in 6 quantum steps instead of 64 reads. What changed?',
-      a:['Nothing about the rule — the same condition became the Mark','You rewrote it in a quantum language','The rule got simpler'], c:0,
-      why:'That is the whole point. The oracle is just a rule that recognises the answer when it sees it — and you had already written it.' },
-    { q:'What is the actual relationship between your <span class="mono">if</span> rule and a quantum oracle?',
-      a:['They are unrelated ideas that happen to sound similar','The oracle is the same rule, just used to flag the answer instead of returning true or false','The oracle replaces your rule with a faster one'], c:1,
-      why:'Same question, asked the same way — an oracle just uses the answer to tip the odds rather than print true or false.' }
+    { q:'Room One’s boxes were checked one at a time until the key turned up. What is that search technique called?',
+      a:['A linear search — checking one at a time, in order','A counted loop','A conditional'], c:0,
+      why:'Right — checking one at a time, in order, is a linear search. It is exactly what your own code did before Mark and Boost sped it up.' },
+    { q:'Your ledger rule — <span class="mono">if amount &gt; 10000 and country != "UK"</span> — became the thing the quantum search looked for. What do we call a rule like that?',
+      a:['A variable','An oracle — a rule that recognises the answer when it sees it','A loop'], c:1,
+      why:'Exactly — you already knew how to write the rule. An oracle is just that same rule, used to flag the answer instead of printing true or false.' }
   ]
 ];
 let quizScore = 0, quizDone = 0;
@@ -3276,8 +3435,8 @@ function finish(){
         if (quizDone === QUIZ_ROUND.length){
           const o = $('#quizOut'); o.style.display = 'block';
           o.innerHTML = `<span class="ok">${quizScore} out of ${QUIZ_ROUND.length}.</span> ` +
-            (quizScore >= 4 ? 'That is a real understanding of what you just did.'
-                            : 'Worth a second run — the ideas stick faster the second time.') +
+            (quizScore >= 4 ? 'That is a real understanding of what you just built tonight.'
+                            : 'You wrote real code and cracked a real vault tonight — that is what matters. Run it again any time and watch the score climb.') +
             `<button class="btn gold" id="toBigPicture" style="margin-top:14px">See what it all builds to →</button>`;
           $('#toBigPicture').addEventListener('click', () => go('s6'));
           checkCue();
@@ -3331,9 +3490,28 @@ function realmCols(N){ return Math.max(4, Math.round(Math.sqrt(N))); }
 function realmGap(cols){ return cols > 24 ? 2 : cols > 12 ? 3 : 6; }
 function realmWallWidth(cols){ return Math.min(440, Math.max(200, cols * 13)); }
 function quantumStepDelay(k){ return Math.max(40, Math.round(240 * 6 / Math.max(k, 6))); }
+/* realmWallWidth(cols) returns the IDEAL wall width for that many columns,
+   tuned for the widest desktop layout — but a fixed ideal width doesn't
+   know how narrow the actual screen is. At high N (e.g. 1024+ qubit values
+   on Variable, or 1024+ boxes on Search/Conditional/Encryption) that ideal
+   width (up to 440px) is wider than a phone's own content column, and
+   because the wall sits inside a CSS Grid column, the column itself was
+   growing to match rather than the wall shrinking to fit — pushing the
+   whole card (wall AND the code panel next to it) off the right edge,
+   inside .realmstage's own scroll context where it's easy to miss
+   entirely. Measuring the actual usable width from a wall-independent
+   ancestor (.realmstage-inner/-narrow, whose own size depends only on
+   viewport + CSS, never on the wall's content) and capping to that fixes
+   it regardless of column count or breakpoint. */
 function sizeWall(el, cols){
+  const ideal = realmWallWidth(cols);
+  const stage = el.closest('.realmstage-inner, .realmstage-inner-narrow');
+  const stageWidth = stage ? stage.clientWidth : ideal;
+  const singleCol = window.innerWidth <= 480;
+  const usable = singleCol ? stageWidth : Math.floor((stageWidth - 14) / 2);
+  const w = Math.max(120, Math.min(ideal, usable > 0 ? usable : ideal));
   el.style.gridTemplateColumns = `repeat(${cols},1fr)`;
-  el.style.maxWidth = realmWallWidth(cols) + 'px';
+  el.style.maxWidth = w + 'px';
   el.style.gap = realmGap(cols) + 'px';
 }
 function pct(p){ return (p*100).toFixed(1) + '%'; }
@@ -3390,12 +3568,20 @@ async function runClassicWall(N, cols, target, els, verb, emoji){
   const scanLen = target + 1;
   const perTick = Math.max(1, Math.ceil(N / 120));
   let revealed = 0;
+  let prevLead = null;
   while (revealed < scanLen){
     const next = Math.min(scanLen, revealed + perTick);
+    if (prevLead) prevLead.classList.remove('check');
     for (let i = revealed; i < next; i++){
       if (i === target){ boxes[i].className = 'bx hit'; boxes[i].textContent = emoji; }
       else { boxes[i].className = 'bx shut'; boxes[i].textContent = ''; }
     }
+    /* a travelling "currently checking" pulse on the leading edge — gives
+       the classical scan its own visible motion, so it isn't just a static
+       reveal sitting next to quantum's constant spin */
+    const lead = boxes[next - 1];
+    prevLead = (lead && lead.classList.contains('shut')) ? lead : null;
+    if (prevLead) prevLead.classList.add('check');
     revealed = next;
     els.line.textContent = `${verb} ${revealed} of ${N}…`;
     await sleep(55);
@@ -3581,9 +3767,19 @@ function updateCountedLoop(){
   const best = bestK(N);
   $('#rkBest').textContent = best;
   const ratio = N / k;
+  const isPeak = k === best;
+  $('#rkFill').classList.toggle('peak', isPeak);
+  $('#rkPeakBadge').style.display = isPeak ? 'block' : 'none';
+  $('#rkVsQ').classList.toggle('peak', isPeak);
+  /* gap bars: classical always shows the full-width worst case (N checks);
+     quantum shows k steps scaled against that same N, so the visible gap
+     between the two bars grows with N — the same maths, read at a glance. */
+  $('#rkGapC').textContent = `${N} checks`;
+  $('#rkGapQ').textContent = `${k} step${k>1?'s':''}`;
+  $('#rkGapQFill').style.width = Math.max(2, Math.min(100, (k / N) * 100)) + '%';
   let msg;
   if (k < best) msg = `${k} step${k>1?'s':''} under-amplifies — the odds haven't peaked yet. Best for ${N} boxes is ${best}.`;
-  else if (k === best) msg = `${k} is the best step count for ${N} boxes — ${pct(p)} odds, about ${ratio.toFixed(1)}× fewer checks than the classical worst case.`;
+  else if (isPeak) msg = `${k} is the best step count for ${N} boxes — ${pct(p)} odds, about ${ratio.toFixed(1)}× fewer checks than the classical worst case.`;
   else msg = `${k} steps overshoots the best of ${best} — the odds have swung back down, exactly like pressing Mark + Boost twice in Room One.`;
   $('#rkInsightTxt').textContent = msg;
 }
@@ -3694,7 +3890,11 @@ async function runSearchCard(){
 $('#rsRun').addEventListener('click', runSearchCard);
 
 /* ═══════ ENCRYPTION ═══════ */
-const CIPHER_TEXT = 'QGSNU VKPX ZLHOT', PLAIN_TEXT = 'THE SIGNAL IS CLEAR';
+/* CIPHER_TEXT is a genuine shift-7 Caesar cipher of PLAIN_TEXT (the same
+   shift convention as Task 1's door, spaces left alone) — verified in
+   Python, not decorative text picked to merely look encrypted:
+   shift('THE SIGNAL IS CLEAR', 7) = 'AOL ZPNUHS PZ JSLHY'. */
+const CIPHER_TEXT = 'AOL ZPNUHS PZ JSLHY', PLAIN_TEXT = 'THE SIGNAL IS CLEAR';
 let reN = 64;
 function encClassicCodeHtml(N){
   return `<span class="kw">for</span> <span class="var">key</span> <span class="kw">in</span> <span class="fn">range</span>(<span class="num">${N}</span>):<br>` +

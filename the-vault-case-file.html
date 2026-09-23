@@ -262,8 +262,6 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
 
 
 <div class="texture"></div>
-<body>
-
 <div class="wrap">
 
 <nav class="rail" id="rail">
@@ -283,7 +281,7 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
     <li><a href="#task3"><span class="tag">04</span>Rooms Two &amp; Three</a></li>
     <li><a href="#task4"><span class="tag">05</span>The Ledger</a></li>
     <li><a href="#close"><span class="tag">06</span>Debrief &amp; quiz</a></li>
-    <li><a href="#realm"><span class="tag">07</span>Quantum Realm</a></li>
+    <li><a href="#realm"><span class="tag">07</span>Quantum Playground</a></li>
     <li><a href="#glossary"><span class="tag">08</span>Glossary</a></li>
     <li><a href="#delivery"><span class="tag">09</span>Running it</a></li>
     <li><a href="#refs"><span class="tag">10</span>Evidence log</a></li>
@@ -363,9 +361,10 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
   <div class="onscreen">
     <div class="lab">On screen, first</div>
     <p>A title card with two cards side by side: <b>Quantum Heist</b> (the full story below, start to
-    finish) and <b>Quantum Realm</b> (skip straight to the open-ended sandbox, §07). Quantum Realm
-    starts no clock and touches none of the story state — it's a complete, self-contained activity,
-    not a locked "advanced mode." Point anyone short on time, or repeating the session, at it directly.</p>
+    finish) and <b>Quantum Playground</b> (skip straight to the seven-card open-ended sandbox, §07 —
+    renamed from "Quantum Realm," same destination, much larger menu). The Playground starts no clock
+    and touches none of the story state — it's a complete, self-contained activity, not a locked
+    "advanced mode." Point anyone short on time, or repeating the session, at it directly.</p>
   </div>
   <div class="onscreen">
     <div class="lab">On screen, once Quantum Heist is chosen</div>
@@ -790,6 +789,18 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
   <div class="eyebrow">06 · Act 5</div>
   <h2 class="title">The debrief, and the quiz</h2>
 
+  <div class="note">
+    <div class="lab">◆ A bigger finale, plus a printable certificate — new this round</div>
+    <p>On Mark's own request ("finishing the heist is an incredible achievement for attendees"): the
+    completion screen now pops a trophy banner and the biggest confetti burst anywhere in the build (26
+    particles), on top of the existing sound and stat summary. A new "🎓 Get your certificate →" button
+    leads to a dedicated certificate screen — type a name, see a fixed congratulatory line and all six
+    construct tiles, then "Print / save as PDF" calls the browser's own native print dialog. No external
+    PDF library, nothing sent anywhere. Styled in the heist's own gold palette, not the Playground's
+    cyan — it reads as belonging to the heist. Worth flagging to a group in advance if you want everyone
+    to actually generate one before they leave.</p>
+  </div>
+
   <div class="warn-box">
     <div class="lab">⚠ The UK quantum statistic — read this before anyone asks</div>
     <p>On screen: <i>"About 3,000 people work in quantum in the UK… aiming for 100,000-plus jobs…
@@ -818,83 +829,152 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
   second, final screen. It re-lists all six constructs as tiles and all five career tie-ins as one
   grid, and adds a sixth role that doesn't map to a single task: <b>Software Engineer</b>, framed as
   the one that "threads through all of it" — assembling separate constructs into one working program
-  in the right order is itself the skill, distinct from knowing any one construct alone. From there
-  the learner can run the story again or jump straight into the Quantum Realm (§07).</p>
+  in the right order is itself the skill, distinct from knowing any one construct alone. A closing
+  note on this screen now also points explicitly at the Quantum Playground (§07) — "seven more
+  mini-labs… the same head-to-head search up to 4096 boxes, plus encryption, true randomness, and
+  every construct from tonight" — before the learner can run the story again or jump straight into it.</p>
 </section>
 
-<!-- 07 QUANTUM REALM -->
+<!-- 07 QUANTUM PLAYGROUND -->
 <section class="sect" id="realm">
   <div class="eyebrow">07 · Optional module</div>
-  <h2 class="title">The Quantum Realm — the sandbox</h2>
+  <h2 class="title">The Quantum Playground — seven mini-labs</h2>
   <p class="subtitle">Not part of the story. Reachable from the opening card (§01) or the Big Picture
-  screen (§06). No clock, no narrative — a head-to-head comparison for practising the same real
-  search algorithm on the learner's own terms, at any scale from four boxes up to four thousand and
-  ninety-six.</p>
+  screen (§06). No clock, no narrative — seven independent mini-labs, each pairing a classical machine
+  against a quantum one on the same job, each showing both sides' real code, each closing on a named
+  bank tech role.</p>
 
-  <h3>What it is, and why it exists</h3>
+  <h3>What it is, why it's now seven cards, and its history</h3>
   <p>Every task in the main story is a fixed, single worked example — a deliberate scaffold (§00,
-  worked-example effect), and scaffolds are meant to come off. The Realm is the un-scaffolded
-  version: the learner sets the problem size and watches the same by-hand search and the same quantum
-  search the story already taught run side by side, at whatever scale they choose, with both
-  versions' actual code shown for direct comparison. This is <b>learner-controlled, variable
-  practice</b> — rerunning an already-learned concept at a self-chosen scale, one of the
-  better-evidenced ways to build a skill that transfers beyond the exact example it was learned
-  on<span class="cite" data-ref="16">16</span>.</p>
+  worked-example effect), and scaffolds are meant to come off. The Playground is the un-scaffolded
+  version: the learner sets the problem, watches a by-hand approach and a quantum approach run side by
+  side, at whatever scale or configuration they choose, with both versions' actual code shown for
+  direct comparison. This is <b>learner-controlled, variable practice</b> — rerunning an
+  already-learned concept at a self-chosen scale, one of the better-evidenced ways to build a skill
+  that transfers beyond the exact example it was learned on<span class="cite" data-ref="16">16</span>.</p>
 
   <div class="note">
-    <div class="lab">◆ Third time's the landing</div>
+    <div class="lab">◆ Fourth build, third full rebuild — and the biggest jump yet</div>
     <p>Two earlier approaches — a build-it-yourself sandbox with staged construct introduction and a
     bidirectional Convert feature, then a full-screen circuit-canvas rebuild of that same drag-and-drop
-    premise — were both tried and both explicitly rejected: the underlying interaction (assembling a
-    program yourself, however presented) was the wrong fit for a closing activity, not the visuals
-    around it. The version below removed the building entirely rather than reworking it again, and
-    landed as intended — unreserved positive feedback, with two further extensions requested and
-    delivered (the code panels and the extended size range, both below).</p>
+    premise — were both tried and both explicitly rejected: assembling a program yourself, however
+    presented, was the wrong fit for a closing activity. The third build removed the building entirely
+    and landed as intended — unreserved positive feedback, plus the code panels and the extended
+    4–4096 range added on request. <b>This round went further, on Mark's own ask</b>: rename "Quantum
+    Realm" to "Quantum Playground"; fold in the heist's own four programming constructs, not just the
+    search comparison; add encryption/decryption; randomise the target instead of always fixing it at
+    the last box; make every card always show a classical-vs-quantum visual and always name a real
+    role; research and add one genuinely new quantum concept the heist doesn't cover anywhere else.
+    The original head-to-head comparison — the third build's entire sandbox — is untouched at the code
+    level and now sits in the menu as one card among seven, renamed <b>Search</b>; six new cards were
+    added alongside it. The existing layout was also checked across five screen sizes/orientations
+    before any of this was built on top of it — zero overflow, so the same full-screen shell was
+    reused for all seven cards, and re-verified with the same sweep after the rebuild.</p>
   </div>
 
-  <div class="declass" data-key="realm">
+  <div class="note">
+    <div class="lab">◆ How the randomised target works, and why it's not just cosmetic</div>
+    <p>Previously the target was always the last box in the wall, and the classical side always
+    animated a full N-box scan regardless. Now, on every wall-based card (Search, Conditional,
+    Encryption, and the quantum side of Until Loop/Variable), the target is genuinely randomised every
+    run (<code>randInt(N)</code>) — and the classical wall animation <b>stops the moment it reaches
+    this run's randomised target</b>, so the reported "this run" figure is honest and actually varies,
+    not a relocated dot inside an animation that still ran to completion. The "worst case" figure
+    alongside it stays a separate, honest caption that is always N, exactly as before. The point this
+    sharpens: <b>the quantum step count never varies with where the target happens to be, but the
+    classical count does</b> — a real difference, not just a randomised visual. All wall-based cards
+    share the same underlying <code>runClassicWall()</code>/<code>runQuantumWall()</code> pair rather
+    than each reimplementing this.</p>
+  </div>
+
+  <div class="declass" data-key="realm-v">
     <div class="declass-bar" onclick="toggleDeclass(this)">
-      <span class="ico">◈ FILE R-A</span><span class="txt">The setup and comparison screens</span><span class="chev">▸</span>
+      <span class="ico">◈ FILE P-1</span><span class="txt">Card 1 — Variable</span><span class="chev">▸</span>
     </div>
     <div class="declass-body">
-      <p><b>One control: how many boxes</b> — a slider with eleven stops (4, 8, 16, 32, 64, 128, 256,
-      512, 1024, 2048, 4096), a 1,024× spread from smallest to largest. No mode toggle, nothing to
-      tick — both classical and quantum run automatically at whatever size is picked. "Run the
-      comparison" goes straight to the comparison screen with both sides' code already visible, before
-      either side has run.</p>
-      <p><b>Two columns, 💻 BY HAND and ⚛ QUANTUM</b> — each a wall of boxes sized to N, a live
-      one-line status ("checking box 40 of 64…", "search step 3 of 6…"), and — new since the
-      strip-back — a rounded "pill" code panel labelled <code>CLASSICAL.PY</code> /
-      <code>QUANTUM.PY</code> underneath, reusing the exact shared code token-colouring every other
-      code block in the build uses.</p>
-      <p><b>The code is generated from the real N and the real <code>bestK(N)</code></b> and appears
-      the moment the size is deployed — readable before "Run both" is ever pressed. The classical
-      panel is a plain <code>for</code>/<code>if</code>/<code>return</code> scan; the quantum panel
-      reuses the exact vocabulary the build already taught — <code>mark()</code>, <code>boost()</code>,
-      <code>repeat N times:</code> — so it reads as the same rule handed to a different machine,
-      echoing the Ledger's own "you wrote one rule and handed it to a different machine" beat, now
-      made literal in side-by-side code. Each panel glows while its own wall animates and stops when
-      that side finishes.</p>
-      <p><b>"Run both" runs concurrently</b>, not sequentially. The classical wall always plays out its
-      full worst case (key in the last box checked) while the quantum side runs its <code>bestK(N)</code>
-      steps — so at every size, quantum visibly finishes first and the classical wall is still
-      working, reinforcing the gap rather than just stating it. Once both finish, a result tile and a
-      live insight line appear — e.g. at 64 boxes: <i>"by hand that's up to 64 checks; the same search
-      only needs 6 quantum steps (about 99.7% odds of the very first grab landing on it) — roughly
-      10.7× fewer."</i></p>
+      <p><b>On screen:</b> a qubit-count slider (1–10) showing the equivalent register size (2ᵠ) live.
+      "Load the variable / register" runs both sides: classical assigns <code>x = 7</code>, then
+      reassigns <code>x = 42</code> — genuinely only ever holds one thing. Quantum puts all 2ᵠ values
+      into superposition at once, then measures, collapsing to one random value.</p>
+      <p><b>The point:</b> a classical variable holds exactly one value, full stop; a quantum register
+      in superposition genuinely holds many together until measured. Insight line: <i>"that 'many
+      values, held together' state is the raw material every quantum algorithm — including the search
+      you ran tonight — works with, before interference steers it toward one answer."</i></p>
+      <p><b>Career tie-in — Quantitative Analyst:</b> a classical risk model updates one market
+      scenario at a time; banks exploring quantum computing are looking at holding many scenarios at
+      once for Monte Carlo-style simulation — the same idea just demonstrated in miniature.</p>
     </div>
   </div>
 
-  <div class="declass" data-key="realm-scale">
+  <div class="declass" data-key="realm-l">
     <div class="declass-bar" onclick="toggleDeclass(this)">
-      <span class="ico">◈ FILE R-B</span><span class="txt">The gap widens with size — verified, not eyeballed</span><span class="chev">▸</span>
+      <span class="ico">◈ FILE P-2</span><span class="txt">Card 2 — Until loop</span><span class="chev">▸</span>
     </div>
     <div class="declass-body">
-      <p>Because <code>bestK(N)</code> grows only roughly like √N, the ratio between the two sides
-      keeps climbing across the whole range — confirmed independently in Python alongside the game's
-      own <code>conf()</code>/<code>bestK()</code> functions, not just assumed:</p>
+      <p><b>On screen:</b> 16 boxes, one hidden key, re-randomised every run. Two independent buttons:
+      "Guess until found" (classical — genuinely guesses in random order until it hits, 1–16 guesses)
+      and "Commit & run" (quantum — a "steps to commit" slider, 1–8, is locked in <i>before</i> the run
+      starts; disabled while it runs).</p>
+      <p><b>The point, and why the layout is asymmetric on purpose:</b> classical can keep going for as
+      long as it takes; quantum must commit to a step count in advance — reading the answer early would
+      collapse the superposition. The insight line draws the direct parallel to Room One's own "press
+      it twice and the odds fall" lesson: overshoot the committed count and, just like Mark+Boost
+      pressed twice, the odds swing back down.</p>
+      <p><b>Career tie-in — IT Operations Engineer:</b> a classical retry-until-it-works loop is exactly
+      how much banking infrastructure recovers from a failed payment or dropped connection; quantum
+      programs can't do that yet — every run today is a fixed, pre-planned job.</p>
+    </div>
+  </div>
+
+  <div class="declass" data-key="realm-k">
+    <div class="declass-bar" onclick="toggleDeclass(this)">
+      <span class="ico">◈ FILE P-3</span><span class="txt">Card 3 — Counted loop</span><span class="chev">▸</span>
+    </div>
+    <div class="declass-body">
+      <p><b>On screen — the one card with no wall animation at all, by design:</b> a pure, live odds
+      calculator reusing the same odds-meter component as Room One and the Ledger. Two sliders — boxes
+      (N, same eleven stops as elsewhere) and search steps (k) — drive a live odds % and fill bar, plus
+      a "Jump to best k" button.</p>
+      <p><b>The point:</b> drag k below the best value and the message says the odds haven't peaked
+      yet; land on it and it states the real odds/ratio; overshoot it and it says so explicitly —
+      <i>"the odds have swung back down, exactly like pressing Mark + Boost twice in Room One"</i> —
+      the same overshoot lesson taught three different ways across this build.</p>
+      <p><b>Career tie-in — Automation Engineer:</b> sizing a batch job by a repeat count is real,
+      everyday work; unlike a classical batch job, overshooting a quantum search's step count actively
+      makes the result <i>worse</i>, not just slower.</p>
+    </div>
+  </div>
+
+  <div class="declass" data-key="realm-c">
+    <div class="declass-bar" onclick="toggleDeclass(this)">
+      <span class="ico">◈ FILE P-4</span><span class="txt">Card 4 — Conditional</span><span class="chev">▸</span>
+    </div>
+    <div class="declass-body">
+      <p><b>On screen:</b> the learner picks a rule — "IF AMOUNT <code>&gt;</code>/<code>&lt;</code>/<code>==</code>
+      10,000" — from a picker built like the Ledger's own operator picker (§05), then a size slider,
+      then "Run the rule." Both sides run the shared wall animation with the code panels generated live
+      to show the learner's own chosen rule baked into both the classical <code>if</code> and the
+      quantum oracle call.</p>
+      <p><b>The point:</b> the learner's own condition becomes the literal thing being searched for —
+      the insight line states it outright: <i>"the quantum oracle IS the condition you picked."</i> The
+      clearest card in the Playground for making "the oracle, made literal" (§05) land.</p>
+      <p><b>Career tie-in — Risk &amp; Financial Crime Analyst:</b> fraud/AML rules are exactly this
+      shape — a condition flagging the one record out of thousands that breaks it.</p>
+    </div>
+  </div>
+
+  <div class="declass" data-key="realm-s">
+    <div class="declass-bar" onclick="toggleDeclass(this)">
+      <span class="ico">◈ FILE P-5</span><span class="txt">Card 5 — Search (the original comparison, now with company)</span><span class="chev">▸</span>
+    </div>
+    <div class="declass-body">
+      <p><b>On screen:</b> unchanged in its mechanics from the third build — the full 4–4096 size
+      slider, live code-panel previews before "Run both" is pressed, the same side-by-side wall race,
+      now with a genuinely randomised target rather than a fixed one. The independently-verified table
+      still applies — the <b>worst case</b> column was never affected by the randomisation, only the
+      newly-varying "this run" figure was added alongside it:</p>
       <div class="tablewrap"><table>
-        <tr><th>N</th><th>Best k</th><th>Odds</th><th>Classical ÷ quantum</th></tr>
+        <tr><th>N</th><th>Best k</th><th>Odds</th><th>Classical ÷ quantum (worst case)</th></tr>
         <tr><td>4</td><td>1</td><td>100.0%</td><td>~4.0×</td></tr>
         <tr><td>8</td><td>2</td><td>94.5%</td><td>~4.0×</td></tr>
         <tr><td>16</td><td>3</td><td>96.1%</td><td>~5.3×</td></tr>
@@ -907,20 +987,84 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
         <tr><td>2048</td><td>35</td><td>100.0%</td><td>~58.5×</td></tr>
         <tr><td>4096</td><td>50</td><td>99.99%</td><td>~81.9×</td></tr>
       </table></div>
-      <p><b>A facilitator-only note on the top of the range:</b> at 4096 boxes the classical wall's
-      animation takes several seconds longer than at smaller sizes — per-box/per-step delay tapers
-      down as N and k grow (batched in ticks, capped regardless of N) so even the largest size stays a
-      watchable few seconds, while the original 4–64 range plays at exactly the timing it always has.
-      Pushing the slider all the way is still comfortably inside a single demonstration.</p>
+      <p>The insight line now explicitly frames the randomisation's point: <i>"that position-blindness
+      is the real advantage, not luck."</i> A facilitator-only note on the top of the range still
+      applies unchanged: per-box/per-step delay tapers down as N and k grow so even 4096 boxes stays a
+      watchable few seconds.</p>
+      <p><b>Career tie-in — Quantum Computing Researcher:</b> several major banks now run dedicated
+      quantum computing research teams exploring search problems like this, at far larger scale — same
+      claim and sourcing as §03's career thread<span class="cite" data-ref="15">15</span>.</p>
+    </div>
+  </div>
+
+  <div class="declass" data-key="realm-e">
+    <div class="declass-bar" onclick="toggleDeclass(this)">
+      <span class="ico">◈ FILE P-6</span><span class="txt">Card 6 — Encryption</span><span class="chev">▸</span>
+    </div>
+    <div class="declass-body">
+      <p><b>On screen:</b> a fixed "intercepted" ciphertext (<code>"QGSNU VKPX ZLHOT"</code>), a
+      keyspace-size slider (4–4096), then "Run both": classical brute-forces keys one at a time,
+      quantum runs its usual <code>bestK(N)</code>-step amplification. On completion the message
+      decrypts to <code>"THE SIGNAL IS CLEAR"</code>.</p>
+      <p><b>The point, stated honestly on screen:</b> this demonstrates the <i>mechanic</i> of a keyed
+      brute-force race, not a real cipher-breaking algorithm — it reuses the same generic wall search,
+      relabelled. A note after running makes the real cryptographic point correctly: <b>Grover only
+      gives a quadratic speedup</b> against brute-forcing a key like this, which is why symmetric keys
+      just need to get longer; it's <b>Shor's algorithm</b> (the one already used against the Ledger's
+      account number, Task 4b, §05) that actually threatens <i>public-key</i> encryption, which is why
+      NIST finalised new post-quantum standards in August 2024<span class="cite" data-ref="10">10</span>.
+      The same Grover-≠-Shor distinction this guide is careful about throughout — a second, hands-on
+      place it gets made.</p>
+      <p><b>Career tie-in — Security / Cryptography Engineer:</b> deciding how long a key needs to be,
+      and against which attack, is real and current work — exactly why NIST's post-quantum standards
+      exist.</p>
+    </div>
+  </div>
+
+  <div class="declass" data-key="realm-q">
+    <div class="declass-bar" onclick="toggleDeclass(this)">
+      <span class="ico">◈ FILE P-7</span><span class="txt">Card 7 — True randomness (QRNG) — the new concept</span><span class="chev">▸</span>
+    </div>
+    <div class="declass-body">
+      <p><b>This is the genuinely new addition Mark asked for</b> — a quantum idea the heist itself
+      never touches anywhere else. Researched via web search, using the same outlet (The Quantum
+      Insider) already cited for the banking career-thread claim<span class="cite" data-ref="15">15</span>,
+      so the sourcing style stays consistent.</p>
+      <p><b>On screen:</b> a seed field (numeric, or any text — hashed if non-numeric) and "Generate 12
+      numbers" on the classical side; a second, unseeded "Generate 12 numbers" on the quantum side.
+      Classical is a genuinely seeded, deterministic PRNG (<code>mulberry32</code>) — the same seed
+      twice gives the same 12 numbers, which the on-screen line invites the learner to try and then
+      confirms. Quantum has no seed field at all, because there's nothing to seed.</p>
+      <p><b>Honestly caveated, not overclaimed — read this before anyone technical asks.</b> The build
+      cannot reach real quantum hardware, and says so directly: <i>"The numbers above all still come
+      from your browser, not a real quantum chip — this page can't reach one."</i> Under the hood,
+      "quantum" stands in using <code>Math.random()</code>. The note correctly describes what a
+      <i>real</i> QRNG exploits: <i>"measuring a qubit in superposition is fundamentally unpredictable,
+      not just hard to predict — no seed, no formula, nothing to replay, even in principle."</i> Same
+      honesty practice as Task 1's shift-cipher note.</p>
+      <p><b>The sourcing, verified and corrected for this guide.</b> The on-screen citation reads
+      "March 2026" — <b>this is a one-year date error</b>; the real dates are March 2025 and September
+      2024 (below). Two real claims sit behind the card's banking note: a <b>certified-randomness
+      demonstration</b> (March 26, 2025) — JPMorgan Chase, Quantinuum, and three US national
+      laboratories (Argonne, Oak Ridge, Lawrence Berkeley) plus UT Austin, published in
+      <i>Nature</i>, 71,313 bits of validated entropy, more randomness generated than
+      consumed<span class="cite" data-ref="18">18</span>; and <b>HSBC's tokenised-gold pilot</b>
+      (announced September 19, 2024) — Quantinuum's "Quantum Origin" quantum randomness deployed
+      alongside post-quantum cryptography to guard against "store now, decrypt later"
+      attacks<span class="cite" data-ref="19">19</span> — a genuine randomness claim, not only a
+      post-quantum-cryptography one.</p>
+      <p><b>Career tie-in — Security / Cryptography Engineer</b> (same role as the Encryption card,
+      deliberately — randomness and encryption are two halves of the same job): every encryption key
+      starts from a random number generator; a predictable one weakens every key built from it.</p>
     </div>
   </div>
 
   <div class="warn-box">
     <div class="lab">◆ Delivery note</div>
-    <p>No clock, no build, no wrong path out — well suited to "free practice" time at the end of a
-    session, or as its own two-minute standalone activity for someone who's already done the full
-    heist; picking a few sizes and watching the gap widen is a natural, low-effort closing beat. One
-    slider, one button — nothing to get stuck on and nothing that can be built incorrectly.</p>
+    <p>No clock and no wrong path out anywhere in the Playground — well suited to "free practice" time,
+    or as its own standalone activity for someone who's already done the full heist. Every card resets
+    to a fresh state on entry, so a second visit never opens on someone else's stale result. Nothing to
+    get stuck on in any of the seven: no construct to assemble, nothing that can be built incorrectly.</p>
   </div>
 </section>
 
@@ -956,14 +1100,15 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
   visually separate groups — "asks a question" vs. "sets a value," §05), so pointing at the two
   groups directly tends to land faster than re-explaining it verbally.</div></div>
   <div class="dnote"><span class="ic">♿</span><div class="b"><b>Accessibility.</b> Every interaction
-  in the entire build — the main heist (Acts 0–5) and the Quantum Realm sandbox (§07) alike — is
-  click/tap based; there is no drag-and-drop anywhere in the current build. The build respects
+  in the entire build — the main heist (Acts 0–5) and the seven-card Quantum Playground (§07) alike —
+  is click/tap based; there is no drag-and-drop anywhere in the current build. The build respects
   <code>prefers-reduced-motion</code>. No external fonts or scripts, so it runs on locked-down
   machines.</div></div>
   <div class="dnote"><span class="ic">🎬</span><div class="b"><b>Going deeper.</b> The four
   flashbacks each carry a worked code example independent of the heist — the fastest way to show
   someone the idea in isolation if the story framing isn't landing for them personally. The Quantum
-  Realm (§07) is the equivalent option for going deeper by <i>doing</i> rather than reading.</div></div>
+  Playground (§07) is the equivalent option for going deeper by <i>doing</i> rather than reading —
+  seven independent open-ended cards.</div></div>
 </section>
 
 <!-- 10 REFS -->
@@ -989,6 +1134,8 @@ footer.end{padding:40px 0 20px; color:var(--txt-3); font-size:.8rem; border-top:
     <li id="ref15">Rehman, M. U. "Top Global Banks Exploring Quantum Technologies in 2026." <i>The Quantum Insider</i>, March 27, 2026. <a href="https://thequantuminsider.com/2026/03/27/15-plus-global-banks-probing-the-wonderful-world-of-quantum-technologies/" target="_blank" rel="noopener">thequantuminsider.com</a> — HSBC, Barclays, Goldman Sachs and JPMorgan Chase quantum research programmes independently verified in this source as of publication.</li>
     <li id="ref16">Schmidt, R. A., &amp; Bjork, R. A. (1992). "New Conceptualizations of Practice: Common Principles in Three Paradigms Suggest New Concepts for Training." <i>Psychological Science</i>, 3(4), 207–217.<span class="caveat">Varied, learner-directed practice produces better retention and transfer than fixed repeated drills, even though it often feels harder during the practice itself.</span></li>
     <li id="ref17">Shor, P. W. (1994). "Algorithms for quantum computation: discrete logarithms and factoring." <i>Proceedings 35th Annual Symposium on Foundations of Computer Science</i>, 124–134. See also Shor, P. W. (1997), "Polynomial-Time Algorithms for Prime Factorization and Discrete Logarithms on a Quantum Computer," <i>SIAM J. Computing</i>, 26(5), 1484–1509.<span class="caveat">Cited for Task 4b's interactive period-finding mechanic and the Shor's-algorithm flash-forward (§05) — the build runs a genuine worked example (a=3, N=91=7×13, r=6) by hand, at a scale small enough for a learner to complete; it never claims to run this algorithm on quantum hardware or at real-key scale.</span></li>
+    <li id="ref18">"Joint Research Team Achieves Certified Quantum Randomness…" <i>The Quantum Insider</i>, March 26, 2025. <a href="https://thequantuminsider.com/2025/03/26/joint-research-team-achieves-certified-quantum-randomness-makes-once-theoretical-experiments-into-real-world-quantum-computing-uses/" target="_blank" rel="noopener">thequantuminsider.com</a> — JPMorganChase, Quantinuum, Argonne National Laboratory, Oak Ridge National Laboratory, Lawrence Berkeley National Laboratory and the University of Texas at Austin; published in <i>Nature</i>; 71,313 bits of certified entropy validated on Quantinuum's 56-qubit "H2" system.<span class="caveat">Cited for the Playground's True Randomness card (§07). The on-screen citation reads "March 2026," a one-year date error against this source's actual publication date — flagged here rather than silently corrected on screen.</span></li>
+    <li id="ref19">HSBC, "HSBC pilots quantum-safe technology for tokenised gold," media release, September 19, 2024. <a href="https://www.hsbc.com/news-and-views/news/media-releases/2024/hsbc-pilots-quantum-safe-technology-for-tokenised-gold" target="_blank" rel="noopener">hsbc.com</a> — confirms Quantinuum's "Quantum Origin" quantum randomness technology was piloted alongside (not instead of) post-quantum cryptography, to protect tokenised gold transactions against "store now, decrypt later" attacks.<span class="caveat">Cited for the Playground's True Randomness card (§07).</span></li>
   </ol>
 </section>
 
@@ -1081,6 +1228,8 @@ const GLOSS = [
   {t:'Quadratic speedup', q:true, d:'Time scales with the square root of the classical time — not a fixed multiple, and not exponential.'},
   {t:'Shor’s algorithm', q:true, d:'A different quantum algorithm (Peter Shor, 1994) giving an exponential speedup at factoring large numbers and discrete logarithms — the hard problems RSA, Diffie-Hellman and ECC rely on. As of Task 4b (§05), a real worked example of its period-finding method (a=3, N=91=7×13, r=6) is run by hand on screen, not just narrated, before a flash-forward names it directly. Not the same algorithm as Grover’s — the direct search puzzles (Rooms One–Three, the Ledger’s scan) remain Grover’s algorithm, unchanged.'},
   {t:'Period-finding', q:true, d:'The classical arithmetic step at the heart of Shor’s algorithm: repeatedly computing powers of a chosen number modulo N until the remainders repeat, then using the repeat length (the period) to split N into its factors. A quantum computer finds the period almost instantly for numbers too large to do by hand; Task 4b (§05) is this same method, done by hand, at a scale small enough to actually complete.'},
+  {t:'Pseudorandom number generator (PRNG)', q:false, d:'A deterministic formula that produces a sequence that looks random but is fully reproducible from its starting value (its “seed”) — the same seed always gives the same sequence. Almost all “random” numbers in ordinary software, including the classical side of the Playground’s True Randomness card (§07), are this.'},
+  {t:'Quantum random number generator (QRNG)', q:true, d:'A device generating randomness from a genuinely unpredictable quantum process (such as measuring a qubit in superposition), not a formula — no seed, nothing to reproduce even in principle. The Playground’s True Randomness card (§07) teaches the distinction but can’t itself run on real quantum hardware; see that section for the exact caveat and sourcing.'},
 ];
 const grid = document.getElementById('glossGrid'), empty = document.getElementById('glossEmpty');
 function renderGloss(filter){
